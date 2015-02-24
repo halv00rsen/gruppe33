@@ -13,10 +13,10 @@ public class Person {
 	
 	public Person(String username, String password, int personid, String name){
 		calendar = new Calendar();
+		groups = new ArrayList<Group>();
 		this.username = username;
 		this.password = password;
 		this.personid = personid;
-		groups = new ArrayList<Group>();
 		this.name = name;
 	}
 	
@@ -36,7 +36,11 @@ public class Person {
 	}
 	
 	public void addEvent(Event event){
-		//legg til calendar
+		calendar.addEvent(event);
+	}
+	
+	public void removeEvent(Event event){
+		calendar.removeEvent(event);
 	}
 	
 	
