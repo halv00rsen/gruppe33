@@ -21,8 +21,9 @@ public class ProgramTest implements ProgramListener{
 		System.out.println("feil login");
 	}
 
-	public void loginSuccess() {
+	public void loginSuccess(String username, String name) {
 		System.out.println("login suksess");
+		System.out.println("Username: " + username + ", name: " + name);
 	}
 
 	public void logout() {
