@@ -16,7 +16,9 @@ public class Program {
 	
 	public Program(){
 		listeners = new ArrayList<ProgramListener>();
+		//opprett kobling med database og/eller socketprogram
 	}
+	
 	
 	public void createUser(String username, String password, String name){
 		if (username == null || password == null || name == null || currentPerson != null){
@@ -42,18 +44,18 @@ public class Program {
 		Map<String, String> info = PersonInformation.getPersonInformation(username, password);
 		String stringId = info.get("personid");
 		if (stringId == null){
-			loginFailListeners();
 			if (DEBUG){
 				System.out.println("Stringid er null");
 			}
+			loginFailListeners();
 			return;
 		}
 		for (char a : stringId.toCharArray()){
 			if ("0123456789".indexOf(a) == -1){
-				loginFailListeners();
 				if (DEBUG){
 					System.out.println(stringId + " kan ikke parses");
 				}
+				loginFailListeners();
 				return;
 			}
 		}

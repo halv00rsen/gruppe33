@@ -5,11 +5,13 @@ import java.util.List;
 
 public class Person {
 	
-	private final Calendar calendar;
-	private String password;
 	public final String username, name;
+	
+	private final Calendar calendar;
 	private final int personid;
 	private final List<Group> groups;
+	
+	private String password;
 	
 	public Person(String username, String password, int personid, String name){
 		calendar = new PersonCalendar(this);
