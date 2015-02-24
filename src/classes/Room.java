@@ -13,7 +13,7 @@ public class Room {
 	}
 	
 	public void bookRoom(Date fromDate, Date toDate, Event event) {
-		if (calendar.isAvailable(fromDate) && calendar.isAvailable(fromDate)) {
+		if (calendar.isAvailable(fromDate, toDate)) {
 			calendar.addEvent(event);
 		}
 	}
