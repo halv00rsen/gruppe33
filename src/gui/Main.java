@@ -7,8 +7,8 @@ import javafx.scene.layout.BorderPane;
 
 
 public class Main extends Application {
-	public final static int screenHeight = 1000;
-	public final static int screenWidth = 600;
+	public final static int SCREENHEIGHT = 1000;
+	public final static int SCREENWIDTH = 600;
 	
 	@Override
 	public void start(Stage primaryStage) {
