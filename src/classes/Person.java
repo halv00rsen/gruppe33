@@ -12,7 +12,7 @@ public class Person {
 	private final List<Group> groups;
 	
 	public Person(String username, String password, int personid, String name){
-		calendar = new Calendar();
+		calendar = new PersonCalendar(this);
 		groups = new ArrayList<Group>();
 		this.username = username;
 		this.password = password;

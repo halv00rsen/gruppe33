@@ -1,6 +1,7 @@
 package classes;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 public class Calendar {
@@ -9,9 +10,12 @@ public class Calendar {
 	
 	public Calendar(){
 		events = new ArrayList<Event>();
-		//hent data fra database
-		
-		
+		//hent data fra database		
+	}
+	
+
+	public List getEvents() {
+		return events;
 	}
 	
 	public void addEvent(Event event){
