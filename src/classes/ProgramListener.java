@@ -1,6 +1,7 @@
 package classes;
 
 public interface ProgramListener {
-	public void logginFailed();
-	public void logginSuccess();
+	public void loginFailed();
+	public void loginSuccess();
+	public void logout();
 }

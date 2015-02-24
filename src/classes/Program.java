@@ -17,14 +17,38 @@ public class Program {
 	
 	public void personLogin(String username, String password){
 		Map<String, String> info = PersonInformation.getPersonInformation(username, password);
-		if (password != info.get("password")){
-			for (ProgramListener l : listeners)
-				l.logginFailed();
+		String usernameDatabase, passwordDatabase, name;
+		int personid = -1;
+		try{
+			usernameDatabase = info.get("username");
+			passwordDatabase = info.get("password");
+			name = info.get("name");
+			personid = Integer.parseInt(info.get("personid"));
+		}catch (Exception e){
+			e.printStackTrace();
+			System.out.println("Feil med parsing fra database");
+			loginFailListeners();
 			return;
 		}
-		currentPerson = new Person(info.get("username"), info.get("password"), Integer.parseInt(info.get("personid")), info.get("name"));
+		if (password != passwordDatabase || personid == -1 || username != usernameDatabase){
+			for (ProgramListener l : listeners)
+				l.loginFailed();
+			return;
+		}
+		currentPerson = new Person(usernameDatabase, passwordDatabase, personid, name);
 		for (ProgramListener l : listeners)
-			l.logginSuccess();
+			l.loginSuccess();
+	}
+	
+	private void loginFailListeners(){
+		for (ProgramListener l : listeners)
+			l.loginFailed();
+	}
+	
+	public void logout(){
+		currentPerson = null;
+		for (ProgramListener l : listeners)
+			l.logout();
 	}
 	
 	public void addListener(ProgramListener l){
