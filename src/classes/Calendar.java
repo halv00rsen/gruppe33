@@ -1,7 +1,16 @@
 package classes;
 
-import java.util.Collection;
+import java.util.ArrayList;
+import java.util.List;
 
 public class Calendar {
-	Collection<Event> events;
+	
+	private List<Event> events;
+	
+	public Calendar(){
+		events = new ArrayList<Event>();
+		//hent data fra database
+		
+		
+	}
 }
