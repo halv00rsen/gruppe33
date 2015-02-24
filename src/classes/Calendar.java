@@ -13,7 +13,14 @@ public class Calendar {
 		//hent data fra database		
 	}
 	
-
+	public boolean isAvailable(Date date) {
+		for (Event event : events) {
+			return !(event.getStartDate().after(date) && event.getEndDate().before(date));
+			//Returnerer false hvis tiden er når det allerede finnes et event
+		}
+		return true;
+	}
+	
 	public List getEvents() {
 		return events;
 	}
