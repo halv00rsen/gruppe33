@@ -11,6 +11,7 @@ public class ProgramTest implements ProgramListener{
 		p.addListener(this);
 		p.personLogin("kåre", "1234");
 		p.logout();
+		p.createUser("halo123", "12345", "Jørgen Halvorsen");
 	}
 
 	public static void main(String[] args){
@@ -28,5 +29,13 @@ public class ProgramTest implements ProgramListener{
 
 	public void logout() {
 		System.out.println("logget ut");
+	}
+
+	public void userCreated() {
+		System.out.println("Brukeren ble opprettet");
+	}
+
+	public void userNotCreated() {
+		System.out.println("Brukeren ble ikke opprettet");
 	}
 }
