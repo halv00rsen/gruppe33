@@ -10,7 +10,6 @@ public abstract class Component extends Pane{
 	public Component(Pane parent){
 		this.parent = parent;
 		parent.getChildren().add(this);
-		init(parent);
 	}
 	/***
 	 * fjerner synlighet og fjerner seg selv fra parent
@@ -32,10 +31,6 @@ public abstract class Component extends Pane{
 	public void hideThisComponent(){
 		this.setVisible(false);
 	}
-	/***
-	 * init(mother) må implementeres av alle komponenter som skal ha noen spesifikasjoner
-	 ***/
-	public abstract void init(Pane parent);
 }
 
 
