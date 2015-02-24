@@ -1,9 +1,10 @@
 package classes;
 
 public class RoomCalendar extends Calendar {
-
-	public RoomCalendar() {
-		// TODO Auto-generated constructor stub
+	int roomNr;
+	
+	public RoomCalendar(int roomNr) {
+		this.roomNr = roomNr;
 	}
 
 }
