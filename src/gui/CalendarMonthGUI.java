@@ -62,7 +62,8 @@ public class CalendarMonthGUI extends Component{
 		//animeBox.getChildren().add(lastCalendar);
 		animeBox.getChildren().add(mainCalendar);
 		//animeBox.getChildren().add(nextCalendar);
-
+		clip = new StackPane();
+		clip.getChildren().add(animeBox);
 //		clip.getChildren().add(clippingShape);
 //		clip.getChildren().get(0).setClip(clippingShape);
 		
@@ -89,9 +90,12 @@ public class CalendarMonthGUI extends Component{
 	}
 	private void nextSlide(MouseEvent e) {
 		int offset = 0;
-		clip.getChildren().add(animeBox);
-		Rectangle clippingShape = new Rectangle();
-		clip = new StackPane();
+		
+//		Rectangle clippingShape = new Rectangle();
+//		clippingShape.setWidth(CalendarMonthGUI.defaulCalWidth);
+//		clippingShape.setHeight(CalendarMonthGUI.defaulCalHeight);
+		
+//		
 		if(e.getSource().equals(sliderRight)){
 			offset = 1;
 			mainCalendar.setVisible(false);
