@@ -12,12 +12,10 @@ public class Room {
 		this.roomNr = roomNr;
 	}
 	
-	public boolean isAvailable(Date date) {
-		List<Event> events = calendar.getEvents();
-		for (Event event : events) {
-			return !(event.getStartDate().after(date) && event.getEndDate().before(date));
+	public void bookRoom(Date fromDate, Date toDate, Event event) {
+		if (calendar.isAvailable(fromDate, toDate)) {
+			calendar.addEvent(event);
 		}
-		return true;
 	}
 	
 	public int getRoomNr() {

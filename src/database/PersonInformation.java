@@ -15,4 +15,8 @@ public class PersonInformation {
 		info.put("name", "Ola Nordmann");
 		return info;
 	}
+	
+	public static boolean changePassword(String username, String oldPassword, String newPassword){
+		return true;
+	}
 }
