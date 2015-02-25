@@ -22,7 +22,10 @@ public class Calendar {
 	public ArrayList<Event> getEventsByInterval(Date startDate, Date endDate) {
 		ArrayList list = new ArrayList<Event>();
 		for (Event event : events) {
-			if(event.getStartDate().after(startDate) && event.getStartDate().before(endDate))  {
+			if(event.getStartDate().after(startDate) && event.getEndDate().before(endDate)) {
+				list.add(event);
+			}
+			else if(event.getStartDate().after(startDate) && event.getStartDate().before(endDate))  {
 				list.add(event);
 			}
 			else if (event.getStartDate().before(startDate) && event.getEndDate().after(endDate)) {
