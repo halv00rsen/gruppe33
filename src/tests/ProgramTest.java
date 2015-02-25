@@ -1,8 +1,10 @@
 package tests;
 
+import classes.Event;
 import classes.Person;
 import classes.Program;
 import classes.ProgramListener;
+import classes.View;
 
 public class ProgramTest implements ProgramListener{
 	
@@ -33,8 +35,6 @@ public class ProgramTest implements ProgramListener{
 		System.out.println("logget ut");
 	}
 
-
-
 	public void userCreated(final boolean isCreated) {
 		System.out.println((isCreated?"Bruker laget": "Bruker ikke laget"));
 	}
@@ -42,4 +42,14 @@ public class ProgramTest implements ProgramListener{
 	public void passwordChange(final boolean isChanged) {
 		System.out.println((isChanged? "Passord byttet":"Passord ikke byttet"));
 	}
+	
+	public void setEvents(Event... events){
+		System.out.println("Events er satt");
+	}
+	
+	public void changeView(View view){
+		System.out.println("View changed to: " + view);
+	}
+	
+	
 }

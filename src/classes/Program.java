@@ -11,12 +11,15 @@ public class Program {
 
 	public final static boolean DEBUG = true;
 	private final List<ProgramListener> listeners;
+	private final List<Calendar> activeCalendars;
 
 	private Person currentPerson;
-	private Calendar currentCalendar;
+	private View currentView;
 	
 	public Program(){
 		listeners = new ArrayList<ProgramListener>();
+		activeCalendars = new ArrayList<Calendar>();
+		currentView = View.Month;
 		//opprett kobling med database og/eller socketprogram
 	}
 	
@@ -31,6 +34,14 @@ public class Program {
 			return;
 		}
 		callCreateUser(CreateUser.isValidNewUser(username, Person.hashPassword(password), name));
+	}
+	
+	public void changeView(View view){
+		if (view == currentView)
+			return;
+		currentView = view;
+		for (ProgramListener l : listeners)
+			l.changeView(view);
 	}
 	
 	public void personLogin(String username, String password){
@@ -69,7 +80,7 @@ public class Program {
 			return;
 		}
 		currentPerson = new Person(usernameDatabase, passwordDatabase, personid, name);
-		currentCalendar = currentPerson.getPersonalCalendar();
+		activeCalendars.add(currentPerson.getPersonalCalendar());
 		for (ProgramListener l : listeners)
 			l.loginSuccess(username, name);
 	}
@@ -108,7 +119,7 @@ public class Program {
 		if (!isLoggedIn())
 			return;
 		currentPerson = null;
-		currentCalendar = null;
+		activeCalendars.clear();
 		for (ProgramListener l : listeners)
 			l.logout();
 	}
