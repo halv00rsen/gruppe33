@@ -13,6 +13,7 @@ public class Program {
 	private final List<ProgramListener> listeners;
 
 	private Person currentPerson;
+	private Calendar currentCalendar;
 	
 	public Program(){
 		listeners = new ArrayList<ProgramListener>();
@@ -22,18 +23,14 @@ public class Program {
 	
 	public void createUser(String username, String password, String name){
 		if (username == null || password == null || name == null || currentPerson != null){
-			createUserFailListeners();
+			callCreateUser(false);
 			return;
 		}
 		if (username.length() < 6 || username.length() > 15 || password.length() < 6 || password.length() > 25){
-			createUserFailListeners();
+			callCreateUser(false);
 			return;
 		}
-		if (CreateUser.isValidNewUser(username, password, name)){
-			for (ProgramListener l : listeners)
-				l.userCreated();
-		}else
-			createUserFailListeners();
+		callCreateUser(CreateUser.isValidNewUser(username, Person.hashPassword(password), name));
 	}
 	
 	public void personLogin(String username, String password){
@@ -41,7 +38,7 @@ public class Program {
 			loginFailListeners();
 			return;
 		}
-		Map<String, String> info = PersonInformation.getPersonInformation(username, password);
+		Map<String, String> info = PersonInformation.getPersonInformation(username, Person.hashPassword(password));
 		String stringId = info.get("personid");
 		if (stringId == null){
 			if (DEBUG){
@@ -63,20 +60,44 @@ public class Program {
 		String passwordDatabase = info.get("password");
 		String name = info.get("name");
 		int personid = Integer.parseInt(stringId);
-		if (password != passwordDatabase || personid == -1 || username != usernameDatabase){
+		if (!Person.hashPassword(password).equals(passwordDatabase) || personid == -1 || username != usernameDatabase){
+			if (DEBUG){
+				System.out.println("Feil med passord");
+			}
 			for (ProgramListener l : listeners)
 				l.loginFailed();
 			return;
 		}
 		currentPerson = new Person(usernameDatabase, passwordDatabase, personid, name);
+		currentCalendar = currentPerson.getPersonalCalendar();
 		for (ProgramListener l : listeners)
 			l.loginSuccess(username, name);
 	}
 	
-	private void createUserFailListeners(){
-		for (ProgramListener l : listeners)
-			l.userNotCreated();
+	public void changePasswordUser(String oldPassword, String newPassword){
+		if (!isLoggedIn())
+			return;
+		if (currentPerson.isCorrectPassword(oldPassword)){
+			if (PersonInformation.changePassword(currentPerson.username, Person.hashPassword(oldPassword), Person.hashPassword(newPassword))){
+				currentPerson.changePassword(newPassword);
+				callChangePassword(true);
+				return;
+			}
+		}
+		callChangePassword(false);
 	}
+	
+	private void callChangePassword(boolean isChanged){
+		for (ProgramListener l : listeners){
+			l.passwordChange(isChanged);
+		}
+	}
+	
+	private void callCreateUser(boolean isCreated){
+		for (ProgramListener l: listeners)
+			l.userCreated(isCreated);
+	}
+	
 	
 	private void loginFailListeners(){
 		for (ProgramListener l : listeners)
@@ -87,6 +108,7 @@ public class Program {
 		if (!isLoggedIn())
 			return;
 		currentPerson = null;
+		currentCalendar = null;
 		for (ProgramListener l : listeners)
 			l.logout();
 	}

@@ -1,5 +1,6 @@
 package tests;
 
+import classes.Person;
 import classes.Program;
 import classes.ProgramListener;
 
@@ -9,9 +10,10 @@ public class ProgramTest implements ProgramListener{
 		
 		Program p = new Program();
 		p.addListener(this);
-		p.personLogin("kåre", "1234");
-		p.logout();
-		p.createUser("halo123", "12345", "Jørgen Halvorsen");
+		p.personLogin("halvor1", "123456");
+		p.changePasswordUser("112345", "heisann");
+		p.changePasswordUser("123456", "heisann");
+		p.changePasswordUser("heisann", "hadebra");
 	}
 
 	public static void main(String[] args){
@@ -31,11 +33,13 @@ public class ProgramTest implements ProgramListener{
 		System.out.println("logget ut");
 	}
 
-	public void userCreated() {
-		System.out.println("Brukeren ble opprettet");
+
+
+	public void userCreated(final boolean isCreated) {
+		System.out.println((isCreated?"Bruker laget": "Bruker ikke laget"));
 	}
 
-	public void userNotCreated() {
-		System.out.println("Brukeren ble ikke opprettet");
+	public void passwordChange(final boolean isChanged) {
+		System.out.println((isChanged? "Passord byttet":"Passord ikke byttet"));
 	}
 }

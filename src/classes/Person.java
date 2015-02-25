@@ -1,5 +1,7 @@
 package classes;
 
+import java.math.BigInteger;
+import java.security.MessageDigest;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -22,8 +24,14 @@ public class Person {
 		this.name = name;
 	}
 	
+	public boolean isCorrectPassword(String password){
+		return this.password.equals(hashPassword(password));
+	}
+	
 	public void changePassword(String password){
-		this.password = password;
+		String pswrd = hashPassword(password);
+		if (pswrd != null)
+			this.password = pswrd;
 		//husk å endre passord i database
 	}
 	
@@ -45,6 +53,21 @@ public class Person {
 		calendar.removeEvent(event);
 	}
 	
+	public Calendar getPersonalCalendar(){
+		return calendar;
+	}
 	
-	
+	public static String hashPassword(String password) {
+		try {
+			MessageDigest messageDigest = MessageDigest.getInstance("MD5");
+			messageDigest.reset();
+			messageDigest.update(password.getBytes());
+			byte[] digest = messageDigest.digest();
+			BigInteger n = new BigInteger(1, digest);
+			String hash = n.toString(16);
+			return hash;
+		} catch (java.security.NoSuchAlgorithmException e) {
+			return null;
+		}
+	}
 }
