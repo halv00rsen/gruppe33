@@ -1,7 +1,7 @@
 package classes;
 
-import java.util.Date;
-import java.util.List;
+import java.time.LocalDateTime;
+
 
 public class Room {
 	private final int roomNr;
@@ -12,8 +12,8 @@ public class Room {
 		this.roomNr = roomNr;
 	}
 	
-	public void bookRoom(Date fromDate, Date toDate, Event event) {
-		if (calendar.isAvailable(fromDate, toDate)) {
+	public void bookRoom(LocalDateTime fromTime, LocalDateTime toTime, Event event) {
+		if (calendar.isAvailable(fromTime, toTime)) {
 			calendar.addEvent(event);
 		}
 	}

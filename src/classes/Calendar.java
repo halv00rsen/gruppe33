@@ -1,8 +1,11 @@
 package classes;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
+
 
 public class Calendar {
 	
@@ -13,39 +16,42 @@ public class Calendar {
 		//hent data fra database		
 	}
 	
-	public boolean isAvailable(Date startDate, Date endDate) {
-		return getEventsByInterval(startDate, endDate).isEmpty();
+	public boolean isAvailable(LocalDateTime startTime, LocalDateTime endTime) {
+		return getEventsByInterval(startTime, endTime).isEmpty();
 	}
 	
 	
 	//Skal returnere alle events som har start eller slutt innenfor intervallet.
-	public ArrayList<Event> getEventsByInterval(Date startDate, Date endDate) {
-		ArrayList list = new ArrayList<Event>();
+	public ArrayList<Event> getEventsByInterval(LocalDateTime startTime, LocalDateTime endTime) {
+		ArrayList<Event> list = new ArrayList<Event>();
 		for (Event event : events) {
-			if(event.getStartDate().after(startDate) && event.getEndDate().before(endDate)) {
+			
+			if(event.getStartTime().isAfter(startTime) && event.getEndTime().isBefore(endTime)){
 				list.add(event);
 			}
-			else if(event.getStartDate().after(startDate) && event.getStartDate().before(endDate))  {
+			else if(event.getStartTime().isAfter(startTime) && event.getStartTime().isBefore(endTime))  {
 				list.add(event);
 			}
-			else if (event.getStartDate().before(startDate) && event.getEndDate().after(endDate)) {
+			else if (event.getStartTime().isBefore(startTime) && event.getEndTime().isAfter(endTime)) {
 				list.add(event);
 			}
-			else if (event.getEndDate().after(startDate) && event.getEndDate().before(endDate)) {	
+			else if (event.getEndTime().isAfter(startTime) && event.getEndTime().isBefore(endTime)) {	
 				list.add(event);
 			}
 		}
 		return list;
 	}
 	
-	public ArrayList<Event> getEventsByDay(Date date) {
-		Date startTime = new Date(date.getYear(), date.getMonth(), date.getDate(), 0, 0, 0);
-		Date endTime = new Date(date.getYear(), date.getMonth(), date.getDate(), 23, 59, 59);
-		return getEventsByInterval(startTime, endTime);
+	
+	
+	public ArrayList<Event> getEventsByDay(LocalDate date) {
+		LocalTime early = LocalTime.of(00, 00, 00);
+		LocalTime late = LocalTime.of(23, 59, 59);
+		return getEventsByInterval(LocalDateTime.of(date, early), LocalDateTime.of(date, late));
 	}
 	
 	
-	public List getEvents() {
+	public List<Event> getEvents() {
 		return events;
 	}
 	

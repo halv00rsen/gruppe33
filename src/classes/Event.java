@@ -1,40 +1,45 @@
 package classes;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Date;
-
 
 public class Event {
 	private String eventName;
 	private String location;
 	private Room room;
-	private Date startDate;
-	private Date endDate;
+	private LocalDate startDate;
+	private LocalDate endDate;
+	private LocalDateTime startTime;
+	private LocalDateTime endTime;
 	private Integer freq;
 	private final Person madeBy;
 	private Collection<EventAppliance> appliance;
 	private Boolean priority;
 	private String info;
+
 	
-	public Event(String eventName, String location, Room room, Date startDate, Date stopDate, Integer freq,
-			Person madeBy, Collection<EventAppliance> appliance,
-			Boolean priority, String info) {
-		
+	public Event(String eventName, String location, Room room,
+			LocalDate startDate, LocalDate endDate, LocalDateTime startTime,
+			LocalDateTime endTime, Integer freq, Person madeBy,
+			Collection<EventAppliance> appliance, Boolean priority, String info) {
 		this.eventName = eventName;
 		this.location = location;
 		this.room = room;
 		this.startDate = startDate;
-		this.endDate = stopDate;
+		this.endDate = endDate;
+		this.startTime = startTime;
+		this.endTime = endTime;
 		this.freq = freq;
 		this.madeBy = madeBy;
 		this.appliance = appliance;
 		this.priority = priority;
 		this.info = info;
 	}
-	
+
 	public Collection<Person> getApplicants() {
-		//Skal returnere de som kan (tror jeg)
+		// Skal returnere de som kan (tror jeg)
 		return new ArrayList<Person>();
 	}
 
@@ -62,20 +67,37 @@ public class Event {
 		this.room = room;
 	}
 
-	public Date getStartDate() {
+	public LocalDate getStartDate() {
 		return startDate;
 	}
 
-	public void setStartDate(Date startDate) {
+	public void setStartDate(LocalDate startDate) {
 		this.startDate = startDate;
 	}
-
-	public Date getEndDate() {
+	
+	public LocalDate getEndDate() {
 		return endDate;
 	}
 
-	public void setEndDate(Date stopDate) {
-		this.endDate = stopDate;
+
+	public void setEndDate(LocalDate endDate) {
+		this.endDate = endDate;
+	}
+
+	public LocalDateTime getStartTime() {
+		return startTime;
+	}
+
+	public void setStartTime(LocalDateTime startTime) {
+		this.startTime = startTime;
+	}
+
+	public LocalDateTime getEndTime() {
+		return endTime;
+	}
+
+	public void setEndTime(LocalDateTime endTime) {
+		this.endTime = endTime;
 	}
 
 	public Integer getFreq() {
@@ -113,4 +135,5 @@ public class Event {
 	public Person getMadeBy() {
 		return madeBy;
 	}
+	
 }
