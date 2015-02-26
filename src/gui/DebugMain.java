@@ -16,7 +16,7 @@ public class DebugMain {
 		LocalTime l2 = LocalTime.now();
 		LocalDateTime l3 = LocalDateTime.now();
 		ZonedDateTime l4 = ZonedDateTime.now();
-		CalendarMonthGUI c = new CalendarMonthGUI(root);
+		CalendarMonthGUI c = new CalendarMonthGUI(root,LocalDate.now());
 	}
 
 }

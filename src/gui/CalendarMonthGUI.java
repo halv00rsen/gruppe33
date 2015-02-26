@@ -1,6 +1,12 @@
 package gui;
 
 
+import javafx.animation.KeyFrame;
+import javafx.animation.KeyValue;
+import javafx.animation.PathTransition;
+import javafx.animation.Timeline;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.geometry.Pos;
 import javafx.scene.control.Label;
 import javafx.scene.input.MouseEvent;
@@ -16,18 +22,27 @@ import javafx.scene.layout.VBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
+import javafx.scene.shape.CubicCurveTo;
+import javafx.scene.shape.MoveTo;
+import javafx.scene.shape.Path;
 import javafx.scene.shape.Polygon;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.shape.TriangleMesh;
+import javafx.util.Duration;
 
+import java.time.LocalDate;
 import java.time.Month;
 import java.time.Year;
-import java.time.ZonedDateTime;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+
+import classes.Calendar;
+import classes.Event;
 
 public class CalendarMonthGUI extends Component{
-	ZonedDateTime date;
-	static int defaulCalHeight = 300;
-	static int defaulCalWidth = 300;
+	LocalDate date;
+	static int defaultCalHeight = 600;
+	static int defaultCalWidth = 700;
 	CalendarMonthBase mainCalendar;
 	CalendarMonthBase nextCalendar;
 	CalendarMonthBase lastCalendar;
@@ -38,32 +53,43 @@ public class CalendarMonthGUI extends Component{
 	Label l;
 	VBox box;
 	HBox hbox;
-	HBox animeBox;
-	StackPane clip;
+	VBox innerBox;
+
+	StackPane calCnt;
 	Pane dayBox;
 	Slider sliderLeft;
 	Slider sliderRight;
-	public CalendarMonthGUI(Pane parent) {
+	public CalendarMonthGUI(Pane parent,LocalDate date) {
 		super(parent);
-		updateDate(ZonedDateTime.now());
+		init(date);
 		
+	}
+	private void init(LocalDate date) {
+		updateDate(date);
 		
+		this.setTranslateX(0);
 		this.setPrefWidth(100);
 		this.setPrefHeight(500);
-
-		this.lastCalendar = new CalendarMonthBase(this.date.plusMonths(-1));
-		this.mainCalendar = new CalendarMonthBase(date);
-		this.nextCalendar = new CalendarMonthBase(this.date.plusMonths(1));
+		
+		this.lastCalendar = new CalendarMonthBase(this,this.date.plusMonths(-1));
+		this.mainCalendar = new CalendarMonthBase(this,date);
+		this.nextCalendar = new CalendarMonthBase(this,this.date.plusMonths(1));
 		
 		
-		
-		animeBox = new HBox();
-		animeBox.setAlignment(Pos.BASELINE_CENTER);
+		lastCalendar.setVisible(false);
+		nextCalendar.setVisible(false);
+		innerBox = new VBox();
+		l = new Label();
+		l.setText(date.getMonth().toString());
+		innerBox.getChildren().add(l);
 		//animeBox.getChildren().add(lastCalendar);
-		animeBox.getChildren().add(mainCalendar);
+		calCnt = new StackPane();
+		calCnt.getChildren().add(lastCalendar);
+		calCnt.getChildren().add(mainCalendar);
+		calCnt.getChildren().add(nextCalendar);
 		//animeBox.getChildren().add(nextCalendar);
-		clip = new StackPane();
-		clip.getChildren().add(animeBox);
+		
+		innerBox.getChildren().add(calCnt);
 //		clip.getChildren().add(clippingShape);
 //		clip.getChildren().get(0).setClip(clippingShape);
 		
@@ -71,14 +97,17 @@ public class CalendarMonthGUI extends Component{
 		sliderRight = new Slider(false);
 		hbox = new HBox();
 		hbox.getChildren().add(sliderLeft);
-		hbox.getChildren().add(clip);
+		hbox.getChildren().add(innerBox);
 		hbox.getChildren().add(sliderRight);
 		this.getChildren().add(hbox);
 		sliderRight.setOnMouseClicked(e -> nextSlide(e));
 		sliderLeft.setOnMouseClicked(e -> nextSlide(e));
+
+		
+		
 		
 	}
-	private void updateDate(ZonedDateTime d) {
+	private void updateDate(LocalDate d) {
 		this.date = d;
 		this.month = d.getMonth();
 		
@@ -89,37 +118,122 @@ public class CalendarMonthGUI extends Component{
 		}
 	}
 	private void nextSlide(MouseEvent e) {
-		int offset = 0;
+		Timeline timeline = new Timeline();
+		int animationTime = 500;
+//		mainCalendar.setVisible(false);
+//		lastCalendar.setVisible(false);
+//		nextCalendar.setVisible(false);
 		
-//		Rectangle clippingShape = new Rectangle();
-//		clippingShape.setWidth(CalendarMonthGUI.defaulCalWidth);
-//		clippingShape.setHeight(CalendarMonthGUI.defaulCalHeight);
-		
-//		
 		if(e.getSource().equals(sliderRight)){
-			offset = 1;
-			mainCalendar.setVisible(false);
-			mainCalendar = nextCalendar;
-			animeBox.getChildren().set(0,mainCalendar);
-			mainCalendar.setVisible(true);
+			nextCalendar.setVisible(true);
+			
+			
+			Rectangle clippingShape1 = new Rectangle();
+			clippingShape1.setHeight(CalendarMonthGUI.defaultCalHeight);
+			clippingShape1.setWidth(CalendarMonthGUI.defaultCalWidth);
 
-			updateDate( mainCalendar.getZonedDateTime());
+			clippingShape1.translateXProperty().set(0);
+			mainCalendar.setClip(clippingShape1);
+			mainCalendar.translateXProperty().set( 0 );
+			KeyValue kvPr1 = new KeyValue(clippingShape1.widthProperty(),  0 );
+			KeyValue kvPr2 = new KeyValue(clippingShape1.translateXProperty(), CalendarMonthGUI.defaultCalWidth);
+			KeyValue kvPr3 = new KeyValue(mainCalendar.translateXProperty(), -CalendarMonthGUI.defaultCalWidth);
+			
+			
+			Rectangle clippingShape2 = new Rectangle();
+			clippingShape2 = new Rectangle();
+			clippingShape2.setHeight(CalendarMonthGUI.defaultCalHeight);
+			clippingShape2.setWidth(CalendarMonthGUI.defaultCalWidth);
+			clippingShape2.translateXProperty().set( - CalendarMonthGUI.defaultCalWidth);
+			nextCalendar.setClip(clippingShape2);
+			nextCalendar.translateXProperty().set( CalendarMonthGUI.defaultCalWidth);
+			KeyValue kvNxt2 = new KeyValue(clippingShape2.translateXProperty(), 0);
+			KeyValue kvNxt3 = new KeyValue(nextCalendar.translateXProperty(), 0);
+			
+			KeyFrame kfDwn = new KeyFrame(Duration.millis(animationTime), kvPr1,kvPr2,kvPr3 ,kvNxt2,kvNxt3);
+			timeline.getKeyFrames().add(kfDwn);
+			timeline.setOnFinished( event -> shiftRight(event));
+			timeline.play();
+			
+			
 		}else if (e.getSource().equals(sliderLeft)){
-			offset = -1;
-			mainCalendar.setVisible(false);
-			mainCalendar = lastCalendar;
-			animeBox.getChildren().set(0,mainCalendar);
+			
 
-			mainCalendar.setVisible(true);
-			updateDate(mainCalendar.getZonedDateTime());
+			lastCalendar.setVisible(true);
+			
+			
+			Rectangle clippingShape1 = new Rectangle();
+			clippingShape1.setHeight(CalendarMonthGUI.defaultCalHeight);
+			clippingShape1.setWidth(CalendarMonthGUI.defaultCalWidth);
+			mainCalendar.setClip(clippingShape1);
+			mainCalendar.translateXProperty().set( 0 );
+			
+			KeyValue kvPr1 = new KeyValue(clippingShape1.widthProperty(),  0 );
+			KeyValue kvPr3 = new KeyValue(mainCalendar.translateXProperty(), CalendarMonthGUI.defaultCalWidth);
+			
+			Rectangle clippingShape2 = new Rectangle();
+			clippingShape2 = new Rectangle();
+			clippingShape2.setHeight(CalendarMonthGUI.defaultCalHeight);
+			clippingShape2.setWidth(0);
+			clippingShape2.translateXProperty().set(CalendarMonthGUI.defaultCalWidth);
+			lastCalendar.setClip(clippingShape2);
+			lastCalendar.translateXProperty().set(- CalendarMonthGUI.defaultCalWidth);
+			
+			KeyValue kvNxt1 = new KeyValue(clippingShape2.widthProperty(), CalendarMonthGUI.defaultCalWidth);
+			KeyValue kvNxt2 = new KeyValue(clippingShape2.translateXProperty(), 0);
+			KeyValue kvNxt3 = new KeyValue(lastCalendar.translateXProperty(), 0);
+			
+			
+			
+			
+			KeyFrame kfDwn = new KeyFrame(Duration.millis(animationTime), kvPr1,kvPr3 , kvNxt1,kvNxt2,kvNxt3);
+			timeline.getKeyFrames().add(kfDwn);
+
+			timeline.setOnFinished( event -> shiftLeft(event));
+			timeline.play();
+			
+			
 		}
-		this.lastCalendar = new CalendarMonthBase(this.date.plusMonths(-1));
-		this.mainCalendar = new CalendarMonthBase(date);
-		this.nextCalendar = new CalendarMonthBase(this.date.plusMonths(1));
 		
 
 	}
-	
+	private void shiftRight(ActionEvent e) {
+		lastCalendar = mainCalendar;
+		mainCalendar = nextCalendar;
+		updateDate(mainCalendar.getLocalDate());
+		nextCalendar = new CalendarMonthBase(this, this.date.plusMonths(1));
+		redrawCalendar();
+	}
+	private void shiftLeft(ActionEvent e) {
+		nextCalendar = mainCalendar;
+		mainCalendar = lastCalendar;
+		updateDate(mainCalendar.getLocalDate());
+		lastCalendar = new CalendarMonthBase(this,this.date.plusMonths(-1));
+		redrawCalendar();
+	}
+	private void redrawCalendar() {
+		mainCalendar.setVisible(false);
+		lastCalendar.setVisible(false);
+		nextCalendar.setVisible(false);
+		calCnt.getChildren().clear();
+		mainCalendar.setVisible(true);
+		if(calCnt.getChildren().size() < 3){
+			calCnt.getChildren().add(lastCalendar);
+			calCnt.getChildren().add(mainCalendar);
+			calCnt.getChildren().add(nextCalendar);
+		}else{
+			calCnt.getChildren().set(0,lastCalendar);
+			calCnt.getChildren().set(1,mainCalendar);
+			calCnt.getChildren().set(2,nextCalendar);
+		
+		}
+		l.setText(date.getMonth().toString());
+		innerBox.getChildren().set(0,l);
+		
+	}
+	public void highlight(LocalDate day){
+		init(day);
+	}
 
 	
 }

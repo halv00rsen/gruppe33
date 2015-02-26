@@ -20,12 +20,13 @@ import javafx.scene.shape.Polygon;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.shape.TriangleMesh;
 
+import java.time.LocalDate;
 import java.time.Month;
 import java.time.Year;
-import java.time.ZonedDateTime;
+import java.time.LocalDateTime;
 
 public class CalendarMonthBase extends Pane{
-	ZonedDateTime date;
+	LocalDate date;
 	Month month; 
 	int daysInMonth;
 	GridPane grid; 
@@ -33,13 +34,14 @@ public class CalendarMonthBase extends Pane{
 	Label l;
 	VBox box;
 	Pane dayBox;
-	public int calHeight = CalendarMonthGUI.defaulCalHeight;
-	public int calWidth = CalendarMonthGUI.defaulCalWidth;
-	public CalendarMonthBase(ZonedDateTime date) {
+	CalendarMonthGUI gui;
+	public int calHeight = CalendarMonthGUI.defaultCalHeight;
+	public int calWidth = CalendarMonthGUI.defaultCalWidth;
+	public CalendarMonthBase(CalendarMonthGUI gui, LocalDate date) {
 		date = date.minusDays(0);
 		this.date = date;
 		this.month = date.getMonth();
-		
+		this.gui = gui;
 		if( Year.isLeap(date.getYear())){
 			daysInMonth = month.maxLength();
 		}else{
@@ -49,35 +51,32 @@ public class CalendarMonthBase extends Pane{
 		
 		
 		generateGrid(date);
-		l = new Label();
-		l.setText(date.getMonth().toString());
+		setSize(calHeight, calWidth);
+		
 		box = new VBox();
-		box.getChildren().add(l);
 		box.getChildren().add(grid);
 		this.getChildren().add(box);
 		grid.setGridLinesVisible(true);
 
 	}
-	public ZonedDateTime getZonedDateTime(){
+	public LocalDate getLocalDate(){
 		return date;
 	}
-	private void generateGrid(ZonedDateTime date) {
+	private void generateGrid(LocalDate date) {
 		grid = new GridPane();
-		ZonedDateTime firstDayInMonth = date.minusDays(date.getDayOfMonth()-1);
+		LocalDate firstDayInMonth = date.minusDays(date.getDayOfMonth()-1);
 		int firstDayInMonthWeekday = firstDayInMonth.getDayOfWeek().getValue();	
 		if(firstDayInMonthWeekday == 1){
 			firstDayInMonthWeekday = 8;
 		}
-		ZonedDateTime firstDayInCalendar = firstDayInMonth.minusDays(firstDayInMonthWeekday-1);
-		ZonedDateTime dayLooper = firstDayInCalendar;
+		LocalDate firstDayInCalendar = firstDayInMonth.minusDays(firstDayInMonthWeekday-1);
+		LocalDate dayLooper = firstDayInCalendar;
 		int x = 0;
 		
-		System.out.println(firstDayInMonthWeekday-1);
 		int y = 0;
 		for (int i = 0; i < firstDayInMonthWeekday-1; i++) {
 			
-			CalendarDayBox thisBox = new CalendarDayBox(dayLooper,null);
-			thisBox.setStyle("-fx-background-color: #DDD");
+			CalendarDayBox thisBox = new CalendarDayBox(gui,dayLooper,null,true);
 			grid.add(thisBox,x,y);
 			x += 1;
 			if(x % 7 == 0){
@@ -88,7 +87,7 @@ public class CalendarMonthBase extends Pane{
 		}
 		
 		for (int i = 0; i < daysInMonth; i++) {
-			CalendarDayBox thisBox = new CalendarDayBox(dayLooper,null);
+			CalendarDayBox thisBox = new CalendarDayBox(gui,dayLooper,null,false);
 			grid.add(thisBox,x,y);
 			dayLooper = dayLooper.plusDays(1);
 			x += 1;
@@ -98,9 +97,8 @@ public class CalendarMonthBase extends Pane{
 			}
 		}
 		for (int i = firstDayInMonthWeekday+daysInMonth-1; i < 7*6; i++) {
-			CalendarDayBox thisBox = new CalendarDayBox(dayLooper,null);
+			CalendarDayBox thisBox = new CalendarDayBox(gui,dayLooper,null,true);
 			grid.add(thisBox,x,y);
-			thisBox.setStyle("-fx-background-color: #DDD");
 			dayLooper = dayLooper.plusDays(1);
 			x += 1;
 			if(x % 7 == 0){
@@ -113,9 +111,9 @@ public class CalendarMonthBase extends Pane{
 		this.calHeight = calHeight;
 		this.calWidth = calWidth;
 		for (int i = 0; i < grid.getChildren().size(); i++) {
-			((CalendarDayBox)grid.getChildren().get(i)).setSize(calHeight / 5, calWidth / 7);
+			((CalendarDayBox)grid.getChildren().get(i)).setSize(calHeight / 6, calWidth / 7);
 		}
 	}
-	
+
 	
 }
