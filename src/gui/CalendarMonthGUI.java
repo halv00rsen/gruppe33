@@ -54,6 +54,8 @@ public class CalendarMonthGUI extends Component{
 	VBox box;
 	HBox hbox;
 	VBox innerBox;
+	VBox header;
+	HBox dayTitles;
 
 	StackPane calCnt;
 	Pane dayBox;
@@ -79,9 +81,28 @@ public class CalendarMonthGUI extends Component{
 		lastCalendar.setVisible(false);
 		nextCalendar.setVisible(false);
 		innerBox = new VBox();
+		header = new VBox();
 		l = new Label();
 		l.setText(date.getMonth().toString());
-		innerBox.getChildren().add(l);
+		dayTitles = new HBox(0.595*CalendarMonthGUI.defaultCalWidth/7);
+		Label mon = new Label();
+		Label tus = new Label();
+		Label wed = new Label();
+		Label tur = new Label();
+		Label fri = new Label();
+		Label sat = new Label();
+		Label sun = new Label();
+		mon.setText("Mandag");
+		tus.setText("Tirsdag");
+		wed.setText("Onsdag");
+		tur.setText("Torsdag");
+		fri.setText("Fredag");
+		sat.setText("Lørdag");
+		sun.setText("Søndag");
+		dayTitles.getChildren().addAll(mon,tus,wed,tur,fri,sat,sun);
+		header.getChildren().add(l);
+		header.getChildren().add(dayTitles);
+		innerBox.getChildren().add(header);
 		//animeBox.getChildren().add(lastCalendar);
 		calCnt = new StackPane();
 		calCnt.getChildren().add(lastCalendar);
@@ -228,7 +249,6 @@ public class CalendarMonthGUI extends Component{
 		
 		}
 		l.setText(date.getMonth().toString());
-		innerBox.getChildren().set(0,l);
 		
 	}
 	public void highlight(LocalDate day){
