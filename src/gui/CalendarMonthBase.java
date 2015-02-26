@@ -76,7 +76,8 @@ public class CalendarMonthBase extends Pane{
 		int y = 0;
 		for (int i = 0; i < firstDayInMonthWeekday-1; i++) {
 			
-			CalendarDayBox thisBox = new CalendarDayBox(gui,dayLooper,null,true);
+			CalendarDayBox thisBox = new CalendarDayBox(gui,dayLooper,null,false,true);
+			thisBox.setIsLowerDisabled(true);
 			grid.add(thisBox,x,y);
 			x += 1;
 			if(x % 7 == 0){
@@ -87,7 +88,7 @@ public class CalendarMonthBase extends Pane{
 		}
 		
 		for (int i = 0; i < daysInMonth; i++) {
-			CalendarDayBox thisBox = new CalendarDayBox(gui,dayLooper,null,false);
+			CalendarDayBox thisBox = new CalendarDayBox(gui,dayLooper,null,false,false);
 			grid.add(thisBox,x,y);
 			dayLooper = dayLooper.plusDays(1);
 			x += 1;
@@ -97,7 +98,8 @@ public class CalendarMonthBase extends Pane{
 			}
 		}
 		for (int i = firstDayInMonthWeekday+daysInMonth-1; i < 7*6; i++) {
-			CalendarDayBox thisBox = new CalendarDayBox(gui,dayLooper,null,true);
+			CalendarDayBox thisBox = new CalendarDayBox(gui,dayLooper,null,true,false);
+			thisBox.setIsUpperDisabled(true);
 			grid.add(thisBox,x,y);
 			dayLooper = dayLooper.plusDays(1);
 			x += 1;

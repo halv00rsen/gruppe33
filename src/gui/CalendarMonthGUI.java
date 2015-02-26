@@ -81,7 +81,7 @@ public class CalendarMonthGUI extends Component{
 		lastCalendar.setVisible(false);
 		nextCalendar.setVisible(false);
 		innerBox = new VBox();
-		header = new VBox();
+		header = new VBox();            
 		l = new Label();
 		l.setText(date.getMonth().toString());
 		dayTitles = new HBox(0.595*CalendarMonthGUI.defaultCalWidth/7);
@@ -123,7 +123,6 @@ public class CalendarMonthGUI extends Component{
 		this.getChildren().add(hbox);
 		sliderRight.setOnMouseClicked(e -> nextSlide(e));
 		sliderLeft.setOnMouseClicked(e -> nextSlide(e));
-
 		
 		
 		
@@ -139,84 +138,88 @@ public class CalendarMonthGUI extends Component{
 		}
 	}
 	private void nextSlide(MouseEvent e) {
-		Timeline timeline = new Timeline();
-		int animationTime = 500;
-//		mainCalendar.setVisible(false);
-//		lastCalendar.setVisible(false);
-//		nextCalendar.setVisible(false);
-		
-		if(e.getSource().equals(sliderRight)){
-			nextCalendar.setVisible(true);
-			
-			
-			Rectangle clippingShape1 = new Rectangle();
-			clippingShape1.setHeight(CalendarMonthGUI.defaultCalHeight);
-			clippingShape1.setWidth(CalendarMonthGUI.defaultCalWidth);
 
-			clippingShape1.translateXProperty().set(0);
-			mainCalendar.setClip(clippingShape1);
-			mainCalendar.translateXProperty().set( 0 );
-			KeyValue kvPr1 = new KeyValue(clippingShape1.widthProperty(),  0 );
-			KeyValue kvPr2 = new KeyValue(clippingShape1.translateXProperty(), CalendarMonthGUI.defaultCalWidth);
-			KeyValue kvPr3 = new KeyValue(mainCalendar.translateXProperty(), -CalendarMonthGUI.defaultCalWidth);
-			
-			
-			Rectangle clippingShape2 = new Rectangle();
-			clippingShape2 = new Rectangle();
-			clippingShape2.setHeight(CalendarMonthGUI.defaultCalHeight);
-			clippingShape2.setWidth(CalendarMonthGUI.defaultCalWidth);
-			clippingShape2.translateXProperty().set( - CalendarMonthGUI.defaultCalWidth);
-			nextCalendar.setClip(clippingShape2);
-			nextCalendar.translateXProperty().set( CalendarMonthGUI.defaultCalWidth);
-			KeyValue kvNxt2 = new KeyValue(clippingShape2.translateXProperty(), 0);
-			KeyValue kvNxt3 = new KeyValue(nextCalendar.translateXProperty(), 0);
-			
-			KeyFrame kfDwn = new KeyFrame(Duration.millis(animationTime), kvPr1,kvPr2,kvPr3 ,kvNxt2,kvNxt3);
-			timeline.getKeyFrames().add(kfDwn);
-			timeline.setOnFinished( event -> shiftRight(event));
-			timeline.play();
+		if(e.getSource().equals(sliderRight)){
+			slideRight();
 			
 			
 		}else if (e.getSource().equals(sliderLeft)){
 			
-
-			lastCalendar.setVisible(true);
-			
-			
-			Rectangle clippingShape1 = new Rectangle();
-			clippingShape1.setHeight(CalendarMonthGUI.defaultCalHeight);
-			clippingShape1.setWidth(CalendarMonthGUI.defaultCalWidth);
-			mainCalendar.setClip(clippingShape1);
-			mainCalendar.translateXProperty().set( 0 );
-			
-			KeyValue kvPr1 = new KeyValue(clippingShape1.widthProperty(),  0 );
-			KeyValue kvPr3 = new KeyValue(mainCalendar.translateXProperty(), CalendarMonthGUI.defaultCalWidth);
-			
-			Rectangle clippingShape2 = new Rectangle();
-			clippingShape2 = new Rectangle();
-			clippingShape2.setHeight(CalendarMonthGUI.defaultCalHeight);
-			clippingShape2.setWidth(0);
-			clippingShape2.translateXProperty().set(CalendarMonthGUI.defaultCalWidth);
-			lastCalendar.setClip(clippingShape2);
-			lastCalendar.translateXProperty().set(- CalendarMonthGUI.defaultCalWidth);
-			
-			KeyValue kvNxt1 = new KeyValue(clippingShape2.widthProperty(), CalendarMonthGUI.defaultCalWidth);
-			KeyValue kvNxt2 = new KeyValue(clippingShape2.translateXProperty(), 0);
-			KeyValue kvNxt3 = new KeyValue(lastCalendar.translateXProperty(), 0);
-			
-			
-			
-			
-			KeyFrame kfDwn = new KeyFrame(Duration.millis(animationTime), kvPr1,kvPr3 , kvNxt1,kvNxt2,kvNxt3);
-			timeline.getKeyFrames().add(kfDwn);
-
-			timeline.setOnFinished( event -> shiftLeft(event));
-			timeline.play();
+			slideLeft();
 			
 			
 		}
 		
 
+	}
+	public void slideLeft() {
+		Timeline timeline = new Timeline();
+		int animationTime = 500;
+		lastCalendar.setVisible(true);
+		
+		
+		Rectangle clippingShape1 = new Rectangle();
+		clippingShape1.setHeight(CalendarMonthGUI.defaultCalHeight);
+		clippingShape1.setWidth(CalendarMonthGUI.defaultCalWidth);
+		mainCalendar.setClip(clippingShape1);
+		mainCalendar.translateXProperty().set( 0 );
+		
+		KeyValue kvPr1 = new KeyValue(clippingShape1.widthProperty(),  0 );
+		KeyValue kvPr3 = new KeyValue(mainCalendar.translateXProperty(), CalendarMonthGUI.defaultCalWidth);
+		
+		Rectangle clippingShape2 = new Rectangle();
+		clippingShape2 = new Rectangle();
+		clippingShape2.setHeight(CalendarMonthGUI.defaultCalHeight);
+		clippingShape2.setWidth(0);
+		clippingShape2.translateXProperty().set(CalendarMonthGUI.defaultCalWidth);
+		lastCalendar.setClip(clippingShape2);
+		lastCalendar.translateXProperty().set(- CalendarMonthGUI.defaultCalWidth);
+		
+		KeyValue kvNxt1 = new KeyValue(clippingShape2.widthProperty(), CalendarMonthGUI.defaultCalWidth);
+		KeyValue kvNxt2 = new KeyValue(clippingShape2.translateXProperty(), 0);
+		KeyValue kvNxt3 = new KeyValue(lastCalendar.translateXProperty(), 0);
+		
+		
+		
+		
+		KeyFrame kfDwn = new KeyFrame(Duration.millis(animationTime), kvPr1,kvPr3 , kvNxt1,kvNxt2,kvNxt3);
+		timeline.getKeyFrames().add(kfDwn);
+
+		timeline.setOnFinished( event -> shiftLeft(event));
+		timeline.play();
+	}
+	public void slideRight() {
+		Timeline timeline = new Timeline();
+		int animationTime = 500;
+		nextCalendar.setVisible(true);
+		
+		
+		Rectangle clippingShape1 = new Rectangle();
+		clippingShape1.setHeight(CalendarMonthGUI.defaultCalHeight);
+		clippingShape1.setWidth(CalendarMonthGUI.defaultCalWidth);
+
+		clippingShape1.translateXProperty().set(0);
+		mainCalendar.setClip(clippingShape1);
+		mainCalendar.translateXProperty().set( 0 );
+		KeyValue kvPr1 = new KeyValue(clippingShape1.widthProperty(),  0 );
+		KeyValue kvPr2 = new KeyValue(clippingShape1.translateXProperty(), CalendarMonthGUI.defaultCalWidth);
+		KeyValue kvPr3 = new KeyValue(mainCalendar.translateXProperty(), -CalendarMonthGUI.defaultCalWidth);
+		
+		
+		Rectangle clippingShape2 = new Rectangle();
+		clippingShape2 = new Rectangle();
+		clippingShape2.setHeight(CalendarMonthGUI.defaultCalHeight);
+		clippingShape2.setWidth(CalendarMonthGUI.defaultCalWidth);
+		clippingShape2.translateXProperty().set( - CalendarMonthGUI.defaultCalWidth);
+		nextCalendar.setClip(clippingShape2);
+		nextCalendar.translateXProperty().set( CalendarMonthGUI.defaultCalWidth);
+		KeyValue kvNxt2 = new KeyValue(clippingShape2.translateXProperty(), 0);
+		KeyValue kvNxt3 = new KeyValue(nextCalendar.translateXProperty(), 0);
+		
+		KeyFrame kfDwn = new KeyFrame(Duration.millis(animationTime), kvPr1,kvPr2,kvPr3 ,kvNxt2,kvNxt3);
+		timeline.getKeyFrames().add(kfDwn);
+		timeline.setOnFinished( event -> shiftRight(event));
+		timeline.play();
 	}
 	private void shiftRight(ActionEvent e) {
 		lastCalendar = mainCalendar;

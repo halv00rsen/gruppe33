@@ -18,22 +18,23 @@ public class CalendarDayBox extends Pane{
 	LocalDate date;
 	Label day;
 	String backupStyle;
-	boolean disabled;
+	boolean isUpperDisabled = false;
+	boolean isLowerDisabled = false;
 	public int calHeight = 100;
 	public int calWidth = 100;
 	CalendarMonthGUI gui;
-	public CalendarDayBox(CalendarMonthGUI gui, LocalDate date,ArrayList<Event> events, boolean isDisabled){
-//		this.gui = gui;
-		this.disabled = false;
+	public CalendarDayBox(CalendarMonthGUI gui, LocalDate date,ArrayList<Event> events, boolean isUpperDisabled, boolean isLowerDisabled){
+		this.gui = gui;
 		this.date = date;
-		this.disabled = isDisabled;
+		this.isLowerDisabled = isLowerDisabled;
+		this.isUpperDisabled = isUpperDisabled;
 		this.dayOfMonth = date.getDayOfMonth();
 		this.month = date.getMonthValue();
 //		this.dayOfMonth = 31;
 		this.setPrefWidth(calWidth);
 		this.setPrefHeight(calHeight);
 		//Add red color if sunday
-		if(disabled){
+		if(isUpperDisabled || isLowerDisabled){
 			this.setStyle("-fx-background-color: #D0D0D0");
 			
 		}else if(date.getDayOfWeek() == DayOfWeek.SUNDAY){
@@ -45,7 +46,7 @@ public class CalendarDayBox extends Pane{
 		}
 		
 		
-		if(date.equals(LocalDate.now()) && disabled){
+		if(date.equals(LocalDate.now()) && (isLowerDisabled || isUpperDisabled)){
 			this.setStyle("-fx-background-color: #E0E0D0");
 			
 		}else if(date.equals(LocalDate.now())){
@@ -53,12 +54,7 @@ public class CalendarDayBox extends Pane{
 			this.setStyle("-fx-background-color: #FFFFDD");
 		
 		}
-		boolean isInNextMonth = date.plusDays(9).getMonthValue()>LocalDate.now().getMonthValue();
-		boolean isNotLongAway = LocalDate.now().minusDays(29).isBefore(date);
-		if( isNotLongAway && isInNextMonth && date.isBefore(LocalDate.now()) && disabled){
-			
-			
-		}else if ( date.isBefore(LocalDate.now()) ){
+		if ( date.isBefore(LocalDate.now())){
 			Main.applyContrast(this,0.7,def);
 		}
 		day = new Label();
@@ -69,7 +65,12 @@ public class CalendarDayBox extends Pane{
 		this.setOnMouseExited(e -> hoverOff(e));
 	}
 
-
+	public void setIsUpperDisabled(boolean t){
+		this.isUpperDisabled = t;
+	}
+	public void setIsLowerDisabled(boolean t){
+		this.isLowerDisabled = t;
+	}
 	private void hoverOff(MouseEvent e) {
 		this.setStyle(backupStyle);
 	}
@@ -87,8 +88,16 @@ public class CalendarDayBox extends Pane{
 	
 
 	private LocalDate onAction(MouseEvent e) {
-		this.setStyle("-fx-background-color: #00E0D0");
-		gui.highlight(this.date);
+		if(isUpperDisabled){
+			gui.slideRight();
+		}else if(isLowerDisabled){
+			gui.slideLeft();
+		}else{
+
+			this.setStyle("-fx-background-color: #00E0D0");
+//			gui.highlight(this.date);
+			
+		}
 		return null;
 	}
 	private LocalDate getLocalDate() {
