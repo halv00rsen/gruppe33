@@ -24,8 +24,10 @@ import java.time.LocalDate;
 import java.time.Month;
 import java.time.Year;
 import java.time.LocalDateTime;
+import java.util.HashMap;
 
 public class CalendarMonthBase extends Pane{
+	HashMap<LocalDate, CalendarDayBox> datesHash = new HashMap<LocalDate, CalendarDayBox>();
 	LocalDate date;
 	Month month; 
 	int daysInMonth;
@@ -79,6 +81,7 @@ public class CalendarMonthBase extends Pane{
 			CalendarDayBox thisBox = new CalendarDayBox(gui,dayLooper,null,false,true);
 			thisBox.setIsLowerDisabled(true);
 			grid.add(thisBox,x,y);
+			datesHash.put(dayLooper, thisBox);
 			x += 1;
 			if(x % 7 == 0){
 				y += 1;
@@ -90,7 +93,10 @@ public class CalendarMonthBase extends Pane{
 		for (int i = 0; i < daysInMonth; i++) {
 			CalendarDayBox thisBox = new CalendarDayBox(gui,dayLooper,null,false,false);
 			grid.add(thisBox,x,y);
+
+			datesHash.put(dayLooper, thisBox);
 			dayLooper = dayLooper.plusDays(1);
+
 			x += 1;
 			if(x % 7 == 0){
 				y += 1;
@@ -101,6 +107,8 @@ public class CalendarMonthBase extends Pane{
 			CalendarDayBox thisBox = new CalendarDayBox(gui,dayLooper,null,true,false);
 			thisBox.setIsUpperDisabled(true);
 			grid.add(thisBox,x,y);
+
+			datesHash.put(dayLooper, thisBox);
 			dayLooper = dayLooper.plusDays(1);
 			x += 1;
 			if(x % 7 == 0){
@@ -117,5 +125,10 @@ public class CalendarMonthBase extends Pane{
 		}
 	}
 
-	
+	public CalendarDayBox getDateBox(LocalDate date){
+		return datesHash.get(date);
+	};
+	public String toString(){
+		return this.date.getMonth().toString();
+	}
 }

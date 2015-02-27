@@ -18,6 +18,10 @@ public class CalendarDayBox extends Pane{
 	LocalDate date;
 	Label day;
 	String backupStyle;
+	String defaultStyle;
+	String highLightStyle = "-fx-background-color: #00FF88";
+	boolean isHighLighted = false;
+
 	boolean isUpperDisabled = false;
 	boolean isLowerDisabled = false;
 	public int calHeight = 100;
@@ -35,28 +39,31 @@ public class CalendarDayBox extends Pane{
 		this.setPrefHeight(calHeight);
 		//Add red color if sunday
 		if(isUpperDisabled || isLowerDisabled){
-			this.setStyle("-fx-background-color: #D0D0D0");
+			this.defaultStyle = "-fx-background-color: #D0D0D0";
 			
 		}else if(date.getDayOfWeek() == DayOfWeek.SUNDAY){
 			
-			this.setStyle("-fx-background-color: #FFAAAA");
+			this.defaultStyle = "-fx-background-color: #FFAAAA";
 			
 		}else{
-			this.setStyle("-fx-background-color: #FFFFFF");
+			this.defaultStyle = "-fx-background-color: #FFFFFF";
 		}
 		
 		
 		if(date.equals(LocalDate.now()) && (isLowerDisabled || isUpperDisabled)){
-			this.setStyle("-fx-background-color: #E0E0D0");
+			this.defaultStyle = "-fx-background-color: #E0E0D0";
 			
 		}else if(date.equals(LocalDate.now())){
 			
-			this.setStyle("-fx-background-color: #FFFFDD");
+			this.defaultStyle = "-fx-background-color: #FFFFDD";
 		
 		}
-		if ( date.isBefore(LocalDate.now())){
+		this.setStyle(defaultStyle);
+		if ( date.isBefore(LocalDate.now() )){
 			Main.applyContrast(this,0.7,def);
 		}
+		this.setStyle(this.getStyle());
+		this.defaultStyle = this.getStyle();
 		day = new Label();
 		day.setText("" + dayOfMonth);
 		this.getChildren().add(day);
@@ -78,26 +85,40 @@ public class CalendarDayBox extends Pane{
 
 	private void hoverOn(MouseEvent e) {
 		backupStyle = this.getStyle();
-		System.out.println(backupStyle);
+//		System.out.println(backupStyle);
 		int[] a = {0,0,0};
 		Main.applyContrast(this, 0.95,a);
 	}
 
+	public boolean isUpperDisabled() {
+		return isUpperDisabled;
+	}
 
+	public boolean isLowerDisabled() {
+		return isLowerDisabled;
+	}
 	
-	
+	public boolean isHighLighted() {
+		return isHighLighted;
+	}
+
+	public void setHighlighted(boolean isHighLighted) {
+		this.isHighLighted = isHighLighted;
+		if(isHighLighted){
+			backupStyle = highLightStyle;
+			this.setStyle(highLightStyle);
+		}else{
+			backupStyle = defaultStyle;
+			this.setStyle(defaultStyle);
+		}
+		
+	}	
 
 	private LocalDate onAction(MouseEvent e) {
-		if(isUpperDisabled){
-			gui.slideRight();
-		}else if(isLowerDisabled){
-			gui.slideLeft();
-		}else{
-
-			this.setStyle("-fx-background-color: #00E0D0");
-//			gui.highlight(this.date);
+		
+		gui.highlight(date);
+		
 			
-		}
 		return null;
 	}
 	private LocalDate getLocalDate() {

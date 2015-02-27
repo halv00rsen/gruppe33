@@ -42,13 +42,14 @@ public class Main extends Application {
 		String style = n.getStyle();
 		
 		style = style.substring(style.length()-6,style.length());
-		System.out.println(style);
 		int[] hex = {Integer.parseInt(style.substring(0,2),16),Integer.parseInt(style.substring(2,4),16),Integer.parseInt(style.substring(4,6),16)};
 		style = "";
 		for (int i = 0; i < 3; i++) {
 			hex[i] = (int) (hex[i] * amount) + addColor[i];
 			hex[i] = hex[i] > 255 ? 255 : hex[i]; 
-			style = style + Integer.toHexString( hex[i]);
+			String string = Integer.toHexString( hex[i]);
+			string = string.equals("0") ?  "00" : string;
+			style = style + string;
 		}
 		n.setStyle("-fx-background-color: #" + style);
 		}

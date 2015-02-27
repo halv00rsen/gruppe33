@@ -140,19 +140,23 @@ public class CalendarMonthGUI extends Component{
 	private void nextSlide(MouseEvent e) {
 
 		if(e.getSource().equals(sliderRight)){
-			slideRight();
 			
+			Timeline timeline = slideRightAnimation();
+			timeline.setOnFinished( event -> shiftRight(event));
+			timeline.play();
 			
 		}else if (e.getSource().equals(sliderLeft)){
 			
-			slideLeft();
 			
+			Timeline timeline = slideLeftAnimation();
+			timeline.setOnFinished( event -> shiftLeft(event));
+			timeline.play();
 			
 		}
 		
 
 	}
-	public void slideLeft() {
+	public Timeline slideLeftAnimation() {
 		Timeline timeline = new Timeline();
 		int animationTime = 500;
 		lastCalendar.setVisible(true);
@@ -185,14 +189,12 @@ public class CalendarMonthGUI extends Component{
 		KeyFrame kfDwn = new KeyFrame(Duration.millis(animationTime), kvPr1,kvPr3 , kvNxt1,kvNxt2,kvNxt3);
 		timeline.getKeyFrames().add(kfDwn);
 
-		timeline.setOnFinished( event -> shiftLeft(event));
-		timeline.play();
+		return timeline;
 	}
-	public void slideRight() {
+	public Timeline slideRightAnimation() {
 		Timeline timeline = new Timeline();
 		int animationTime = 500;
 		nextCalendar.setVisible(true);
-		
 		
 		Rectangle clippingShape1 = new Rectangle();
 		clippingShape1.setHeight(CalendarMonthGUI.defaultCalHeight);
@@ -204,7 +206,6 @@ public class CalendarMonthGUI extends Component{
 		KeyValue kvPr1 = new KeyValue(clippingShape1.widthProperty(),  0 );
 		KeyValue kvPr2 = new KeyValue(clippingShape1.translateXProperty(), CalendarMonthGUI.defaultCalWidth);
 		KeyValue kvPr3 = new KeyValue(mainCalendar.translateXProperty(), -CalendarMonthGUI.defaultCalWidth);
-		
 		
 		Rectangle clippingShape2 = new Rectangle();
 		clippingShape2 = new Rectangle();
@@ -218,8 +219,7 @@ public class CalendarMonthGUI extends Component{
 		
 		KeyFrame kfDwn = new KeyFrame(Duration.millis(animationTime), kvPr1,kvPr2,kvPr3 ,kvNxt2,kvNxt3);
 		timeline.getKeyFrames().add(kfDwn);
-		timeline.setOnFinished( event -> shiftRight(event));
-		timeline.play();
+		return timeline;
 	}
 	private void shiftRight(ActionEvent e) {
 		lastCalendar = mainCalendar;
@@ -252,11 +252,44 @@ public class CalendarMonthGUI extends Component{
 		
 		}
 		l.setText(date.getMonth().toString());
+		System.out.println(mainCalendar);
 		
 	}
-	public void highlight(LocalDate day){
-		init(day);
+	CalendarDayBox boxHighlighted;
+	public void highlight(LocalDate date){
+		if(boxHighlighted != null){
+			boxHighlighted.setHighlighted(false);
+		}
+		CalendarDayBox a = mainCalendar.getDateBox(date);
+		System.out.println(mainCalendar);
+		if(a.isUpperDisabled() == true){
+			Timeline timeline = slideRightAnimation();
+			timeline.setOnFinished( event -> shiftRightAndHighlight(event,date));
+			timeline.play();
+		}else if(a.isLowerDisabled() == true){
+			Timeline timeline = slideLeftAnimation();
+			timeline.setOnFinished( event -> shiftLeftAndHighlight(event,date));
+			timeline.play();
+		}else{
+			highlightContinue(date);
+		}
+		
+		
 	}
-
+	private void shiftLeftAndHighlight(ActionEvent event,LocalDate date) {
+		shiftLeft(event);
+		highlightContinue(date);
+	}
+	private void shiftRightAndHighlight(ActionEvent event,LocalDate date) {
+		shiftRight(event);
+		highlightContinue(date);
+	}
+	private void highlightContinue(LocalDate date){
+		System.out.println(mainCalendar);
+		CalendarDayBox a = mainCalendar.getDateBox(date);
+		boxHighlighted = a;
+		a.setHighlighted(true);
+		a.requestFocus();
+	}
 	
 }
