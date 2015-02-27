@@ -12,11 +12,12 @@ public class DebugMain {
 	 * Kan tulles med så mye man ønsker, ikke en del av programmet.
 	 */
 	public DebugMain(Pane root) {
-		LocalDate l1 = LocalDate.now();
-		LocalTime l2 = LocalTime.now();
-		LocalDateTime l3 = LocalDateTime.now();
-		ZonedDateTime l4 = ZonedDateTime.now();
+		
+		
+		
+		
 		CalendarMonthGUI c = new CalendarMonthGUI(root,LocalDate.now());
+		root.getChildren().add(c);
 	}
 
 }
