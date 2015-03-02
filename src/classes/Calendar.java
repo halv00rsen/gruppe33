@@ -44,6 +44,7 @@ public abstract class Calendar {
 	
 	
 	
+	
 	public ArrayList<Event> getEventsByDay(LocalDate date) {
 		LocalTime early = LocalTime.of(00, 00, 00);
 		LocalTime late = LocalTime.of(23, 59, 59);

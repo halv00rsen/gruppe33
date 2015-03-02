@@ -28,6 +28,11 @@ public class Program {
 		
 	}
 	
+	public void deleteEvent(){
+		
+		
+	}
+	
 	public void requestEvent(int eventId){
 		
 	}
