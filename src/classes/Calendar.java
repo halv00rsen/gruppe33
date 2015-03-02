@@ -7,7 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-public class Calendar {
+public abstract class Calendar {
 	
 	private final List<Event> events;
 	

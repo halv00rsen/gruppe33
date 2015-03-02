@@ -1,5 +1,7 @@
 package gui;
 	
+import classes.Program;
+
 import com.sun.javafx.geom.transform.BaseTransform.Degree;
 
 import javafx.application.Application;
@@ -16,6 +18,12 @@ public class Main extends Application {
 	public final static int SCREENHEIGHT = 1000;
 	public final static int SCREENWIDTH = 600;
 	public final static Pane root = new Pane();
+	private final Program program;
+	
+	public Main(){
+		program = new Program();
+
+	}
 	
 	@Override
 	public void start(Stage primaryStage) {
@@ -31,7 +39,6 @@ public class Main extends Application {
 	}
 	
 	public void init(BorderPane p){
-		
 		
 	}
 	
