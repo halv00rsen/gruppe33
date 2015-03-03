@@ -15,13 +15,14 @@ import javafx.stage.Stage;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.layout.Pane;
+import javafx.scene.text.Font;
 
 
 public class Main extends Application implements ProgramListener{
 	public final static int SCREENHEIGHT = 1000;
 	public final static int SCREENWIDTH = 600;
 	public final static Pane root = new Pane();
-	
+	public final static Font header1 = new Font("Calibri", 30);
 	private final Program program;
 	private Window currentWindow;
 	
