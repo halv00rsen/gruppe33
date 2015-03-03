@@ -31,7 +31,7 @@ public class Main extends Application implements ProgramListener{
 		program.addListener(this);
 		Window loginScreen = new LoginScreen();
 		openNewWindow(loginScreen);
-		
+		//
 	}
 	
 	@Override
