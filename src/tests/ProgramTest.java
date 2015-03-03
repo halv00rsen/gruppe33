@@ -6,7 +6,6 @@ import classes.Calendar;
 import classes.Event;
 import classes.Group;
 import classes.Message;
-import classes.Person;
 import classes.Program;
 import classes.ProgramListener;
 import classes.Room;
