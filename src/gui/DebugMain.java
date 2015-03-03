@@ -37,7 +37,7 @@ public class DebugMain {
 		CalendarMonthGUI c = new CalendarMonthGUI(root,LocalDate.now(),events);
 		LoginGUI l = new LoginGUI(root);
 		
-		root.getChildren().add(c);
+		root.getChildren().add(l);
 	}
 
 }
