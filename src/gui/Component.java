@@ -10,6 +10,7 @@ public abstract class Component extends Pane{
 	public Component(Pane parent){
 		this.parent = parent;
 		
+		
 	}
 	/***
 	 * fjerner synlighet og fjerner seg selv fra parent
