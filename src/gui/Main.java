@@ -1,6 +1,4 @@
 package gui;
-import components.*;
-import windows.*;	
 import java.util.List;
 
 import windows.LoginScreen;
@@ -12,16 +10,10 @@ import classes.ProgramListener;
 import classes.Room;
 import classes.View;
 
-import com.sun.javafx.geom.transform.BaseTransform.Degree;
-
-import gui.DebugMain;
 import javafx.application.Application;
 import javafx.stage.Stage;
 import javafx.scene.Node;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Pane;
 
 
