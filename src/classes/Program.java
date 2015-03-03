@@ -29,14 +29,14 @@ public class Program {
 		//add events to server
 		for (Calendar cals: cal)
 			cals.addEvent(event);
-		callSuccess(Message.EventAdded);
+		callMessage(Message.EventAdded);
 	}
 	
 	public void deleteEvent(Event event, Calendar...cals){
 		//remove event from database/server
 		for (Calendar cal: cals)
 			cal.removeEvent(event);
-		callSuccess(Message.EventDeleted);
+		callMessage(Message.EventDeleted);
 	}
 	
 	public void requestEvent(int eventId){
@@ -78,11 +78,11 @@ public class Program {
 	
 	private void updateCalendarListeners(){
 		for (ProgramListener l: listeners)
-			l.updateCalendar(new ArrayList<Calendar>(activeCalendars));
+			l.updateCalendar(new ArrayList<Calendar>(activeCalendars), currentView);
 	}
 	
 	
-	private void callSuccess(Message msg){
+	private void callMessage(Message msg){
 		for (ProgramListener l : listeners)
 			l.sendMessage(msg);
 	}
@@ -101,12 +101,12 @@ public class Program {
 	}
 	
 	public void changeView(View view){
-		if (view == currentView)
+		if (currentView == view)
 			return;
 		currentView = view;
-		for (ProgramListener l : listeners)
-			l.changeView(view);
+		updateCalendarListeners();
 	}
+	
 	
 	public void personLogin(String username, String password){
 		if (username == null || password == null || isLoggedIn()){

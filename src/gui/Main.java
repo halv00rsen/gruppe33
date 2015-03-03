@@ -1,6 +1,14 @@
 package gui;
 	
+import java.util.List;
+
+import classes.Calendar;
+import classes.Group;
+import classes.Message;
 import classes.Program;
+import classes.ProgramListener;
+import classes.Room;
+import classes.View;
 
 import com.sun.javafx.geom.transform.BaseTransform.Degree;
 
@@ -14,15 +22,18 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Pane;
 
 
-public class Main extends Application {
+public class Main extends Application implements ProgramListener{
 	public final static int SCREENHEIGHT = 1000;
 	public final static int SCREENWIDTH = 600;
 	public final static Pane root = new Pane();
+	
 	private final Program program;
+	private Window currentWindow;
 	
 	public Main(){
 		program = new Program();
-
+		program.addListener(this);
+		
 	}
 	
 	@Override
@@ -30,7 +41,6 @@ public class Main extends Application {
 		try {
 			DebugMain debuglauncher = new DebugMain(root);
 			Scene scene = new Scene(root,SCREENHEIGHT,SCREENHEIGHT);
-			scene.getStylesheets().add(getClass().getResource("application.css").toExternalForm());
 			primaryStage.setScene(scene);
 			primaryStage.show();
 		} catch(Exception e) {
@@ -59,5 +69,71 @@ public class Main extends Application {
 			style = style + string;
 		}
 		n.setStyle("-fx-background-color: #" + style);
-		}
+	}
+	
+	private void openNewWindow(Window window){
+		if (currentWindow != null)
+			currentWindow.exitThisWindow();
+		currentWindow = window;
+	}
+
+	@Override
+	public void loginFailed() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void loginSuccess(String username, String name) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void logout() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void userCreated(boolean isCreated) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void passwordChange(boolean isChanged) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void sendMessage(Message msg) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void updateGroups(Group... groups) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void updateCalendar(List<Calendar> cal, View view) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void updateRoomNames(Room... rooms) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void sendNotification(String notif) {
+		// TODO Auto-generated method stub
+		
+	}
 	}
