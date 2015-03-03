@@ -95,7 +95,7 @@ public class ProgramTest implements ProgramListener{
 	}
 
 	@Override
-	public void updateCalendar(List<Calendar> cal) {
+	public void updateCalendar(List<Calendar> cal, View view) {
 		// TODO Auto-generated method stub
 		
 	}
