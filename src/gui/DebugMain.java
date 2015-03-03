@@ -57,7 +57,7 @@ public class DebugMain {
 		LoginGUI l = new LoginGUI(root);
 >>>>>>> 52576ed6de17ca71bdfd25a2e6e3866e738a2e1c
 		
-		root.getChildren().add(c);
+		root.getChildren().add(l);
 	}
 
 }
