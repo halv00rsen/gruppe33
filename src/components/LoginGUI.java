@@ -38,13 +38,12 @@ public class LoginGUI extends Component{
 	VBox mainVBox;
 	GridPane mainGridPane;
 	
-	public LoginGUI(Pane parent) {
-		super(parent);
+	public LoginGUI(Window parent, Main main) {
+		super(parent,main);
 		init();
 	}
 
 	private void init(){
-		
 		this.setTranslateX(0);
 		this.setPrefWidth(100);
 		this.setPrefHeight(500);
@@ -68,7 +67,8 @@ public class LoginGUI extends Component{
 			@Override
 			public void handle(ActionEvent arg0) {
 				
-				System.out.println(validate());
+				main.requestLogin(usernameTextField.getText(),passwordTextField.getText());
+				
 				
 			}
 	});
