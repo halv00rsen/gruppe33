@@ -25,24 +25,59 @@ public class Program {
 	}
 	
 	public void createEvent(Event event, Calendar... cal){
-		
+		//add events to server
+		for (Calendar cals: cal)
+			cals.addEvent(event);
+		callSuccess(Message.EventAdded);
 	}
 	
-	public void deleteEvent(){
-		
-		
+	public void deleteEvent(Event event, Calendar...cals){
+		//remove event from database/server
+		for (Calendar cal: cals)
+			cal.removeEvent(event);
+		callSuccess(Message.EventDeleted);
 	}
 	
 	public void requestEvent(int eventId){
 		
 	}
 	
-	public void addPersonCalendar(int personId){
-		
+	public void addCalendar(Object id){
+		for (Calendar c : activeCalendars){
+			if (c.isOwner(id)){
+				return;
+			}
+		}
+		for (Calendar c : unactive){
+			if (c.isOwner(id)){
+				activeCalendars.add(c);
+				unactive.remove(c);
+				updateCalendarListeners();
+				return;
+			}
+		}
+		//else, get calendar from database
 	}
 	
-	public void removePersonCalendar(int personId){
-		
+	public void removeCalendar(Object id){
+		for (Calendar c : unactive){
+			if (c.isOwner(id))
+				return;
+		}
+		for (Calendar c : activeCalendars){
+			if (c.isOwner(c)){
+				unactive.add(c);
+				activeCalendars.remove(c);
+				updateCalendarListeners();
+				return;
+			}
+		}
+	}
+	
+	
+	private void updateCalendarListeners(){
+		for (ProgramListener l: listeners)
+			l.updateCalendar(new ArrayList<Calendar>(activeCalendars));
 	}
 	
 	

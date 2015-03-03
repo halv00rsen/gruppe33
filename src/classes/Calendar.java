@@ -66,5 +66,6 @@ public abstract class Calendar {
 			events.remove(event);
 	}
 	
+	public abstract boolean isOwner(Object object);
 
 }

@@ -1,5 +1,7 @@
 package tests;
 
+import java.util.List;
+
 import classes.Calendar;
 import classes.Event;
 import classes.Group;
@@ -23,7 +25,20 @@ public class ProgramTest implements ProgramListener{
 	}
 
 	public static void main(String[] args){
-		ProgramTest t = new ProgramTest();
+//		ProgramTest t = new ProgramTest();
+		System.out.println("true: " + num(1));
+		System.out.println("false: " + num(2));
+		System.out.println("true: " + string("user"));
+		System.out.println("false: " + string("Uas"));
+	}
+	
+	public static boolean num(Object nr){
+//		System.out.println(nr.toString());
+		return ("" + 1).equals(nr.toString());
+	}
+	
+	public static boolean string(Object str){
+		return "user".equals(str);
 	}
 
 	public void loginFailed() {
@@ -68,12 +83,6 @@ public class ProgramTest implements ProgramListener{
 	}
 
 	@Override
-	public void updateCalendar(Calendar... cal) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
 	public void updateRoomNames(Room... rooms) {
 		// TODO Auto-generated method stub
 		
@@ -81,6 +90,12 @@ public class ProgramTest implements ProgramListener{
 
 	@Override
 	public void sendNotification(String notif) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void updateCalendar(List<Calendar> cal) {
 		// TODO Auto-generated method stub
 		
 	}

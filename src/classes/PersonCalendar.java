@@ -1,6 +1,7 @@
 package classes;
 
 public class PersonCalendar extends Calendar{
+	
 	private Person ownerPerson;
 	
 	public PersonCalendar(Person ownerPerson) {
@@ -15,6 +16,8 @@ public class PersonCalendar extends Calendar{
 		this.ownerPerson = ownerPerson;
 	}
 	
-	
+	public boolean isOwner(Object username){
+		return ownerPerson.username.equals(username);
+	}
 
 }

@@ -4,13 +4,16 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Group {
+	
+	public final int id;
 	private String name;
 	private final List<Person> members;
 	private final Calendar groupCalendar;
 	private final List<Group> subGroups;
 	
-	public Group(String name, Person... members) {
+	public Group(String name, int id, Person... members) {
 		groupCalendar = new GroupCalendar(this);
+		this.id = id;
 		this.name = name;
 		this.members = new ArrayList<Person>();
 		for (Person p : members)

@@ -16,6 +16,8 @@ public class GroupCalendar extends Calendar{
 		this.ownerGroup = ownerGroup;
 	}
 	
-	
+	public boolean isOwner(Object id){
+		return ("" + ownerGroup.id).equals(id.toString());
+	}
 
 }

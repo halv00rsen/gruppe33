@@ -1,10 +1,15 @@
 package classes;
 
 public class RoomCalendar extends Calendar {
-	int roomNr;
+	
+	private final int roomNr;
 	
 	public RoomCalendar(int roomNr) {
 		this.roomNr = roomNr;
+	}
+	
+	public boolean isOwner(Object roomNr){
+		return ("" + roomNr).equals(roomNr.toString());
 	}
 
 }
