@@ -6,6 +6,8 @@ import java.util.ArrayList;
 import java.util.Collection;
 
 public class Event {
+	private final Person madeBy;
+	public  final int id;
 	private String eventName;
 	private String location;
 	private Room room;
@@ -14,7 +16,6 @@ public class Event {
 	private LocalDateTime startTime;
 	private LocalDateTime endTime;
 	private Integer freq;
-	private final Person madeBy;
 	private Collection<EventAppliance> appliance;
 	private Boolean priority;
 	private String info;
@@ -24,6 +25,7 @@ public class Event {
 			LocalDate startDate, LocalDate endDate, LocalDateTime startTime,
 			LocalDateTime endTime, Integer freq, Person madeBy,
 			Collection<EventAppliance> appliance, Boolean priority, String info) {
+		id = 2;
 		this.eventName = eventName;
 		this.location = location;
 		this.room = room;

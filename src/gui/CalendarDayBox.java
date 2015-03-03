@@ -5,10 +5,16 @@ import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
+import javafx.geometry.Insets;
 import javafx.scene.Node;
 import javafx.scene.control.Label;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Pane;
+import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
+import javafx.scene.shape.Line;
+import javafx.scene.shape.Rectangle;
 import classes.Event;
 
 public class CalendarDayBox extends Pane{
@@ -19,16 +25,21 @@ public class CalendarDayBox extends Pane{
 	Label day;
 	String backupStyle;
 	String defaultStyle;
+	
 	String highLightStyle = "-fx-background-color: #00FF88";
 	boolean isHighLighted = false;
 
 	boolean isUpperDisabled = false;
 	boolean isLowerDisabled = false;
+	BorderPane base;
+	VBox body;
+	ArrayList<Event> events;
 	public int calHeight = 100;
 	public int calWidth = 100;
-	CalendarMonthGUI gui;
+	CalendarMonthGUI calGui;
 	public CalendarDayBox(CalendarMonthGUI gui, LocalDate date,ArrayList<Event> events, boolean isUpperDisabled, boolean isLowerDisabled){
-		this.gui = gui;
+		this.calGui = gui;
+		this.events = events;
 		this.date = date;
 		this.isLowerDisabled = isLowerDisabled;
 		this.isUpperDisabled = isUpperDisabled;
@@ -37,7 +48,7 @@ public class CalendarDayBox extends Pane{
 //		this.dayOfMonth = 31;
 		this.setPrefWidth(calWidth);
 		this.setPrefHeight(calHeight);
-		//Add red color if sunday
+		
 		if(isUpperDisabled || isLowerDisabled){
 			this.defaultStyle = "-fx-background-color: #D0D0D0";
 			
@@ -50,26 +61,63 @@ public class CalendarDayBox extends Pane{
 		}
 		
 		
-		if(date.equals(LocalDate.now()) && (isLowerDisabled || isUpperDisabled)){
-			this.defaultStyle = "-fx-background-color: #E0E0D0";
-			
-		}else if(date.equals(LocalDate.now())){
-			
-			this.defaultStyle = "-fx-background-color: #FFFFDD";
-		
-		}
 		this.setStyle(defaultStyle);
 		if ( date.isBefore(LocalDate.now() )){
 			Main.applyContrast(this,0.7,def);
+		}else if(date.equals(LocalDate.now())){
+			
+			Pane splitDay = new Pane();
+				this.getChildren().add(splitDay);
+				splitDay.toBack();
+				this.toBack();
+				splitDay.setPrefWidth(calWidth);
+				double h = calHeight*LocalDateTime.now().getHour()/24;
+				splitDay.setPrefHeight(h);
+				splitDay.setStyle(this.getStyle());
+				Main.applyContrast(splitDay,0.7,def);
+				Line l = new Line();
+				l.setStroke(Color.RED);
+				l.setStrokeWidth(2);
+				l.setStartX(0);
+				l.setStartY(h+1);
+				l.setEndX(calWidth);
+				l.setEndY(h+1);
+				this.getChildren().add(l);
 		}
 		this.setStyle(this.getStyle());
 		this.defaultStyle = this.getStyle();
-		day = new Label();
-		day.setText("" + dayOfMonth);
-		this.getChildren().add(day);
+		
+		base = new BorderPane();
+			base.setPadding(new Insets(5));
+				day = new Label();
+					base.setLeft(day);
+					day.setText("" + dayOfMonth);
+				body = new VBox(1);
+					base.setBottom(body);
+					if(!(isLowerDisabled || isUpperDisabled)){
+
+						addEvents();
+					}
+		this.getChildren().add(base);
 		this.setOnMouseClicked(e -> onAction(e));
 		this.setOnMouseEntered(e -> hoverOn(e));
 		this.setOnMouseExited(e -> hoverOff(e));
+	}
+
+	private void addEvents() {
+		for (int i = 0; i < events.size(); i++) {
+			Event thisEvent = events.get(i);
+			
+			Pane thisEventPane = new Pane();
+				Label eventLabel = new Label();
+					eventLabel.setText(thisEvent.getEventName());
+					thisEventPane.getChildren().add(eventLabel);
+			
+			body.getChildren().add(thisEventPane);		
+			
+			
+		}
+		
 	}
 
 	public void setIsUpperDisabled(boolean t){
@@ -81,8 +129,8 @@ public class CalendarDayBox extends Pane{
 	private void hoverOff(MouseEvent e) {
 		this.setStyle(backupStyle);
 	}
-
-
+	
+	
 	private void hoverOn(MouseEvent e) {
 		backupStyle = this.getStyle();
 //		System.out.println(backupStyle);
@@ -115,8 +163,8 @@ public class CalendarDayBox extends Pane{
 	}	
 
 	private LocalDate onAction(MouseEvent e) {
-		
-		gui.highlight(date);
+		calGui.requestFocus();
+		calGui.highlight(date);
 		
 			
 		return null;

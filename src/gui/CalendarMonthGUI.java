@@ -9,6 +9,8 @@ import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Pos;
 import javafx.scene.control.Label;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Border;
 import javafx.scene.layout.HBox;
@@ -40,6 +42,7 @@ import classes.Calendar;
 import classes.Event;
 
 public class CalendarMonthGUI extends Component{
+//	focusProperty = getFocs
 	LocalDate date;
 	static int defaultCalHeight = 600;
 	static int defaultCalWidth = 700;
@@ -61,21 +64,23 @@ public class CalendarMonthGUI extends Component{
 	Pane dayBox;
 	Slider sliderLeft;
 	Slider sliderRight;
-	public CalendarMonthGUI(Pane parent,LocalDate date) {
+	ArrayList<Event> events;
+	public CalendarMonthGUI(Pane parent,LocalDate date, ArrayList<Event> events) {
 		super(parent);
-		init(date);
+		init(date,events);
 		
 	}
-	private void init(LocalDate date) {
+	private void init(LocalDate date,ArrayList<Event> events) {
 		updateDate(date);
-		
+		this.requestFocus();
 		this.setTranslateX(0);
 		this.setPrefWidth(100);
 		this.setPrefHeight(500);
+		this.events = events;
 		
-		this.lastCalendar = new CalendarMonthBase(this,this.date.plusMonths(-1));
-		this.mainCalendar = new CalendarMonthBase(this,date);
-		this.nextCalendar = new CalendarMonthBase(this,this.date.plusMonths(1));
+		this.lastCalendar = new CalendarMonthBase(this,this.date.plusMonths(-1),events);
+		this.mainCalendar = new CalendarMonthBase(this,date,events);
+		this.nextCalendar = new CalendarMonthBase(this,this.date.plusMonths(1),events);
 		
 		
 		lastCalendar.setVisible(false);
@@ -99,6 +104,7 @@ public class CalendarMonthGUI extends Component{
 		fri.setText("Fredag");
 		sat.setText("Lørdag");
 		sun.setText("Søndag");
+		sun.setTextFill(Color.RED);
 		dayTitles.getChildren().addAll(mon,tus,wed,tur,fri,sat,sun);
 		header.getChildren().add(l);
 		header.getChildren().add(dayTitles);
@@ -123,8 +129,27 @@ public class CalendarMonthGUI extends Component{
 		this.getChildren().add(hbox);
 		sliderRight.setOnMouseClicked(e -> nextSlide(e));
 		sliderLeft.setOnMouseClicked(e -> nextSlide(e));
+		this.requestFocus();
+		this.setOnKeyPressed(e -> handleOnKeyPressed(e));
 		
 		
+	}
+	private void handleOnKeyPressed(KeyEvent e){
+		System.out.println("HEIHEIHEIHIE");
+		if(e.getCode().equals(KeyCode.RIGHT)){
+			System.out.println("HØYRE");
+			Timeline timeline = slideRightAnimation();
+			timeline.setOnFinished( event -> shiftRight(event));
+			timeline.play();
+			
+		}else if (e.getCode() == KeyCode.LEFT){
+			
+			
+			Timeline timeline = slideLeftAnimation();
+			timeline.setOnFinished( event -> shiftLeft(event));
+			timeline.play();
+			
+		}
 		
 	}
 	private void updateDate(LocalDate d) {
@@ -225,14 +250,14 @@ public class CalendarMonthGUI extends Component{
 		lastCalendar = mainCalendar;
 		mainCalendar = nextCalendar;
 		updateDate(mainCalendar.getLocalDate());
-		nextCalendar = new CalendarMonthBase(this, this.date.plusMonths(1));
+		nextCalendar = new CalendarMonthBase(this, this.date.plusMonths(1),events);
 		redrawCalendar();
 	}
 	private void shiftLeft(ActionEvent e) {
 		nextCalendar = mainCalendar;
 		mainCalendar = lastCalendar;
 		updateDate(mainCalendar.getLocalDate());
-		lastCalendar = new CalendarMonthBase(this,this.date.plusMonths(-1));
+		lastCalendar = new CalendarMonthBase(this,this.date.plusMonths(-1),events);
 		redrawCalendar();
 	}
 	private void redrawCalendar() {
@@ -257,11 +282,17 @@ public class CalendarMonthGUI extends Component{
 	}
 	CalendarDayBox boxHighlighted;
 	public void highlight(LocalDate date){
+		CalendarDayBox a = mainCalendar.getDateBox(date);
+		
+		
 		if(boxHighlighted != null){
 			boxHighlighted.setHighlighted(false);
+			if(date.isEqual(boxHighlighted.date)){
+				this.requestFocus();
+				boxHighlighted = null;
+				return;
+			}
 		}
-		CalendarDayBox a = mainCalendar.getDateBox(date);
-		System.out.println(mainCalendar);
 		if(a.isUpperDisabled() == true){
 			Timeline timeline = slideRightAnimation();
 			timeline.setOnFinished( event -> shiftRightAndHighlight(event,date));

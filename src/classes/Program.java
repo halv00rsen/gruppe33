@@ -11,7 +11,7 @@ public class Program {
 
 	public final static boolean DEBUG = true;
 	private final List<ProgramListener> listeners;
-	private final List<Calendar> activeCalendars;
+	private final List<Calendar> activeCalendars, unactive;
 
 	private Person currentPerson;
 	private View currentView;
@@ -19,8 +19,36 @@ public class Program {
 	public Program(){
 		listeners = new ArrayList<ProgramListener>();
 		activeCalendars = new ArrayList<Calendar>();
+		unactive = new ArrayList<Calendar>();
 		currentView = View.Month;
 		//opprett kobling med database og/eller socketprogram
+	}
+	
+	public void createEvent(Event event, Calendar... cal){
+		
+	}
+	
+	public void deleteEvent(){
+		
+		
+	}
+	
+	public void requestEvent(int eventId){
+		
+	}
+	
+	public void addPersonCalendar(int personId){
+		
+	}
+	
+	public void removePersonCalendar(int personId){
+		
+	}
+	
+	
+	private void callSuccess(Message msg){
+		for (ProgramListener l : listeners)
+			l.sendMessage(msg);
 	}
 	
 	

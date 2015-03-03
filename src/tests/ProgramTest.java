@@ -1,9 +1,13 @@
 package tests;
 
+import classes.Calendar;
 import classes.Event;
+import classes.Group;
+import classes.Message;
 import classes.Person;
 import classes.Program;
 import classes.ProgramListener;
+import classes.Room;
 import classes.View;
 
 public class ProgramTest implements ProgramListener{
@@ -49,6 +53,36 @@ public class ProgramTest implements ProgramListener{
 	
 	public void changeView(View view){
 		System.out.println("View changed to: " + view);
+	}
+
+	@Override
+	public void sendMessage(Message msg) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void updateGroups(Group... groups) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void updateCalendar(Calendar... cal) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void updateRoomNames(Room... rooms) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void sendNotification(String notif) {
+		// TODO Auto-generated method stub
+		
 	}
 	
 	
