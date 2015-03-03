@@ -5,6 +5,7 @@ import java.util.ArrayList;
 
 import classes.Event;
 import javafx.scene.layout.Pane;
+import jfxtras.scene.control.agenda.Agenda;
 
 public class DebugMain {
 
@@ -15,6 +16,7 @@ public class DebugMain {
 	 */
 	public DebugMain(Pane root) {
 		
+		Agenda agenda = new Agenda();
 		
 		ArrayList<Event> events = new ArrayList<Event>();
 		Event event1 = new Event(null, null, null, null, null, null, null, null, null, null, null, null);
@@ -29,13 +31,17 @@ public class DebugMain {
 		event3.setEventName("Jakt");
 		event4.setEventName("Skydiving");
 		event5.setEventName("Handle");
+		event1.setStartTime(LocalDateTime.of(1986, Month.APRIL, 8, 12, 30));
+		event2.setStartTime(LocalDateTime.of(1986, Month.APRIL, 8, 12, 31));
+		event3.setStartTime(LocalDateTime.of(1986, Month.APRIL, 8, 12, 32));
+		event4.setStartTime(LocalDateTime.of(1986, Month.APRIL, 8, 12, 33));
+		event5.setStartTime(LocalDateTime.of(1986, Month.APRIL, 8, 12, 34));
 		events.add(event1);
 		events.add(event2);
 		events.add(event3);
 		events.add(event4);
 		events.add(event5);
-		CalendarMonthGUI c = new CalendarMonthGUI(root,LocalDate.now(),events);
-		LoginGUI l = new LoginGUI(root);
+		SideMenu c = new SideMenu(root, LocalDate.now(), events);
 		
 		root.getChildren().add(c);
 	}
