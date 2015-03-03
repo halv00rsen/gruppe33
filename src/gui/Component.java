@@ -1,5 +1,6 @@
 package gui;
-
+import components.*;
+import windows.*;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.layout.Pane;

@@ -1,6 +1,7 @@
-package gui;
+package components;
 
-
+import gui.*;
+import windows.*;
 import javafx.geometry.Pos;
 import javafx.scene.control.Label;
 import javafx.scene.input.MouseEvent;

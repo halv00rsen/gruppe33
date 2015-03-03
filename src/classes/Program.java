@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import classes.Calendar.TypeOfCalendar;
 import database.CreateUser;
 import database.PersonInformation;
 
@@ -25,28 +26,63 @@ public class Program {
 	}
 	
 	public void createEvent(Event event, Calendar... cal){
-		
+		//add events to server
+		for (Calendar cals: cal)
+			cals.addEvent(event);
+		callMessage(Message.EventAdded);
 	}
 	
-	public void deleteEvent(){
-		
-		
+	public void deleteEvent(Event event, Calendar...cals){
+		//remove event from database/server
+		for (Calendar cal: cals)
+			cal.removeEvent(event);
+		callMessage(Message.EventDeleted);
 	}
 	
 	public void requestEvent(int eventId){
 		
 	}
 	
-	public void addPersonCalendar(int personId){
-		
+	public void addCalendar(Object id, TypeOfCalendar type){
+		for (Calendar c : activeCalendars){
+			if (c.isOwner(id, type)){
+				return;
+			}
+		}
+		for (Calendar c : unactive){
+			if (c.isOwner(id, type)){
+				activeCalendars.add(c);
+				unactive.remove(c);
+				updateCalendarListeners();
+				return;
+			}
+		}
+		//else, get calendar from database
 	}
 	
-	public void removePersonCalendar(int personId){
-		
+	public void removeCalendar(Object id, TypeOfCalendar type){
+		for (Calendar c : unactive){
+			if (c.isOwner(id, type))
+				return;
+		}
+		for (Calendar c : activeCalendars){
+			if (c.isOwner(c, type)){
+				unactive.add(c);
+				activeCalendars.remove(c);
+				updateCalendarListeners();
+				return;
+			}
+		}
 	}
 	
 	
-	private void callSuccess(Message msg){
+	private void updateCalendarListeners(){
+		for (ProgramListener l: listeners)
+			l.updateCalendar(new ArrayList<Calendar>(activeCalendars), currentView);
+	}
+	
+	
+	private void callMessage(Message msg){
 		for (ProgramListener l : listeners)
 			l.sendMessage(msg);
 	}
@@ -65,12 +101,12 @@ public class Program {
 	}
 	
 	public void changeView(View view){
-		if (view == currentView)
+		if (currentView == view)
 			return;
 		currentView = view;
-		for (ProgramListener l : listeners)
-			l.changeView(view);
+		updateCalendarListeners();
 	}
+	
 	
 	public void personLogin(String username, String password){
 		if (username == null || password == null || isLoggedIn()){
