@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import classes.Calendar.TypeOfCalendar;
 import database.CreateUser;
 import database.PersonInformation;
 
@@ -42,14 +43,14 @@ public class Program {
 		
 	}
 	
-	public void addCalendar(Object id){
+	public void addCalendar(Object id, TypeOfCalendar type){
 		for (Calendar c : activeCalendars){
-			if (c.isOwner(id)){
+			if (c.isOwner(id, type)){
 				return;
 			}
 		}
 		for (Calendar c : unactive){
-			if (c.isOwner(id)){
+			if (c.isOwner(id, type)){
 				activeCalendars.add(c);
 				unactive.remove(c);
 				updateCalendarListeners();
@@ -59,13 +60,13 @@ public class Program {
 		//else, get calendar from database
 	}
 	
-	public void removeCalendar(Object id){
+	public void removeCalendar(Object id, TypeOfCalendar type){
 		for (Calendar c : unactive){
-			if (c.isOwner(id))
+			if (c.isOwner(id, type))
 				return;
 		}
 		for (Calendar c : activeCalendars){
-			if (c.isOwner(c)){
+			if (c.isOwner(c, type)){
 				unactive.add(c);
 				activeCalendars.remove(c);
 				updateCalendarListeners();

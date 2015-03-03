@@ -5,6 +5,7 @@ public class PersonCalendar extends Calendar{
 	private Person ownerPerson;
 	
 	public PersonCalendar(Person ownerPerson) {
+		super(TypeOfCalendar.Personal);
 		this.ownerPerson = ownerPerson;
 	}
 
@@ -16,8 +17,8 @@ public class PersonCalendar extends Calendar{
 		this.ownerPerson = ownerPerson;
 	}
 	
-	public boolean isOwner(Object username){
-		return ownerPerson.username.equals(username);
+	public boolean isOwner(Object username, TypeOfCalendar type){
+		return ownerPerson.username.equals(username) && type == super.type;
 	}
 
 }
