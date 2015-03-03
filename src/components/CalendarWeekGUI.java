@@ -1,6 +1,7 @@
-package gui;
+package components;
 
-
+import gui.*;
+import windows.*;
 import javafx.animation.KeyFrame;
 import javafx.animation.KeyValue;
 import javafx.animation.PathTransition;

@@ -1,5 +1,6 @@
-package gui;
-
+package components;
+import gui.*;
+import windows.*;
 import javafx.geometry.Pos;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.StackPane;

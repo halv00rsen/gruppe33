@@ -1,7 +1,9 @@
 package gui;
-	
+import components.*;
+import windows.*;	
 import java.util.List;
 
+import windows.LoginScreen;
 import classes.Calendar;
 import classes.Group;
 import classes.Message;
@@ -12,6 +14,7 @@ import classes.View;
 
 import com.sun.javafx.geom.transform.BaseTransform.Degree;
 
+import gui.DebugMain;
 import javafx.application.Application;
 import javafx.stage.Stage;
 import javafx.scene.Node;
@@ -33,13 +36,21 @@ public class Main extends Application implements ProgramListener{
 	public Main(){
 		program = new Program();
 		program.addListener(this);
+		Window loginScreen = new LoginScreen();
+		Window loginScreen2 = new LoginScreen();
+		
+		openNewWindow(loginScreen);
+
+		openNewWindow(loginScreen2);
 		
 	}
 	
 	@Override
 	public void start(Stage primaryStage) {
 		try {
-			DebugMain debuglauncher = new DebugMain(root);
+//			DebugMain debuglauncher = new DebugMain(root);
+
+			
 			Scene scene = new Scene(root,SCREENHEIGHT,SCREENHEIGHT);
 			primaryStage.setScene(scene);
 			primaryStage.show();
@@ -48,9 +59,7 @@ public class Main extends Application implements ProgramListener{
 		}
 	}
 	
-	public void init(BorderPane p){
-		
-	}
+	
 	
 	public static void main(String[] args) {
 		launch(args);
@@ -75,6 +84,7 @@ public class Main extends Application implements ProgramListener{
 		if (currentWindow != null)
 			currentWindow.exitThisWindow();
 		currentWindow = window;
+		root.getChildren().add(window);
 	}
 
 	@Override

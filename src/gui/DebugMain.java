@@ -1,5 +1,6 @@
 package gui;
-
+import components.*;
+import windows.*;
 import java.time.*;
 import java.util.ArrayList;
 

@@ -1,5 +1,6 @@
-package gui;
-
+package components;
+import gui.*;
+import windows.*;
 import java.util.ArrayList;
 import java.time.DayOfWeek;
 import java.time.LocalDate;
