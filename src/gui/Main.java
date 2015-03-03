@@ -37,11 +37,7 @@ public class Main extends Application implements ProgramListener{
 		program = new Program();
 		program.addListener(this);
 		Window loginScreen = new LoginScreen();
-		Window loginScreen2 = new LoginScreen();
-		
 		openNewWindow(loginScreen);
-
-		openNewWindow(loginScreen2);
 		
 	}
 	

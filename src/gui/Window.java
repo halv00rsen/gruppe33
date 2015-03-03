@@ -8,6 +8,8 @@ public abstract class Window extends Pane{
 	public Window(){
 //		Main.root.getChildren().add(this);
 		init(Main.root);
+		this.setPrefHeight(Main.SCREENHEIGHT);
+		this.setPrefHeight(Main.SCREENWIDTH);
 	}
 	/***
 	 * fjerner synlighet og fjerner seg selv fra parent
