@@ -1,5 +1,7 @@
-package gui;
-
+package components;
+import gui.*;
+import windows.*;
+import gui.Main;
 import java.util.ArrayList;
 import java.time.DayOfWeek;
 import java.time.LocalDate;
@@ -17,7 +19,7 @@ import javafx.scene.shape.Line;
 import javafx.scene.shape.Rectangle;
 import classes.Event;
 
-public class CalendarDayBox extends Pane{
+public class CalendarWeekDayBox extends Pane{
 	int dayOfMonth;
 	int[] def = {0,0,0};
 	int month;
@@ -34,10 +36,10 @@ public class CalendarDayBox extends Pane{
 	BorderPane base;
 	VBox body;
 	ArrayList<Event> events;
-	public int calHeight = 100;
+	public int calHeight = 600;
 	public int calWidth = 100;
-	CalendarMonthGUI calGui;
-	public CalendarDayBox(CalendarMonthGUI gui, LocalDate date,ArrayList<Event> events, boolean isUpperDisabled, boolean isLowerDisabled){
+	CalendarWeekGUI calGui;
+	public CalendarWeekDayBox(CalendarWeekGUI gui, LocalDate date,ArrayList<Event> events, boolean isUpperDisabled, boolean isLowerDisabled){
 		this.calGui = gui;
 		this.events = events;
 		this.date = date;
@@ -71,7 +73,8 @@ public class CalendarDayBox extends Pane{
 				splitDay.toBack();
 				this.toBack();
 				splitDay.setPrefWidth(calWidth);
-				double h = calHeight*LocalDateTime.now().getHour()/24;
+				double hourHeight = calHeight/24;
+				double h = hourHeight*(LocalDateTime.now().getHour()-1) + (LocalDateTime.now().getMinute()/60)*hourHeight;
 				splitDay.setPrefHeight(h);
 				splitDay.setStyle(this.getStyle());
 				Main.applyContrast(splitDay,0.7,def);
@@ -108,12 +111,9 @@ public class CalendarDayBox extends Pane{
 		for (int i = 0; i < events.size(); i++) {
 			Event thisEvent = events.get(i);
 			
-			Pane thisEventPane = new Pane();
-				Label eventLabel = new Label();
-					eventLabel.setText(thisEvent.getEventName());
-					thisEventPane.getChildren().add(eventLabel);
+			Pane eventBox = new EventBox(thisEvent);
 			
-			body.getChildren().add(thisEventPane);		
+			body.getChildren().add(eventBox);		
 			
 			
 		}

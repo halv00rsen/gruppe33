@@ -1,5 +1,6 @@
-package gui;
-
+package components;
+import gui.*;
+import windows.*;
 import java.awt.TextField;
 
 import javafx.scene.control.Button;

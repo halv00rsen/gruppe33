@@ -5,6 +5,7 @@ public class GroupCalendar extends Calendar{
 	private Group ownerGroup;
 
 	public GroupCalendar(Group ownerGroup) {
+		super(TypeOfCalendar.Group);
 		this.ownerGroup = ownerGroup;
 	}
 
@@ -16,6 +17,8 @@ public class GroupCalendar extends Calendar{
 		this.ownerGroup = ownerGroup;
 	}
 	
-	
+	public boolean isOwner(Object id, TypeOfCalendar type){
+		return ("" + ownerGroup.id).equals(id.toString()) && type == super.type;
+	}
 
 }

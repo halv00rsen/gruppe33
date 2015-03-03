@@ -9,10 +9,12 @@ import java.util.List;
 
 public abstract class Calendar {
 	
+	public final TypeOfCalendar type;
 	private final List<Event> events;
 	
-	public Calendar(){
+	public Calendar(TypeOfCalendar type){
 		events = new ArrayList<Event>();
+		this.type = type;
 		//hent data fra database		
 	}
 	
@@ -66,5 +68,10 @@ public abstract class Calendar {
 			events.remove(event);
 	}
 	
+	public abstract boolean isOwner(Object object, TypeOfCalendar type);
+	
+	public enum TypeOfCalendar{
+		Room, Group, Personal;
+	}
 
 }
