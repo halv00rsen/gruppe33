@@ -7,8 +7,10 @@ public class LoginScreen extends Window{
 
 	@Override
 	public void init(Pane root) {
-		// TODO Auto-generated method stub
-		
+		this.setStyle("-fx-background-color: #00FF00");
+		LoginGUI login = new LoginGUI(root);
+		this.getChildren().add(login);
+		//
 	}
 
 }
