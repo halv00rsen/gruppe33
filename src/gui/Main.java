@@ -9,8 +9,9 @@ import classes.Program;
 import classes.ProgramListener;
 import classes.Room;
 import classes.View;
-
 import javafx.application.Application;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.stage.Stage;
 import javafx.scene.Node;
 import javafx.scene.Scene;
@@ -31,7 +32,6 @@ public class Main extends Application implements ProgramListener{
 		program.addListener(this);
 		Window loginScreen = new LoginScreen(this);
 		openNewWindow(loginScreen);
-		//
 	}
 	
 	@Override
