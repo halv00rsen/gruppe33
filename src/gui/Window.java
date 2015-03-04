@@ -5,11 +5,14 @@ import javafx.scene.Node;
 import javafx.scene.layout.Pane;
 
 public abstract class Window extends Pane{
-	public Window(){
-//		Main.root.getChildren().add(this);
-		init(Main.root);
+	public final Main main;
+	public Window(Main main){
+		
+		this.main = main;
+//		main.root.getChildren().add(main.root);
 		this.setPrefHeight(Main.SCREENHEIGHT);
-		this.setPrefHeight(Main.SCREENWIDTH);
+		this.setPrefWidth(Main.SCREENWIDTH);
+		init();
 	}
 	/***
 	 * fjerner synlighet og fjerner seg selv fra parent
@@ -33,5 +36,5 @@ public abstract class Window extends Pane{
 	/***
 	 * init(root) må implementeres av alle vindu go her legges til komponenter som skal være med
 	 ***/
-	public abstract void init(Pane root);
+	public abstract void init();
 }

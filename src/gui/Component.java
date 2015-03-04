@@ -7,10 +7,11 @@ import javafx.scene.layout.Pane;
 import javafx.scene.layout.Region;
 
 public abstract class Component extends Pane{
-	Pane parent;
-	public Component(Pane parent){
+	public Pane parent;
+	public final Main main;
+	public Component(Pane parent,Main main){
 		this.parent = parent;
-		
+		this.main = main;
 		
 	}
 	/***

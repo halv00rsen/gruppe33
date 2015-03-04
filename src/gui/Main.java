@@ -1,7 +1,7 @@
 package gui;
 import java.util.List;
 
-import windows.LoginScreen;
+import windows.*;
 import classes.Calendar;
 import classes.Group;
 import classes.Message;
@@ -30,7 +30,7 @@ public class Main extends Application implements ProgramListener{
 	public Main(){
 		program = new Program();
 		program.addListener(this);
-		Window loginScreen = new LoginScreen();
+		Window loginScreen = new LoginScreen(this);
 		openNewWindow(loginScreen);
 	}
 	
@@ -84,8 +84,8 @@ public class Main extends Application implements ProgramListener{
 
 	@Override
 	public void loginSuccess(String username, String name) {
-		// TODO Auto-generated method stub
-		
+		HomeScreen homeScreen  = new HomeScreen(this);
+		openNewWindow(homeScreen);
 	}
 
 	@Override
@@ -135,4 +135,7 @@ public class Main extends Application implements ProgramListener{
 		// TODO Auto-generated method stub
 		
 	}
+	public void requestLogin(String userName, String password){
+		program.personLogin(userName, password);
 	}
+}
