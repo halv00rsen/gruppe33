@@ -1,7 +1,4 @@
 package gui;
-import components.*;
-import windows.*;
-import javafx.scene.Node;
 import javafx.scene.layout.Pane;
 
 public abstract class Window extends Pane{
@@ -13,6 +10,8 @@ public abstract class Window extends Pane{
 		this.setPrefHeight(Main.SCREENHEIGHT);
 		this.setPrefWidth(Main.SCREENWIDTH);
 		init();
+		this.setStyle("-fx-color-background: #FF0044");
+		
 	}
 	/***
 	 * fjerner synlighet og fjerner seg selv fra parent
