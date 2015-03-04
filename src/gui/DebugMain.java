@@ -15,7 +15,7 @@ public class DebugMain {
 	 * For å kjøre GUI komponenter til debuging. 
 	 * Kan tulles med så mye man ønsker, ikke en del av programmet.
 	 */
-	public DebugMain(Pane root) {
+	public DebugMain(Pane root, Main main) {
 		
 //		Agenda agenda = new Agenda();
 		
@@ -47,11 +47,11 @@ public class DebugMain {
 		events.add(event3);
 		events.add(event4);
 		events.add(event5);
-		SideMenu c = new SideMenu(root, LocalDate.now(), events);
+		SideMenu c = new SideMenu(root, LocalDate.now(), events, main);
 //		CalendarWeekGUI c = new CalendarWeekGUI(root,LocalDate.now(),events);
-		LoginGUI l = new LoginGUI(main);
+//		LoginGUI l = new LoginGUI(main);
 		
-		root.getChildren().add(l);
+//		root.getChildren().add(l);
 	}
 
 }

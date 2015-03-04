@@ -40,8 +40,8 @@ public class SideMenu extends Component {
 	ObservableList<String> items =FXCollections.observableArrayList ();
 	
 	
-	public SideMenu(Pane parent, LocalDate date, ArrayList<Event> events) {
-		super(parent);
+	public SideMenu(Pane parent, LocalDate date, ArrayList<Event> events, Main main) {
+		super(parent, main);
 		init(date, events);
 	}
 	

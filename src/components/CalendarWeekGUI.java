@@ -66,8 +66,8 @@ public class CalendarWeekGUI extends Component{
 	Slider sliderLeft;
 	Slider sliderRight;
 	ArrayList<Event> events;
-	public CalendarWeekGUI(Pane parent,LocalDate date, ArrayList<Event> events) {
-		super(parent);
+	public CalendarWeekGUI(Pane parent,LocalDate date, ArrayList<Event> events, Main main) {
+		super(parent, main);
 		init(date,events);
 		
 	}

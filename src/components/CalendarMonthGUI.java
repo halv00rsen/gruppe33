@@ -66,8 +66,8 @@ public class CalendarMonthGUI extends Component{
 	Slider sliderLeft;
 	Slider sliderRight;
 	ArrayList<Event> events;
-	public CalendarMonthGUI(Pane parent,LocalDate date, ArrayList<Event> events) {
-		super(parent);
+	public CalendarMonthGUI(Pane parent,LocalDate date, ArrayList<Event> events, Main main) {
+		super(parent, main);
 		init(date,events);
 		
 	}
