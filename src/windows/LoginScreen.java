@@ -1,7 +1,6 @@
 package windows;
 import components.*;
 import gui.*;
-import javafx.scene.layout.Pane;
 import gui.Window;
 public class LoginScreen extends Window{
 
