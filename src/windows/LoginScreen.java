@@ -10,9 +10,7 @@ public class LoginScreen extends Window{
 		// TODO Auto-generated constructor stub
 	}
 
-	@Override
-	public void init(Pane root) {
-		LoginGUI login = new LoginGUI(root);
+
 
 	public void init(){
 //		this.setStyle("-fx-background-color: #00FF00");
