@@ -19,7 +19,8 @@ public class LoginGUI extends Component{
 	
 	Label title;
 	Label infoLabel;
-	Text errorLabel;
+	Label errorNameLabel;
+	Label passordNameLabel;
 	Label usernameLabel;
 	Label passwordLabel;
 	Button loginButton;
@@ -53,7 +54,10 @@ public class LoginGUI extends Component{
 		title.setText("Kalender");
 		title.setFont(Font.font ("Verdana", 20));
 		
-		errorLabel = new Text();
+		errorNameLabel = new Label();
+		errorNameLabel.setPadding(new Insets(10, 10, 10, 10));
+		errorNameLabel.setText("Skriv inn brukernavn");
+		errorNameLabel.setVisible(false);
 		usernameLabel = new Label();
 		usernameLabel.setText("Username: ");
 		usernameLabel.setPadding(new Insets(10, 10, 10, 10));
@@ -132,9 +136,9 @@ public class LoginGUI extends Component{
 		mainGridPane = new GridPane();
 		mainGridPane.add(usernameLabel, 0, 0);
 		mainGridPane.add(usernameTextField, 1, 0);
+		mainGridPane.add(errorNameLabel, 2, 0);
 		mainGridPane.add(passwordLabel, 0, 1);
 		mainGridPane.add(passwordTextField, 1, 1);
-		
 		hbox = new HBox();
 		hbox.getChildren().add(emailTextField);
 		hbox.getChildren().add(sendUserInfoButton);
@@ -161,22 +165,28 @@ public class LoginGUI extends Component{
 	private String validate(){
 		String errorMessage = "";
 		
-		//LOOP errormethods
-			
-			errorMessage = validateTextFields();
+		validateTextFields();
 
 		return errorMessage;
 	}
 	
-	private String validateTextFields(){
+	private boolean validateTextFields(){
 		String isEmptyMessage = "";
-		if(usernameTextField.getText().isEmpty()) isEmptyMessage += "Brukernavn ikke oppgitt. ";
+		if(usernameTextField.getText().isEmpty()){
+			isEmptyMessage += "Brukernavn ikke oppgitt";
+			errorNameLabel.setVisible(true);
+		}
+		if(passwordTextField.getText().isEmpty()){
+			isEmptyMessage += "Passord ikke oppgitt";
+			errorNameLabel.setVisible(true);
+		}
+		if(isEmptyMessage == "") return true;
 		
-		if(passwordTextField.getText().isEmpty()) isEmptyMessage += "Passord ikke oppgitt. ";
-		
-		return isEmptyMessage;
-	}
-	private String validateUsernane(){
+		return false;
+			
+		}
+
+	private String validateUsername(){
 		
 		return "sjekk i database";
 		
