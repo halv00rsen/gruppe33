@@ -49,7 +49,7 @@ public class DebugMain {
 		events.add(event5);
 		SideMenu c = new SideMenu(root, LocalDate.now(), events);
 //		CalendarWeekGUI c = new CalendarWeekGUI(root,LocalDate.now(),events);
-		LoginGUI l = new LoginGUI(root);
+		LoginGUI l = new LoginGUI(main);
 		
 		root.getChildren().add(l);
 	}

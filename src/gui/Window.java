@@ -13,6 +13,8 @@ public abstract class Window extends Pane{
 		this.setPrefHeight(Main.SCREENHEIGHT);
 		this.setPrefWidth(Main.SCREENWIDTH);
 		init();
+		this.setStyle("-fx-color-background: #FF0044");
+		
 	}
 	/***
 	 * fjerner synlighet og fjerner seg selv fra parent
