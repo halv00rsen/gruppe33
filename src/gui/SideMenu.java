@@ -73,7 +73,7 @@ public class SideMenu extends Component {
 		
 		
 		GridPane eventInformation = new GridPane();
-		eventInformation.setHgap(5); //horizontal gap in pixels => that's what you are asking for
+		eventInformation.setHgap(50); //horizontal gap in pixels 
 		eventInformation.setVgap(5); //vertical gap in pixels
 		eventInformation.setGridLinesVisible(false);
 		eventInformation.add(fromTime, 0, 0);
@@ -116,8 +116,6 @@ public class SideMenu extends Component {
 						eventInformation.add(toTimeData, 1, 1);
 						eventInformation.add(locationData, 1, 2);
 						eventInformation.add(infoData, 1, 3);
-						
-						
 					}
 				}
 		        /*
@@ -129,8 +127,7 @@ public class SideMenu extends Component {
 		    }
 		});
 
-		HBox listAndInformation = new HBox(list, eventInformation);
-		
+		HBox listAndInformation = new HBox(5, list, eventInformation);
 		
 		
 		HBox eventButtons = new HBox(5);

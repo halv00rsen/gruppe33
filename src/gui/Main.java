@@ -35,8 +35,8 @@ public class Main extends Application implements ProgramListener{
 
 		openNewWindow(loginScreen2);
 		*/
-		Window loginScreen = new LoginScreen(this);
-		openNewWindow(loginScreen);
+		//Window loginScreen = new LoginScreen(this);
+		//openNewWindow(loginScreen);
 	}
 	
 	@Override
