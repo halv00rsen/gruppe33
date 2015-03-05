@@ -7,6 +7,8 @@ import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.scene.control.Button;
+import javafx.scene.control.CheckBox;
+import javafx.scene.control.Hyperlink;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.control.TextField;
@@ -17,6 +19,7 @@ import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
+import javafx.scene.text.TextFlow;
 import gui.Window;
 public class NewUserWindow extends Window{
 	
@@ -25,22 +28,30 @@ public class NewUserWindow extends Window{
 	Label lastNameLabel;
 	Label usernameLabel;
 	Label passwordLabel;
+	Label rePasswordLabel;
 	Label emailLabel;
-	Label phone;
+	Label phoneLabel;
 	Text errorFirstNameText;
 	Text errorLastNameText;
+	Text errorEmailText;
 	Text errorUsernameText;
 	Text errorPasswordText;
-	Text errorEmailText;
+	Text errorRePasswordText;
+	Text errorTermsText;
 	
 	TextField firstNameTextField;
 	TextField lastNameTextField;
-	TextField usernameTextField;
 	TextField emailTextField;
+	TextField phoneTextField;
+	TextField usernameTextField;
 	TextField passwordTextField;
+	TextField rePasswordTextField;
 	
+	TextFlow terms;
+	CheckBox acceptCheckBox;
 	Button createUserButton;
 	HBox hbox;
+	HBox innerHbox;
 	VBox vbox;
 	GridPane mainGridPane;
 	
@@ -60,21 +71,20 @@ public class NewUserWindow extends Window{
 		title.setFont(Font.font ("Verdana", 20));
 		title.setPadding(new Insets(10, 0, 0, 20));
 		
-		firstNameLabel = new Label("Fornavn");
-		firstNameLabel.setPadding(new Insets(0, 0, 0, 20));
+		firstNameLabel = new Label("Fornavn*");;
 		firstNameLabel.setFont(Font.font("Verdana", 12));
-		lastNameLabel = new Label("Etternavn");
-		lastNameLabel.setPadding(new Insets(0, 0, 0, 20));
+		lastNameLabel = new Label("Etternavn*");
 		lastNameLabel.setFont(Font.font("Verdana", 12));
-		usernameLabel = new Label("Brukernavn: ");
-		usernameLabel.setPadding(new Insets(0, 0, 0, 20));
+		usernameLabel = new Label("Brukernavn*");
 		usernameLabel.setFont(Font.font("Verdana", 12));
-		passwordLabel = new Label("Passord: ");
-		passwordLabel.setPadding(new Insets(0, 0, 0, 20));
+		passwordLabel = new Label("Passord*");
 		passwordLabel.setFont(Font.font("Verdana", 12));
-		emailLabel = new Label("Epostadresse: ");
-		emailLabel.setPadding(new Insets(0, 0, 0, 20));
+		rePasswordLabel = new Label("Passord om igjen*");
+		rePasswordLabel.setFont(Font.font("Verdana", 12));
+		emailLabel = new Label("Epostadresse*");
 		emailLabel.setFont(Font.font("Verdana", 12));
+		phoneLabel = new Label("Tlf");
+		phoneLabel.setFont(Font.font("Verdana", 12));
 		
 		errorFirstNameText = new Text("Skriv inn fornavn*");
 		errorFirstNameText.setVisible(false);
@@ -88,9 +98,15 @@ public class NewUserWindow extends Window{
 		errorPasswordText = new Text("Skriv inn passord*");
 		errorPasswordText.setVisible(false);
 		errorPasswordText.setFill(Color.RED);
+		errorRePasswordText = new Text("Passord stemmer ikke");
+		errorRePasswordText.setVisible(false);
+		errorRePasswordText.setFill(Color.RED);
 		errorEmailText = new Text("Skriv inn epost*");
 		errorEmailText.setVisible(false);
 		errorEmailText.setFill(Color.RED);
+		errorTermsText = new Text("Du må godta avtalen for å opprette en bruker*");
+		errorTermsText.setVisible(false);
+		errorTermsText.setFill(Color.RED);
 		
 		firstNameTextField = new TextField();
 		firstNameTextField.setPromptText("Ola");
@@ -142,6 +158,21 @@ public class NewUserWindow extends Window{
 		        if (newPropertyValue)
 		        {
 		        	errorPasswordText.setVisible(false);
+		        	errorRePasswordText.setVisible(false);
+		        }
+		    }
+		});
+		
+		rePasswordTextField = new TextField();
+		rePasswordTextField.setPromptText("******");
+		rePasswordTextField.focusedProperty().addListener(new ChangeListener<Boolean>()
+				{
+		    @Override
+		    public void changed(ObservableValue<? extends Boolean> arg0, Boolean oldPropertyValue, Boolean newPropertyValue)
+		    {
+		        if (newPropertyValue)
+		        {
+		        	errorRePasswordText.setVisible(false);
 		        }
 		    }
 		});
@@ -160,6 +191,20 @@ public class NewUserWindow extends Window{
 		    }
 		});
 		
+		phoneTextField = new TextField();
+		phoneTextField.setPromptText("12345678");
+		phoneTextField.focusedProperty().addListener(new ChangeListener<Boolean>()
+				{
+		    @Override
+		    public void changed(ObservableValue<? extends Boolean> arg0, Boolean oldPropertyValue, Boolean newPropertyValue)
+		    {
+		        if (newPropertyValue)
+		        {
+		        	System.out.println("get number");
+		        }
+		    }
+		});
+		
 		createUserButton = new Button("Registrer deg");
 		createUserButton.setOnAction(new EventHandler<ActionEvent>(){
 
@@ -170,6 +215,17 @@ public class NewUserWindow extends Window{
 				
 			}
 	});
+		terms = new TextFlow(new Hyperlink("godtatt avtalen"));
+		terms.setPadding(new Insets(0, 0, 0, 0));
+		acceptCheckBox = new CheckBox("Jeg har");
+		acceptCheckBox.setPadding(new Insets(0, 0, 0, 3));
+		acceptCheckBox.setFont(Font.font("Verdana", 10));
+		acceptCheckBox.selectedProperty().addListener(new ChangeListener<Boolean>() {
+		    @Override
+		    public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
+		    	errorTermsText.setVisible(false);
+		    }
+		});
 		
 		mainGridPane = new GridPane();
 		mainGridPane.setHgap(10);
@@ -183,20 +239,31 @@ public class NewUserWindow extends Window{
 		mainGridPane.add(emailLabel, 0, 2);
 		mainGridPane.add(emailTextField, 1, 2);
 		mainGridPane.add(errorEmailText, 2, 2);
-		mainGridPane.add(usernameLabel, 0, 3);
-		mainGridPane.add(usernameTextField, 1, 3);
-		mainGridPane.add(errorUsernameText, 2, 3);
-		mainGridPane.add(passwordLabel, 0, 4);
-		mainGridPane.add(passwordTextField, 1, 4);
-		mainGridPane.add(errorPasswordText, 2, 4);
+		mainGridPane.add(phoneLabel, 0, 3);
+		mainGridPane.add(phoneTextField, 1, 3);
+		mainGridPane.add(usernameLabel, 0, 4);
+		mainGridPane.add(usernameTextField, 1, 4);
+		mainGridPane.add(errorUsernameText, 2, 4);
+		mainGridPane.add(passwordLabel, 0, 5);
+		mainGridPane.add(passwordTextField, 1, 5);
+		mainGridPane.add(errorPasswordText, 2, 5);
+		mainGridPane.add(rePasswordLabel, 0, 6);
+		mainGridPane.add(rePasswordTextField, 1, 6);
+		mainGridPane.add(errorRePasswordText, 2, 6);
+		
+		innerHbox = new HBox(33);
+		innerHbox.getChildren().add(terms);
+		innerHbox.getChildren().add(createUserButton);
 		
 		hbox = new HBox();
-		hbox.setPadding(new Insets(0, 0, 0, 20));
-		hbox.getChildren().add(createUserButton);
+		hbox.getChildren().add(acceptCheckBox);
+		hbox.getChildren().add(innerHbox);
 		vbox = new VBox(20);
+		vbox.setPadding(new Insets(0, 0, 0, 20));
 		vbox.getChildren().add(title);
 		vbox.getChildren().add(mainGridPane);
 		vbox.getChildren().add(hbox);
+		vbox.getChildren().add(errorTermsText);
 		
 		this.getChildren().add(vbox);
 	}
@@ -223,6 +290,21 @@ public class NewUserWindow extends Window{
 			isEmptyMessage += "Passord ikke oppgitt. ";
 			errorPasswordText.setVisible(true);
 		}
+		if(!passwordTextField.getText().equals(rePasswordTextField.getText())){
+			
+			isEmptyMessage += "Passord stemmer ikke. ";
+			
+			errorRePasswordText.setVisible(true);
+			passwordTextField.clear();
+			rePasswordTextField.clear();
+		}
+		if(!acceptCheckBox.isSelected()){
+			
+			errorTermsText.setVisible(true);
+			isEmptyMessage += "Avtale ikke godtatt";
+			
+		}
+		
 		if(isEmptyMessage == "") return true;
 		
 		return false;
