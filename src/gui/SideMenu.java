@@ -59,19 +59,34 @@ public class SideMenu extends Component {
 		
 		
 		
-		fromTime = new Label("From:");
-		toTime = new Label("To:");
-		location = new Label("Location:");
-		info = new Label("Info");
+		fromTime = new Label("Fra:");
+		toTime = new Label("Til:");
+		location = new Label("Sted:");
+		info = new Label("Informasjon");
 		priority = new Label("Priority:");
 		
+		Text fromTimeData = new Text("");
+		Text toTimeData = new Text("");
+		Text locationData = new Text("");
+		Text infoData = new Text("");
+		
+		
+		
 		GridPane eventInformation = new GridPane();
-		eventInformation.setGridLinesVisible(true);
+		eventInformation.setHgap(50); //horizontal gap in pixels 
+		eventInformation.setVgap(5); //vertical gap in pixels
+		eventInformation.setGridLinesVisible(false);
 		eventInformation.add(fromTime, 0, 0);
 		eventInformation.add(toTime, 0, 1);
 		eventInformation.add(location, 0, 2);
 		eventInformation.add(info, 0, 3);
 		eventInformation.add(priority, 0, 4);
+
+		eventInformation.add(fromTimeData, 1, 0);
+		eventInformation.add(toTimeData, 1, 1);
+		eventInformation.add(locationData, 1, 2);
+		eventInformation.add(infoData, 1, 3);
+		
 		
 		//Endrer tabellen når man klikker på listen
 		list.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<String>() {
@@ -82,12 +97,25 @@ public class SideMenu extends Component {
 		        for (Event event : events) {
 					if(event.getEventName().equals(newValue)) {
 						DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
-						String formattedDateTime = event.getStartTime().format(formatter);
+						String formattedStartTime = event.getStartTime().format(formatter);
+						String formattedEndTime = event.getEndTime().format(formatter);
 						
-						Text fromTime = new Text(formattedDateTime);
-						eventInformation.getChildren().remove(5);
-						eventInformation.add(fromTime, 1, 0);
+						eventInformation.getChildren().removeAll(fromTime, toTime, location, info, priority, fromTimeData, toTimeData, locationData, infoData);
+						eventInformation.add(fromTime, 0, 0);
+						eventInformation.add(toTime, 0, 1);
+						eventInformation.add(location, 0, 2);
+						eventInformation.add(info, 0, 3);
+						eventInformation.add(priority, 0, 4);
 						
+						fromTimeData.setText(formattedStartTime);
+						toTimeData.setText(formattedEndTime);
+						locationData.setText(event.getLocation());
+						infoData.setText(event.getInfo());
+
+						eventInformation.add(fromTimeData, 1, 0);
+						eventInformation.add(toTimeData, 1, 1);
+						eventInformation.add(locationData, 1, 2);
+						eventInformation.add(infoData, 1, 3);
 					}
 				}
 		        /*
@@ -99,8 +127,7 @@ public class SideMenu extends Component {
 		    }
 		});
 
-		HBox listAndInformation = new HBox(list, eventInformation);
-		
+		HBox listAndInformation = new HBox(5, list, eventInformation);
 		
 		
 		HBox eventButtons = new HBox(5);
@@ -132,26 +159,6 @@ public class SideMenu extends Component {
 		list.setItems(items);
 		list.setMaxWidth(150);
 		list.setPrefHeight(150);
-	}
-	
-	private GridPane addEventInformation(String eventName, ArrayList<Event> events) {
-		fromTime = new Label("From:");
-		toTime = new Label("To:");
-		location = new Label("Location:");
-		info = new Label("Info");
-		priority = new Label("Priority:");
-		
-		GridPane eventInformation = new GridPane();
-		eventInformation.setGridLinesVisible(true);
-		eventInformation.add(fromTime, 0, 0);
-		eventInformation.add(toTime, 0, 1);
-		eventInformation.add(location, 0, 2);
-		eventInformation.add(info, 0, 3);
-		eventInformation.add(priority, 0, 4);
-		
-		eventInformation.add(new Label("Hallo"), 1, 0);
-		
-		return eventInformation;
 	}
 	
 }

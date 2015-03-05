@@ -28,14 +28,21 @@ public class Main extends Application implements ProgramListener{
 	public Main(){
 		program = new Program();
 		program.addListener(this);
-		Window loginScreen = new LoginScreen(this);
+/*		Window loginScreen = new LoginScreen();
+		Window loginScreen2 = new LoginScreen();
+		
 		openNewWindow(loginScreen);
+
+		openNewWindow(loginScreen2);
+		*/
+		//Window loginScreen = new LoginScreen(this);
+		//openNewWindow(loginScreen);
 	}
 	
 	@Override
 	public void start(Stage primaryStage) {
 		try {
-//			DebugMain debuglauncher = new DebugMain(root);
+//			DebugMain debuglauncher = new DebugMain(root, this);
 
 			
 			Scene scene = new Scene(root,SCREENHEIGHT,SCREENHEIGHT);

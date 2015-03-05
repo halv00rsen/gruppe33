@@ -12,6 +12,8 @@ import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.scene.control.ToggleButton;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
@@ -64,6 +66,7 @@ public class LoginGUI extends Component{
 		title.setFont(Font.font ("Verdana", 20));
 		title.setPadding(new Insets(0, 0, 10, 0));
 		
+		
 		errorNameLabel = new Label();
 		errorNameLabel.setPadding(new Insets(10, 10, 10, 10));
 		errorNameLabel.setText("Enter username*");
@@ -88,7 +91,18 @@ public class LoginGUI extends Component{
 		passwordLabel.setFont(Font.font("Verdana", 12));
 		passwordLabel.setPadding(new Insets(10, 20, 10, 0));
 		
+		EventHandler<KeyEvent> loginAction = new EventHandler<KeyEvent>(){
+
+			@Override
+			public void handle(KeyEvent event) {
+				if (event.getCode() == KeyCode.ENTER){
+					main.requestLogin(usernameTextField.getText(), passwordField.getText());
+				}
+			}
+			
+		};
 		loginButton = new Button();
+		loginButton.setOnKeyReleased(loginAction);
 		loginButton.setText("Log in");
 		loginButton.setFont(Font.font("Verdana", 12));
 		loginButton.setOnAction(new EventHandler<ActionEvent>(){
@@ -217,7 +231,8 @@ public class LoginGUI extends Component{
 		mainHBox.getChildren().add(doBox);
 		mainHBox.getChildren().add(vbox);
 		
-
+		usernameTextField.setOnKeyReleased(loginAction);
+		passwordField.setOnKeyReleased(loginAction);
 		
 		mainVBox = new VBox(10);
 		mainVBox.setPadding(new Insets(10, 10, 10, 20));
