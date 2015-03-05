@@ -23,7 +23,7 @@ public class HomeScreen extends Window{
 		HBox b1 = new HBox(0);
 		
 		
-		CalendarMonthGUI gui = new CalendarMonthGUI(this, LocalDate.now(), new ArrayList<Event>(), main);
+		CalendarWeekGUI gui = new CalendarWeekGUI(this, LocalDate.now(), new ArrayList<Event>(), main);
 		SideMenu menu = new SideMenu(this, LocalDate.now(), DebugMain.getEvents(), main);
 		b1.getChildren().addAll(gui,menu);
 		this.getChildren().add(b1);
