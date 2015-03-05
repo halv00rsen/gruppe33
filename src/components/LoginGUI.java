@@ -23,18 +23,14 @@ import javafx.scene.text.TextFlow;
 
 public class LoginGUI extends Component{
 	
-	String highLightStyle = "-fx-background-color: #D63434";
 	
 	Label title;
-	Label infoLabel;
 	Label errorNameLabel;
 	Label errorPasswordLabel;
 	Label errorEmailLabel;
-	Label passordNameLabel;
 	Label usernameLabel;
 	Label passwordLabel;
 	Button loginButton;
-	Button createUserButton;
 	Button sendUserInfoButton;
 	ToggleButton forgottenUserInfoToggle;
 	TextField usernameTextField;
@@ -112,18 +108,6 @@ public class LoginGUI extends Component{
 			}
 	});
 		
-		
-		createUserButton = new Button();
-		createUserButton.setText("Create user");
-		createUserButton.setOnAction(new EventHandler<ActionEvent>(){
-
-			@Override
-			public void handle(ActionEvent arg0) {
-				
-				System.out.println("Nytt vindu for ny bruker");
-				
-			}
-	});
 		sendUserInfoButton = new Button();
 		sendUserInfoButton.setText("Send");
 		sendUserInfoButton.setFont(Font.font("Verdana", 12));
