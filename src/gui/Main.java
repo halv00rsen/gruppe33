@@ -1,9 +1,7 @@
 package gui;
-import components.*;
-import windows.*;	
 import java.util.List;
 
-import windows.LoginScreen;
+import windows.*;
 import classes.Calendar;
 import classes.Group;
 import classes.Message;
@@ -11,17 +9,10 @@ import classes.Program;
 import classes.ProgramListener;
 import classes.Room;
 import classes.View;
-
-import com.sun.javafx.geom.transform.BaseTransform.Degree;
-
-import gui.DebugMain;
 import javafx.application.Application;
 import javafx.stage.Stage;
 import javafx.scene.Node;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.text.Font;
 
@@ -44,12 +35,14 @@ public class Main extends Application implements ProgramListener{
 
 		openNewWindow(loginScreen2);
 		*/
+		Window loginScreen = new LoginScreen(this);
+		openNewWindow(loginScreen);
 	}
 	
 	@Override
 	public void start(Stage primaryStage) {
 		try {
-			DebugMain debuglauncher = new DebugMain(root);
+			DebugMain debuglauncher = new DebugMain(root, this);
 
 			
 			Scene scene = new Scene(root,SCREENHEIGHT,SCREENHEIGHT);
@@ -96,8 +89,8 @@ public class Main extends Application implements ProgramListener{
 
 	@Override
 	public void loginSuccess(String username, String name) {
-		// TODO Auto-generated method stub
-		
+		HomeScreen homeScreen  = new HomeScreen(this);
+		openNewWindow(homeScreen);
 	}
 
 	@Override
@@ -147,4 +140,7 @@ public class Main extends Application implements ProgramListener{
 		// TODO Auto-generated method stub
 		
 	}
+	public void requestLogin(String userName, String password){
+		program.personLogin(userName, password);
 	}
+}

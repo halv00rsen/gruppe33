@@ -6,7 +6,7 @@ import java.util.ArrayList;
 
 import classes.Event;
 import javafx.scene.layout.Pane;
-import jfxtras.scene.control.agenda.Agenda;
+//import jfxtras.scene.control.agenda.Agenda;
 
 public class DebugMain {
 
@@ -15,9 +15,9 @@ public class DebugMain {
 	 * For å kjøre GUI komponenter til debuging. 
 	 * Kan tulles med så mye man ønsker, ikke en del av programmet.
 	 */
-	public DebugMain(Pane root) {
+	public DebugMain(Pane root, Main main) {
 		
-		Agenda agenda = new Agenda();
+//		Agenda agenda = new Agenda();
 		
 		ArrayList<Event> events = new ArrayList<Event>();
 		Event event1 = new Event(null, null, null, null, null, null, null, null, null, null, null, null);
@@ -32,7 +32,6 @@ public class DebugMain {
 		event3.setEventName("Jakt");
 		event4.setEventName("Skydiving");
 		event5.setEventName("Handle");
-		
 		event1.setStartTime(LocalDateTime.of(1986, Month.APRIL, 8, 12, 30));
 		event2.setStartTime(LocalDateTime.of(1986, Month.APRIL, 8, 12, 31));
 		event3.setStartTime(LocalDateTime.of(1986, Month.APRIL, 8, 12, 32));
@@ -64,9 +63,13 @@ public class DebugMain {
 		events.add(event4);
 		events.add(event5);
 
-		SideMenu c = new SideMenu(root, LocalDate.now(), events);
-
+		
+		SideMenu c = new SideMenu(root, LocalDate.now(), events, main);
 		root.getChildren().add(c);
+//		CalendarWeekGUI c = new CalendarWeekGUI(root,LocalDate.now(),events);
+//		LoginGUI l = new LoginGUI(main);
+		
+//		root.getChildren().add(l);
 	}
 
 }
