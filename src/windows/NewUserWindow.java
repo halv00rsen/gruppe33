@@ -216,7 +216,9 @@ public class NewUserWindow extends Window{
 				
 			}
 	});
-		terms = new TextFlow(new Hyperlink("godtatt avtalen"));
+		Hyperlink link = new Hyperlink("godtatt avtalen");
+		link.setOnAction(e-> openSvada(e));
+		terms = new TextFlow(link);
 		terms.setPadding(new Insets(0, 0, 0, 0));
 		acceptCheckBox = new CheckBox("Jeg har");
 		acceptCheckBox.setPadding(new Insets(0, 0, 0, 3));
@@ -269,6 +271,11 @@ public class NewUserWindow extends Window{
 		this.getChildren().add(vbox);
 	}
 	
+	private void openSvada(ActionEvent e) {
+//		System.out.println("HEI");
+		SvadaScreen s = new SvadaScreen();
+	}
+
 	private boolean validateTextFields(){
 		String isEmptyMessage = "";
 		if(firstNameTextField.getText().isEmpty()){
