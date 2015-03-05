@@ -39,6 +39,7 @@ public class NewUserWindow extends Window{
 	Text errorPasswordText;
 	Text errorRePasswordText;
 	Text errorTermsText;
+	Text errorTermsRead;
 	
 	TextField firstNameTextField;
 	TextField lastNameTextField;
@@ -55,6 +56,7 @@ public class NewUserWindow extends Window{
 	HBox innerHbox;
 	VBox vbox;
 	GridPane mainGridPane;
+	private boolean clicked = false;
 	
 	public NewUserWindow(Main main) {
 		super(main);
@@ -108,7 +110,9 @@ public class NewUserWindow extends Window{
 		errorTermsText = new Text("Du må godta avtalen for å opprette en bruker*");
 		errorTermsText.setVisible(false);
 		errorTermsText.setFill(Color.RED);
-		
+		errorTermsRead = new Text("Du må lese avtalen før du godtar*");
+		errorTermsRead.setVisible(false);
+		errorTermsRead.setFill(Color.RED);
 		firstNameTextField = new TextField();
 		firstNameTextField.setPromptText("Ola");
 		firstNameTextField.focusedProperty().addListener(new ChangeListener<Boolean>()
@@ -227,6 +231,7 @@ public class NewUserWindow extends Window{
 		    @Override
 		    public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
 		    	errorTermsText.setVisible(false);
+		    	errorTermsRead.setVisible(false);
 		    }
 		});
 		
@@ -267,12 +272,14 @@ public class NewUserWindow extends Window{
 		vbox.getChildren().add(mainGridPane);
 		vbox.getChildren().add(hbox);
 		vbox.getChildren().add(errorTermsText);
+		vbox.getChildren().add(errorTermsRead);
 		
 		this.getChildren().add(vbox);
 	}
 	
 	private void openSvada(ActionEvent e) {
 //		System.out.println("HEI");
+		clicked = true;
 		SvadaScreen s = new SvadaScreen();
 	}
 
@@ -311,6 +318,8 @@ public class NewUserWindow extends Window{
 			errorTermsText.setVisible(true);
 			isEmptyMessage += "Avtale ikke godtatt";
 			
+		}else if(acceptCheckBox.isSelected() && clicked == false){
+			errorTermsRead.setVisible(true);
 		}
 		
 		if(isEmptyMessage == "") return true;
