@@ -59,7 +59,7 @@ public class LoginGUI extends Component{
 		this.setPrefWidth(100);
 		this.setPrefHeight(500);
 		
-		createUserFlow = new TextFlow(new Hyperlink("New user?"));
+		createUserFlow = new TextFlow(new Hyperlink("Ny bruker?"));
 		
 		title = new Label();
 		title.setText("Velkommen");
@@ -69,25 +69,25 @@ public class LoginGUI extends Component{
 		
 		errorNameLabel = new Label();
 		errorNameLabel.setPadding(new Insets(10, 10, 10, 10));
-		errorNameLabel.setText("Enter username*");
+		errorNameLabel.setText("Skriv brukernavn*");
 		errorNameLabel.setVisible(false);
 		errorNameLabel.setTextFill(Color.RED);
 		errorPasswordLabel = new Label();
 		errorPasswordLabel.setPadding(new Insets(10, 10, 10, 10));
-		errorPasswordLabel.setText("Enter password*");
+		errorPasswordLabel.setText("Skriv passord*");
 		errorPasswordLabel.setVisible(false);
 		errorPasswordLabel.setTextFill(Color.RED);
 		errorEmailLabel = new Label();
 		errorEmailLabel.setPadding(new Insets(10, 10, 10, 10));
-		errorEmailLabel.setText("Enter email*");
+		errorEmailLabel.setText("Skriv epost*");
 		errorEmailLabel.setVisible(false);
 		errorEmailLabel.setTextFill(Color.RED);
 		usernameLabel = new Label();
-		usernameLabel.setText("Username: ");
+		usernameLabel.setText("Brukernavn: ");
 		usernameLabel.setFont(Font.font("Verdana", 12));
 		usernameLabel.setPadding(new Insets(10, 20, 10, 0));
 		passwordLabel = new Label();
-		passwordLabel.setText("Password: ");
+		passwordLabel.setText("Passord: ");
 		passwordLabel.setFont(Font.font("Verdana", 12));
 		passwordLabel.setPadding(new Insets(10, 20, 10, 0));
 		
@@ -103,7 +103,7 @@ public class LoginGUI extends Component{
 		};
 		loginButton = new Button();
 		loginButton.setOnKeyReleased(loginAction);
-		loginButton.setText("Log in");
+		loginButton.setText("Logg in");
 		loginButton.setFont(Font.font("Verdana", 12));
 		loginButton.setOnAction(new EventHandler<ActionEvent>(){
 
@@ -120,8 +120,19 @@ public class LoginGUI extends Component{
 				
 				
 			}
-	});
+		});
 		
+//		createUserButton = new Button();
+//		createUserButton.setText("Lag bruker");
+//		createUserButton.setOnAction(new EventHandler<ActionEvent>(){
+//
+//			@Override
+//			public void handle(ActionEvent arg0) {
+//				
+//				System.out.println("Nytt vindu for ny bruker");
+//				
+//			}
+//		});
 		sendUserInfoButton = new Button();
 		sendUserInfoButton.setText("Send");
 		sendUserInfoButton.setFont(Font.font("Verdana", 12));
@@ -134,10 +145,10 @@ public class LoginGUI extends Component{
 				validateEmail();
 				
 			}
-	});
+		});
 		
 		usernameTextField = new TextField();
-		usernameTextField.setPromptText("Enter username");
+		usernameTextField.setPromptText("Brukernavn");
 		usernameTextField.focusedProperty().addListener(new ChangeListener<Boolean>()
 				{
 		    @Override
@@ -151,7 +162,7 @@ public class LoginGUI extends Component{
 		});
 		
 		passwordField = new PasswordField();
-		passwordField.setPromptText("Enter password");
+		passwordField.setPromptText("Passord");
 		passwordField.focusedProperty().addListener(new ChangeListener<Boolean>()
 				{
 		    @Override
@@ -166,7 +177,7 @@ public class LoginGUI extends Component{
 		
 		emailTextField = new TextField();
 		emailTextField.setVisible(false);
-		emailTextField.setPromptText("Email address");
+		emailTextField.setPromptText("Epostadresse");
 		emailTextField.focusedProperty().addListener(new ChangeListener<Boolean>()
 				{
 		    @Override
@@ -180,7 +191,7 @@ public class LoginGUI extends Component{
 		});
 		
 		forgottenUserInfoToggle = new ToggleButton();
-		forgottenUserInfoToggle.setText("Forgotten password?");
+		forgottenUserInfoToggle.setText("Glemt passord?");
 		forgottenUserInfoToggle.setFont(Font.font("Verdana", 12));
 		forgottenUserInfoToggle.setOnAction(new EventHandler<ActionEvent>(){
 
@@ -254,6 +265,7 @@ public class LoginGUI extends Component{
 			isEmptyMessage += "Passord ikke oppgitt";
 			errorPasswordLabel.setVisible(true);
 		}
+		System.out.println("Message: " + isEmptyMessage);
 		if(isEmptyMessage == "") return true;
 		
 		return false;

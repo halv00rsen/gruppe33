@@ -138,7 +138,7 @@ public class SideMenu extends Component {
 		
 		VBox vbox = new VBox();
 		vbox.getChildren().addAll(daysEvents, listAndInformation, eventButtons);
-		parent.getChildren().add(vbox);
+		this.getChildren().add(vbox);
 	}
 
 	

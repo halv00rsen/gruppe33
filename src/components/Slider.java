@@ -8,18 +8,18 @@ import javafx.scene.shape.Polygon;
 
 public class Slider extends StackPane{
 	private String backupStyle;
-
+	public static int width = 40;
 
 	public Slider(boolean left){
 		
 		this.getChildren();
 		this.setPrefHeight(CalendarMonthGUI.defaultCalHeight);
-		this.setPrefWidth(40);
+		this.setPrefWidth(width);
 		this.setStyle("-fx-background-color: #E0E0E0");
 		Polygon arrow = new Polygon();
 		arrow.getPoints().add(0.0);
-		arrow.getPoints().add(40.0);
-		arrow.getPoints().add(40.0);
+		arrow.getPoints().add(width + 0.00);
+		arrow.getPoints().add(width + 0.00);
 		arrow.getPoints().add(0.0);
 		arrow.getPoints().add(0.0);
 		arrow.getPoints().add(-40.0);

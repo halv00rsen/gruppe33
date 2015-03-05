@@ -58,8 +58,8 @@ public class CalendarWeekGUI extends Component{
 		updateDate(date);
 		this.requestFocus();
 		this.setTranslateX(0);
-		this.setPrefWidth(100);
-		this.setPrefHeight(500);
+		this.setPrefWidth(defaultCalWidth+Slider.width*2);
+		this.setPrefHeight(defaultCalHeight);
 		this.events = events;
 		
 		this.lastCalendar = new CalendarWeekBase(this,this.date.plusMonths(-1),events);
