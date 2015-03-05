@@ -19,12 +19,13 @@ public class HomeScreen extends Window{
 	@Override
 	public void init() {
 		// TODO Auto-generated method stub
-		GridPane b1 = new GridPane();
+		HBox b1 = new HBox(50);
 		CalendarMonthGUI gui = new CalendarMonthGUI(this, LocalDate.now(), new ArrayList<Event>(), main);
+		LoginScreen login = new LoginScreen(main);
 		SideMenu menu = new SideMenu(this, LocalDate.now(), DebugMain.getEvents(), main);
-		b1.add(gui, 0, 0);
-		b1.add(menu, 1, 0);
-		this.getChildren().add(b1);
+		b1.getChildren().addAll(gui, login);
+		
+		this.getChildren().addAll(gui,menu);
 	}
 
 }
