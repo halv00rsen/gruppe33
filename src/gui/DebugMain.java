@@ -1,8 +1,10 @@
 package gui;
 import components.*;
 import windows.*;
+
 import java.time.*;
 import java.util.ArrayList;
+import java.util.List;
 
 import classes.Event;
 import javafx.scene.layout.Pane;
@@ -14,11 +16,11 @@ public class DebugMain {
 	 * 
 	 * For å kjøre GUI komponenter til debuging. 
 	 * Kan tulles med så mye man ønsker, ikke en del av programmet.
+	 * 
+	 * 
 	 */
-	public DebugMain(Pane root, Main main) {
-		
-//		Agenda agenda = new Agenda();
-		
+	
+	public static ArrayList<Event> getEvents(){
 		ArrayList<Event> events = new ArrayList<Event>();
 		Event event1 = new Event(null, null, null, null, null, null, null, null, null, null, null, null);
 		Event event2 = new Event(null, null, null, null, null, null, null, null, null, null, null, null);
@@ -62,9 +64,17 @@ public class DebugMain {
 		events.add(event3);
 		events.add(event4);
 		events.add(event5);
+		return events;
+	}
+	
+	public DebugMain(Pane root, Main main) {
+		
+//		Agenda agenda = new Agenda();
+		
+		
 
 		
-		SideMenu c = new SideMenu(root, LocalDate.now(), events, main);
+		SideMenu c = new SideMenu(root, LocalDate.now(), getEvents(), main);
 		root.getChildren().add(c);
 //		CalendarWeekGUI c = new CalendarWeekGUI(root,LocalDate.now(),events);
 //		LoginGUI l = new LoginGUI(main);

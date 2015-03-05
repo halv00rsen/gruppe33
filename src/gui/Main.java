@@ -42,7 +42,7 @@ public class Main extends Application implements ProgramListener{
 	@Override
 	public void start(Stage primaryStage) {
 		try {
-			DebugMain debuglauncher = new DebugMain(root, this);
+//			DebugMain debuglauncher = new DebugMain(root, this);
 
 			
 			Scene scene = new Scene(root,SCREENHEIGHT,SCREENHEIGHT);
