@@ -15,7 +15,8 @@ public class LoginScreen extends Window{
 //		this.setStyle("-fx-background-color: #00FF00");
 		LoginGUI login = new LoginGUI(this,main);
 		NewUserWindow create = new NewUserWindow(main);
-		this.getChildren().add(login);
+		SettingsGUI settings = new SettingsGUI(this, main);
+		this.getChildren().add(settings);
 		//
 	}
 
