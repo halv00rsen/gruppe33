@@ -28,8 +28,8 @@ import classes.Event;
 public class CalendarMonthGUI extends Component{
 //	focusProperty = getFocs
 	LocalDate date;
-	static int defaultCalHeight = 600;
-	static int defaultCalWidth = 700;
+	static int defaultCalHeight = 400;
+	static int defaultCalWidth = 600;
 	CalendarMonthBase mainCalendar;
 	CalendarMonthBase nextCalendar;
 	CalendarMonthBase lastCalendar;
@@ -58,8 +58,8 @@ public class CalendarMonthGUI extends Component{
 		updateDate(date);
 		this.requestFocus();
 		this.setTranslateX(0);
-		this.setPrefWidth(100);
-		this.setPrefHeight(500);
+		this.setPrefWidth(defaultCalWidth+Slider.width*2);
+		this.setPrefHeight(defaultCalHeight);
 		this.events = events;
 		
 		this.lastCalendar = new CalendarMonthBase(this,this.date.plusMonths(-1),events);
@@ -115,7 +115,7 @@ public class CalendarMonthGUI extends Component{
 		sliderLeft.setOnMouseClicked(e -> nextSlide(e));
 		this.requestFocus();
 		this.setOnKeyPressed(e -> handleOnKeyPressed(e));
-		
+//		System.out.println(innerBox.getWidth());
 		
 	}
 	private void handleOnKeyPressed(KeyEvent e){
