@@ -2,15 +2,33 @@ package windows;
 import java.time.LocalDate;
 import java.util.ArrayList;
 
+import javafx.beans.property.SimpleBooleanProperty;
+import javafx.event.ActionEvent;
+import javafx.geometry.Pos;
+import javafx.scene.control.Button;
+import javafx.scene.control.RadioButton;
+import javafx.scene.control.ToggleButton;
+import javafx.scene.control.ToggleGroup;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
+import javafx.scene.layout.VBox;
 import classes.Event;
 import components.*;
 import gui.*;
 public class HomeScreen extends Window{
-
+	
+    ToggleButton weekButton;
+    ToggleButton monthButton;
+    ToggleGroup group;
+    
+    CalendarWeekGUI weekGui;
+    CalendarMonthGUI monthGui;
+    
+    VBox calendarAndInfo;
+    HBox mainBox;
+    
 	public HomeScreen(Main main) {
 		super(main);
 //		this.setStyle("-fx-color-background: #ff0044");
@@ -20,19 +38,50 @@ public class HomeScreen extends Window{
 	@Override
 	public void init() {
 		// TODO Auto-generated method stub
+		
+		weekButton = new ToggleButton("Uke");
+		monthButton = new ToggleButton("Måned");
+		group = new ToggleGroup();
+		weekButton.setToggleGroup(group);
+		monthButton.setToggleGroup(group);
+		
+		weekButton.setOnAction(e -> weekButtonMethod(e));
+		monthButton.setOnAction(e -> monthButtonMethod(e));
+		
+		mainBox = new HBox(0);
+		calendarAndInfo = new VBox(10);
+		
 
-		HBox b1 = new HBox(0);
 		
-		
-		CalendarMonthGUI gui = new CalendarMonthGUI(this, LocalDate.now(), new ArrayList<Event>(), main);
-		LoginScreen login = new LoginScreen(main);
+		weekGui = new CalendarWeekGUI(this, LocalDate.now(), new ArrayList<Event>(), main);
+		monthGui = new CalendarMonthGUI(this, LocalDate.now(), new ArrayList<Event>(), main);
 		SideMenu menu = new SideMenu(this, LocalDate.now(), DebugMain.getEvents(), main);
-
-		b1.getChildren().addAll(gui,menu);
-		this.getChildren().add(b1);
+		
+		
+		
+		
+		HBox buttons = new HBox(weekButton, monthButton);
+		buttons.setAlignment(Pos.BOTTOM_RIGHT);
+		calendarAndInfo.getChildren().addAll(buttons, weekGui);
+		
+		
+		
+		mainBox.getChildren().addAll(calendarAndInfo,menu);
+		this.getChildren().add(mainBox);
 //		this.getChildren().add(gui);
 //		gui.setTranslateX(300);
 
+	}
+	
+	
+	private void monthButtonMethod(ActionEvent e) {
+		calendarAndInfo.getChildren().remove(1);
+		calendarAndInfo.getChildren().add(monthGui);
+	}
+
+	private void weekButtonMethod(ActionEvent e) {
+		calendarAndInfo.getChildren().remove(1);
+		calendarAndInfo.getChildren().add(weekGui);
 	}
 
 }
