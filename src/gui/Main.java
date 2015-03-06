@@ -93,7 +93,9 @@ public class Main extends Application implements ProgramListener{
 
 	@Override
 	public void userCreated(boolean isCreated) {
-		// TODO Auto-generated method stub
+		if (isCreated){
+			requestLoginWindow();
+		}
 		
 	}
 
@@ -135,6 +137,10 @@ public class Main extends Application implements ProgramListener{
 	
 	public void requestLogout(){
 		program.logout();
+	}
+	
+	public void requestCreateUser(String username, String password, String name){
+		program.createUser(username, password, name);
 	}
 	
 	public void requestLogin(String userName, String password){

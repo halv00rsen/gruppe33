@@ -218,7 +218,11 @@ public class NewUserWindow extends Window{
 			@Override
 			public void handle(ActionEvent arg0) {
 				
-				if(validateTextFields()) System.out.println("lag bruker");
+				if(validateTextFields()){
+					System.out.println("lag bruker");
+					main.requestCreateUser(usernameTextField.getText(), passwordTextField.getText(), firstNameTextField.getText()
+							+ " " + lastNameTextField.getText());
+				}
 				
 			}
 	});
