@@ -2,11 +2,14 @@ package windows;
 import java.time.LocalDate;
 import java.util.ArrayList;
 
-import javafx.beans.property.SimpleBooleanProperty;
+
+
+
+
 import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
-import javafx.scene.control.RadioButton;
 import javafx.scene.control.ToggleButton;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.layout.BorderPane;
@@ -29,6 +32,7 @@ public class HomeScreen extends Window{
     VBox calendarAndInfo;
     HBox mainBox;
     
+	private Button logout, settings;
 	public HomeScreen(Main main) {
 		super(main);
 //		this.setStyle("-fx-color-background: #ff0044");
@@ -52,6 +56,17 @@ public class HomeScreen extends Window{
 		calendarAndInfo = new VBox(10);
 		
 
+		logout = new Button("Logg ut");
+		logout.setOnAction(new EventHandler<ActionEvent>(){
+
+			@Override
+			public void handle(ActionEvent event) {
+				main.requestLogout();
+			}
+			
+		});
+		settings = new Button("Brukerinnstillinger");
+		settings.setOnAction(e -> main.requestSettingsWindow());
 		
 		weekGui = new CalendarWeekGUI(this, LocalDate.now(), new ArrayList<Event>(), main);
 		monthGui = new CalendarMonthGUI(this, LocalDate.now(), new ArrayList<Event>(), main);
@@ -62,12 +77,13 @@ public class HomeScreen extends Window{
 		
 		HBox buttons = new HBox(weekButton, monthButton);
 		buttons.setAlignment(Pos.BOTTOM_RIGHT);
-		calendarAndInfo.getChildren().addAll(buttons, weekGui);
+		calendarAndInfo.getChildren().addAll(buttons, weekGui, logout);
 		
 		
 		
 		mainBox.getChildren().addAll(calendarAndInfo,menu);
 		this.getChildren().add(mainBox);
+
 //		this.getChildren().add(gui);
 //		gui.setTranslateX(300);
 

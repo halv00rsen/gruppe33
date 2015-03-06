@@ -25,6 +25,7 @@ public class Main extends Application implements ProgramListener{
 	public final static Font header1 = new Font("Calibri", 30);
 
 	private final Program program;
+	private Stage stage;
 	private Window currentWindow;
 	
 	public Main(){
@@ -39,9 +40,10 @@ public class Main extends Application implements ProgramListener{
 	public void start(Stage primaryStage) {
 		try {
 //			DebugMain debuglauncher = new DebugMain(root, this);
-
+			stage = primaryStage;
 			
 			Scene scene = new Scene(root,SCREENHEIGHT,SCREENHEIGHT);
+			stage.setTitle("xKal");
 			primaryStage.setScene(scene);
 			primaryStage.show();
 		} catch(Exception e) {
@@ -79,7 +81,7 @@ public class Main extends Application implements ProgramListener{
 
 	@Override
 	public void loginFailed() {
-		// TODO Auto-generated method stub
+		
 		
 	}
 
@@ -87,17 +89,20 @@ public class Main extends Application implements ProgramListener{
 	public void loginSuccess(String username, String name) {
 		HomeScreen homeScreen  = new HomeScreen(this);
 		openNewWindow(homeScreen);
+		stage.setTitle("xKal (" + username + ")");
 	}
 
 	@Override
 	public void logout() {
-		// TODO Auto-generated method stub
-		
+		requestLoginWindow();
+		stage.setTitle("xKal");
 	}
 
 	@Override
 	public void userCreated(boolean isCreated) {
-		// TODO Auto-generated method stub
+		if (isCreated){
+			requestLoginWindow();
+		}
 		
 	}
 
@@ -136,7 +141,30 @@ public class Main extends Application implements ProgramListener{
 		// TODO Auto-generated method stub
 		
 	}
+	
+	public void requestLogout(){
+		program.logout();
+	}
+	
+	public void requestCreateUser(String username, String password, String name){
+		program.createUser(username, password, name);
+	}
+	
 	public void requestLogin(String userName, String password){
 		program.personLogin(userName, password);
+	}
+	
+	public void requestNewUserGUI(){
+		NewUserWindow w = new NewUserWindow(this);
+		openNewWindow(w);
+	}
+	
+	public void requestLoginWindow(){
+		Window w = new LoginScreen(this);
+		openNewWindow(w);
+	}
+	
+	public void requestSettingsWindow(){
+//		Window w = new 
 	}
 }

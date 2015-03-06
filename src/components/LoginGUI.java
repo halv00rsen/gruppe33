@@ -14,6 +14,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.control.ToggleButton;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
@@ -59,7 +60,18 @@ public class LoginGUI extends Component{
 		this.setPrefWidth(100);
 		this.setPrefHeight(500);
 		
-		createUserFlow = new TextFlow(new Hyperlink("Ny bruker?"));
+		Hyperlink l = new Hyperlink("Ny bruker?");
+		l.setOnMouseClicked(new EventHandler<MouseEvent>(){
+
+			@Override
+			public void handle(MouseEvent event) {
+				System.out.println("CLicked");
+				main.requestNewUserGUI();
+			}
+			
+		});
+		
+		createUserFlow = new TextFlow(l);
 		
 		title = new Label();
 		title.setText("Velkommen");
