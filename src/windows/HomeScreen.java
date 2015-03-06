@@ -25,7 +25,7 @@ public class HomeScreen extends Window{
     VBox calendarAndInfo;
     HBox mainBox;
     
-	private Button logout, settings;
+	private Button settings;
 	public HomeScreen(Main main) {
 		super(main);
 //		this.setStyle("-fx-color-background: #ff0044");
@@ -48,16 +48,6 @@ public class HomeScreen extends Window{
 		mainBox = new HBox(0);
 		calendarAndInfo = new VBox(10);
 		
-
-		logout = new Button("Logg ut");
-		logout.setOnAction(new EventHandler<ActionEvent>(){
-
-			@Override
-			public void handle(ActionEvent event) {
-				main.requestLogout();
-			}
-			
-		});
 		settings = new Button("Brukerinnstillinger");
 		settings.setOnAction(e -> main.requestSettingsWindow());
 		
@@ -70,7 +60,7 @@ public class HomeScreen extends Window{
 		
 		HBox buttons = new HBox(weekButton, monthButton);
 		buttons.setAlignment(Pos.BOTTOM_RIGHT);
-		calendarAndInfo.getChildren().addAll(buttons, weekGui, logout);
+		calendarAndInfo.getChildren().addAll(buttons, weekGui);
 		
 		
 		

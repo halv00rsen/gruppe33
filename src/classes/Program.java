@@ -198,7 +198,7 @@ public class Program {
 			listeners.remove(l);
 	}
 	
-	private boolean isLoggedIn(){
+	public boolean isLoggedIn(){
 		return currentPerson != null;
 	}
 }

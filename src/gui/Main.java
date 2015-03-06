@@ -13,6 +13,10 @@ import javafx.application.Application;
 import javafx.stage.Stage;
 import javafx.scene.Node;
 import javafx.scene.Scene;
+import javafx.scene.control.Button;
+import javafx.scene.control.Tab;
+import javafx.scene.control.TabPane;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.text.Font;
 
@@ -27,6 +31,7 @@ public class Main extends Application implements ProgramListener{
 	private final Program program;
 	private Stage stage;
 	private Window currentWindow;
+	private TabPane tabPane;
 	
 	public Main(){
 		program = new Program();
@@ -78,7 +83,7 @@ public class Main extends Application implements ProgramListener{
 		currentWindow = window;
 		root.getChildren().add(window);
 	}
-
+	
 	@Override
 	public void loginFailed() {
 		
@@ -87,8 +92,30 @@ public class Main extends Application implements ProgramListener{
 
 	@Override
 	public void loginSuccess(String username, String name) {
+		HBox box = new HBox(20);
+		Button logout = new Button("Logg ut");
+		
+		logout.setOnAction(e -> program.logout());
+		tabPane = new TabPane();
+		Tab home = new Tab("Hjem");
 		HomeScreen homeScreen  = new HomeScreen(this);
-		openNewWindow(homeScreen);
+		home.setContent(homeScreen);
+		
+		Tab newEvent = new Tab("Ny event");
+		Tab room = new Tab("Rom");
+		Tab persons = new Tab("Personer");
+		Tab inbox = new Tab("Postkasse");
+		Tab settings = new Tab("Innstillinger");
+		
+		tabPane.getTabs().addAll(home, newEvent, room, persons, inbox, settings);
+		for (Tab tab : tabPane.getTabs()){
+			tab.setClosable(false);
+		}
+		box.getChildren().addAll(logout, tabPane);
+//		openNewWindow(homeScreen);
+		if (currentWindow != null)
+			currentWindow.exitThisWindow();
+		root.getChildren().add(box);
 		stage.setTitle("xKal (" + username + ")");
 	}
 
@@ -140,10 +167,6 @@ public class Main extends Application implements ProgramListener{
 	public void sendNotification(String notif) {
 		// TODO Auto-generated method stub
 		
-	}
-	
-	public void requestLogout(){
-		program.logout();
 	}
 	
 	public void requestCreateUser(String username, String password, String name){
