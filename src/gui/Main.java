@@ -88,8 +88,7 @@ public class Main extends Application implements ProgramListener{
 
 	@Override
 	public void logout() {
-		// TODO Auto-generated method stub
-		
+		requestLoginWindow();
 	}
 
 	@Override
@@ -133,6 +132,11 @@ public class Main extends Application implements ProgramListener{
 		// TODO Auto-generated method stub
 		
 	}
+	
+	public void requestLogout(){
+		program.logout();
+	}
+	
 	public void requestLogin(String userName, String password){
 		program.personLogin(userName, password);
 	}
