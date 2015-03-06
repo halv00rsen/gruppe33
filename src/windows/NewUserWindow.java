@@ -62,7 +62,6 @@ public class NewUserWindow extends Window{
 	
 	public NewUserWindow(Main main) {
 		super(main);
-		init();
 	}
 
 	@Override
