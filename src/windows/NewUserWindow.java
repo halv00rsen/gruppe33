@@ -49,6 +49,8 @@ public class NewUserWindow extends Window{
 	PasswordField passwordTextField;
 	PasswordField rePasswordTextField;
 	
+	private Button cancel;
+	
 	TextFlow terms;
 	CheckBox acceptCheckBox;
 	Button createUserButton;
@@ -259,9 +261,20 @@ public class NewUserWindow extends Window{
 		mainGridPane.add(rePasswordTextField, 1, 6);
 		mainGridPane.add(errorRePasswordText, 2, 6);
 		
+		cancel = new Button("Avbryt");
+		cancel.setOnAction(new EventHandler<ActionEvent>(){
+
+			@Override
+			public void handle(ActionEvent event) {
+				main.requestLoginWindow();
+			}
+			
+		});
+		
 		innerHbox = new HBox(33);
 		innerHbox.getChildren().add(terms);
 		innerHbox.getChildren().add(createUserButton);
+		innerHbox.getChildren().add(cancel);
 		
 		hbox = new HBox();
 		hbox.getChildren().add(acceptCheckBox);

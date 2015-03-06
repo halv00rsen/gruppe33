@@ -16,7 +16,7 @@ public class LoginScreen extends Window{
 		LoginGUI login = new LoginGUI(this,main);
 		NewUserWindow create = new NewUserWindow(main);
 		SettingsGUI settings = new SettingsGUI(this, main);
-		this.getChildren().add(settings);
+		this.getChildren().add(login);
 		//
 	}
 
