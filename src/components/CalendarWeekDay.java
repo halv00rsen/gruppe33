@@ -15,7 +15,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Line;
 import classes.Event;
 
-public class CalendarWeekDayBox extends Pane{
+public class CalendarWeekDay extends Pane{
 	int dayOfMonth;
 	int[] def = {0,0,0};
 	int month;
@@ -35,7 +35,7 @@ public class CalendarWeekDayBox extends Pane{
 	public int calHeight = 600;
 	public int calWidth = 100;
 	CalendarWeekGUI calGui;
-	public CalendarWeekDayBox(CalendarWeekGUI gui, LocalDate date,ArrayList<Event> events, boolean isUpperDisabled, boolean isLowerDisabled){
+	public CalendarWeekDay(CalendarWeekGUI gui, LocalDate date,ArrayList<Event> events, boolean isUpperDisabled, boolean isLowerDisabled){
 		this.calGui = gui;
 		this.events = events;
 		this.date = date;
