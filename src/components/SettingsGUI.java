@@ -1,5 +1,6 @@
 package components;
 
+import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
@@ -47,10 +48,10 @@ public class SettingsGUI extends Component{
 	TextField usernameTextField;
 	PasswordField passwordTextField;
 	PasswordField rePasswordTextField;
-
+	
+	Button cancelButton;
 	Button createUserButton;
 	HBox hbox;
-	HBox innerHbox;
 	VBox vbox;
 	GridPane mainGridPane;
 
@@ -111,16 +112,17 @@ public class SettingsGUI extends Component{
 		    @Override
 		    public void changed(ObservableValue<? extends Boolean> arg0, Boolean oldPropertyValue, Boolean newPropertyValue)
 		    {
-	        	firstNameTextField.selectAll();
-		        if (newPropertyValue)
-		        {
-		        	errorFirstNameText.setVisible(false);
-		        }
-		        else
-		        {
-		            System.out.println("Textfield out focus");
-		        }
+		    	errorFirstNameText.setVisible(false);
+		    	Platform.runLater(new Runnable() {
+	                @Override
+	                public void run() {
+	                    if (firstNameTextField.isFocused() && !firstNameTextField.getText().isEmpty()) {
+	                    	firstNameTextField.selectAll();
+	                    }
+	                }
+		    	});
 		    }
+		    	
 		});
 		lastNameTextField = new TextField();
 		lastNameTextField.focusedProperty().addListener(new ChangeListener<Boolean>()
@@ -128,11 +130,17 @@ public class SettingsGUI extends Component{
 		    @Override
 		    public void changed(ObservableValue<? extends Boolean> arg0, Boolean oldPropertyValue, Boolean newPropertyValue)
 		    {
-		        if (newPropertyValue)
-		        {
-		        	errorLastNameText.setVisible(false);
-		        }
+		    	errorLastNameText.setVisible(false);
+		    	Platform.runLater(new Runnable() {
+	                @Override
+	                public void run() {
+	                    if (lastNameTextField.isFocused() && !lastNameTextField.getText().isEmpty()) {
+	                    	lastNameTextField.selectAll();
+	                    }
+	                }
+		    	});
 		    }
+		    	
 		});
 		usernameTextField = new TextField();
 		usernameTextField.focusedProperty().addListener(new ChangeListener<Boolean>()
@@ -140,12 +148,17 @@ public class SettingsGUI extends Component{
 		    @Override
 		    public void changed(ObservableValue<? extends Boolean> arg0, Boolean oldPropertyValue, Boolean newPropertyValue)
 		    {
-		        if (newPropertyValue)
-		        {
-			    	System.out.println("FUNKER");
-		        	errorUsernameText.setVisible(false);
-		        }
+		    	errorUsernameText.setVisible(false);
+		    	Platform.runLater(new Runnable() {
+	                @Override
+	                public void run() {
+	                    if (usernameTextField.isFocused() && !usernameTextField.getText().isEmpty()) {
+	                    	usernameTextField.selectAll();
+	                    }
+	                }
+		    	});
 		    }
+		    	
 		});
 		
 		passwordTextField = new PasswordField();
@@ -155,13 +168,17 @@ public class SettingsGUI extends Component{
 		    @Override
 		    public void changed(ObservableValue<? extends Boolean> arg0, Boolean oldPropertyValue, Boolean newPropertyValue)
 		    {
-		        if (newPropertyValue)
-		        {
-		        	errorPasswordText.setVisible(false);
-		        	errorRePasswordText.setVisible(false);
-		        }
+		    	errorPasswordText.setVisible(false);
+		    	Platform.runLater(new Runnable() {
+	                @Override
+	                public void run() {
+	                    if (passwordTextField.isFocused() && !passwordTextField.getText().isEmpty()) {
+	                    	passwordTextField.selectAll();
+	                    }
+	                }
+		    	});
 		    }
-		});
+		 });
 		
 		rePasswordTextField = new PasswordField();
 		rePasswordTextField.setPromptText("******");
@@ -170,12 +187,17 @@ public class SettingsGUI extends Component{
 		    @Override
 		    public void changed(ObservableValue<? extends Boolean> arg0, Boolean oldPropertyValue, Boolean newPropertyValue)
 		    {
-		        if (newPropertyValue)
-		        {
-		        	errorRePasswordText.setVisible(false);
-		        }
+		    	errorRePasswordText.setVisible(false);
+		    	Platform.runLater(new Runnable() {
+	                @Override
+	                public void run() {
+	                    if (rePasswordTextField.isFocused() && !rePasswordTextField.getText().isEmpty()) {
+	                    	rePasswordTextField.selectAll();
+	                    }
+	                }
+		    	});
 		    }
-		});
+		 });
 		
 		emailTextField = new TextField();
 		emailTextField.focusedProperty().addListener(new ChangeListener<Boolean>()
@@ -183,12 +205,17 @@ public class SettingsGUI extends Component{
 		    @Override
 		    public void changed(ObservableValue<? extends Boolean> arg0, Boolean oldPropertyValue, Boolean newPropertyValue)
 		    {
-		        if (newPropertyValue)
-		        {
-		        	errorEmailText.setVisible(false);
-		        }
+		    	errorEmailText.setVisible(false);
+		    	Platform.runLater(new Runnable() {
+	                @Override
+	                public void run() {
+	                    if (emailTextField.isFocused() && !emailTextField.getText().isEmpty()) {
+	                    	emailTextField.selectAll();
+	                    }
+	                }
+		    	});
 		    }
-		});
+		 });
 		
 		phoneTextField = new TextField();
 		phoneTextField.focusedProperty().addListener(new ChangeListener<Boolean>()
@@ -196,12 +223,16 @@ public class SettingsGUI extends Component{
 		    @Override
 		    public void changed(ObservableValue<? extends Boolean> arg0, Boolean oldPropertyValue, Boolean newPropertyValue)
 		    {
-		        if (newPropertyValue)
-		        {
-		        	System.out.println("get number");
-		        }
+		    	Platform.runLater(new Runnable() {
+	                @Override
+	                public void run() {
+	                    if (phoneTextField.isFocused() && !phoneTextField.getText().isEmpty()) {
+	                    	phoneTextField.selectAll();
+	                    }
+	                }
+		    	});
 		    }
-		});
+		 });
 		
 		createUserButton = new Button("Lagre endringer");
 		createUserButton.setOnAction(new EventHandler<ActionEvent>(){
@@ -209,7 +240,17 @@ public class SettingsGUI extends Component{
 			@Override
 			public void handle(ActionEvent arg0) {
 				
-				if(validateTextFields()) System.out.println("lag bruker");
+				if(validateTextFields()) System.out.println("Lag bruker");
+				
+			}
+		});
+		cancelButton = new Button("Avbryt");
+		cancelButton.setOnAction(new EventHandler<ActionEvent>(){
+
+			@Override
+			public void handle(ActionEvent arg0) {
+				
+				System.out.println("Avbryt");
 				
 			}
 	});
@@ -238,11 +279,15 @@ public class SettingsGUI extends Component{
 		mainGridPane.add(rePasswordTextField, 1, 6);
 		mainGridPane.add(errorRePasswordText, 2, 6);
 		
+		hbox = new HBox(20);
+		hbox.getChildren().add(createUserButton);
+		hbox.getChildren().add(cancelButton);
+		
 		vbox = new VBox(20);
 		vbox.setPadding(new Insets(0, 0, 0, 20));
 		vbox.getChildren().add(title);
 		vbox.getChildren().add(mainGridPane);
-		vbox.getChildren().add(createUserButton);
+		vbox.getChildren().add(hbox);
 		
 		this.getChildren().add(vbox);
 		
