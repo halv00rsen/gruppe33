@@ -76,7 +76,7 @@ public class Main extends Application implements ProgramListener{
 
 	@Override
 	public void loginFailed() {
-		// TODO Auto-generated method stub
+		
 		
 	}
 
@@ -88,13 +88,14 @@ public class Main extends Application implements ProgramListener{
 
 	@Override
 	public void logout() {
-		// TODO Auto-generated method stub
-		
+		requestLoginWindow();
 	}
 
 	@Override
 	public void userCreated(boolean isCreated) {
-		// TODO Auto-generated method stub
+		if (isCreated){
+			requestLoginWindow();
+		}
 		
 	}
 
@@ -133,7 +134,26 @@ public class Main extends Application implements ProgramListener{
 		// TODO Auto-generated method stub
 		
 	}
+	
+	public void requestLogout(){
+		program.logout();
+	}
+	
+	public void requestCreateUser(String username, String password, String name){
+		program.createUser(username, password, name);
+	}
+	
 	public void requestLogin(String userName, String password){
 		program.personLogin(userName, password);
+	}
+	
+	public void requestNewUserGUI(){
+		NewUserWindow w = new NewUserWindow(this);
+		openNewWindow(w);
+	}
+	
+	public void requestLoginWindow(){
+		Window w = new LoginScreen(this);
+		openNewWindow(w);
 	}
 }
