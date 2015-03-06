@@ -2,20 +2,13 @@ package windows;
 import java.time.LocalDate;
 import java.util.ArrayList;
 
-
-
-
-
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 import javafx.scene.control.ToggleButton;
 import javafx.scene.control.ToggleGroup;
-import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
-import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import classes.Event;
 import components.*;
@@ -91,12 +84,12 @@ public class HomeScreen extends Window{
 	
 	
 	private void monthButtonMethod(ActionEvent e) {
-		calendarAndInfo.getChildren().remove(1);
+		calendarAndInfo.getChildren().remove(weekGui);
 		calendarAndInfo.getChildren().add(monthGui);
 	}
 
 	private void weekButtonMethod(ActionEvent e) {
-		calendarAndInfo.getChildren().remove(1);
+		calendarAndInfo.getChildren().remove(monthGui);
 		calendarAndInfo.getChildren().add(weekGui);
 	}
 
