@@ -25,14 +25,14 @@ import java.util.ArrayList;
 
 import classes.Event;
 
-public class CalendarMonthGUI extends Component{
+public class CalendarMonthGUI extends CalendarGUI{
 //	focusProperty = getFocs
 	LocalDate date;
 	static int defaultCalHeight = 400;
 	static int defaultCalWidth = 600;
-	CalendarMonthBase mainCalendar;
-	CalendarMonthBase nextCalendar;
-	CalendarMonthBase lastCalendar;
+	CalendarMonthGrid mainCalendar;
+	CalendarMonthGrid nextCalendar;
+	CalendarMonthGrid lastCalendar;
 	Month month; 
 	int daysInMonth;
 	GridPane grid; 
@@ -62,9 +62,9 @@ public class CalendarMonthGUI extends Component{
 		this.setPrefHeight(defaultCalHeight);
 		this.events = events;
 		
-		this.lastCalendar = new CalendarMonthBase(this,this.date.plusMonths(-1),events);
-		this.mainCalendar = new CalendarMonthBase(this,date,events);
-		this.nextCalendar = new CalendarMonthBase(this,this.date.plusMonths(1),events);
+		this.lastCalendar = new CalendarMonthGrid(this,this.date.plusMonths(-1),events);
+		this.mainCalendar = new CalendarMonthGrid(this,date,events);
+		this.nextCalendar = new CalendarMonthGrid(this,this.date.plusMonths(1),events);
 		
 		
 		lastCalendar.setVisible(false);
@@ -234,14 +234,14 @@ public class CalendarMonthGUI extends Component{
 		lastCalendar = mainCalendar;
 		mainCalendar = nextCalendar;
 		updateDate(mainCalendar.getLocalDate());
-		nextCalendar = new CalendarMonthBase(this, this.date.plusMonths(1),events);
+		nextCalendar = new CalendarMonthGrid(this, this.date.plusMonths(1),events);
 		redrawCalendar();
 	}
 	private void shiftLeft(ActionEvent e) {
 		nextCalendar = mainCalendar;
 		mainCalendar = lastCalendar;
 		updateDate(mainCalendar.getLocalDate());
-		lastCalendar = new CalendarMonthBase(this,this.date.plusMonths(-1),events);
+		lastCalendar = new CalendarMonthGrid(this,this.date.plusMonths(-1),events);
 		redrawCalendar();
 	}
 	private void redrawCalendar() {
@@ -264,9 +264,9 @@ public class CalendarMonthGUI extends Component{
 		System.out.println(mainCalendar);
 		
 	}
-	CalendarDayBox boxHighlighted;
+	CalendarMonthDay boxHighlighted;
 	public void highlight(LocalDate date){
-		CalendarDayBox a = mainCalendar.getDateBox(date);
+		CalendarMonthDay a = mainCalendar.getDateBox(date);
 		
 		
 		if(boxHighlighted != null){
@@ -301,7 +301,7 @@ public class CalendarMonthGUI extends Component{
 	}
 	private void highlightContinue(LocalDate date){
 		System.out.println(mainCalendar);
-		CalendarDayBox a = mainCalendar.getDateBox(date);
+		CalendarMonthDay a = mainCalendar.getDateBox(date);
 		boxHighlighted = a;
 		a.setHighlighted(true);
 		a.requestFocus();

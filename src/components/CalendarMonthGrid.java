@@ -13,8 +13,8 @@ import java.util.HashMap;
 
 import classes.Event;
 
-public class CalendarMonthBase extends Pane{
-	HashMap<LocalDate, CalendarDayBox> datesHash = new HashMap<LocalDate, CalendarDayBox>();
+public class CalendarMonthGrid extends CalendarGrid{
+	HashMap<LocalDate, CalendarMonthDay> datesHash = new HashMap<LocalDate, CalendarMonthDay>();
 	LocalDate date;
 	Month month; 
 	int daysInMonth;
@@ -27,7 +27,7 @@ public class CalendarMonthBase extends Pane{
 	public int calHeight = CalendarMonthGUI.defaultCalHeight;
 	public int calWidth = CalendarMonthGUI.defaultCalWidth;
 	ArrayList<Event> events;
-	public CalendarMonthBase(CalendarMonthGUI gui, LocalDate date,ArrayList<Event> events) {
+	public CalendarMonthGrid(CalendarMonthGUI gui, LocalDate date,ArrayList<Event> events) {
 		date = date.minusDays(0);
 		this.events = events;
 		this.date = date;
@@ -67,7 +67,7 @@ public class CalendarMonthBase extends Pane{
 		int y = 0;
 		for (int i = 0; i < firstDayInMonthWeekday-1; i++) {
 			
-			CalendarDayBox thisBox = new CalendarDayBox(gui,dayLooper,events,false,true);
+			CalendarMonthDay thisBox = new CalendarMonthDay(gui,dayLooper,events,false,true);
 			thisBox.setIsLowerDisabled(true);
 			grid.add(thisBox,x,y);
 			datesHash.put(dayLooper, thisBox);
@@ -80,7 +80,7 @@ public class CalendarMonthBase extends Pane{
 		}
 		
 		for (int i = 0; i < daysInMonth; i++) {
-			CalendarDayBox thisBox = new CalendarDayBox(gui,dayLooper,events,false,false);
+			CalendarMonthDay thisBox = new CalendarMonthDay(gui,dayLooper,events,false,false);
 			grid.add(thisBox,x,y);
 
 			datesHash.put(dayLooper, thisBox);
@@ -93,7 +93,7 @@ public class CalendarMonthBase extends Pane{
 			}
 		}
 		for (int i = firstDayInMonthWeekday+daysInMonth-1; i < 7*6; i++) {
-			CalendarDayBox thisBox = new CalendarDayBox(gui,dayLooper,events,true,false);
+			CalendarMonthDay thisBox = new CalendarMonthDay(gui,dayLooper,events,true,false);
 			thisBox.setIsUpperDisabled(true);
 			grid.add(thisBox,x,y);
 
@@ -110,11 +110,11 @@ public class CalendarMonthBase extends Pane{
 		this.calHeight = calHeight;
 		this.calWidth = calWidth;
 		for (int i = 0; i < grid.getChildren().size(); i++) {
-			((CalendarDayBox)grid.getChildren().get(i)).setSize(calHeight / 6, calWidth / 7);
+			((CalendarMonthDay)grid.getChildren().get(i)).setSize(calHeight / 6, calWidth / 7);
 		}
 	}
 
-	public CalendarDayBox getDateBox(LocalDate date){
+	public CalendarMonthDay getDateBox(LocalDate date){
 		return datesHash.get(date);
 	};
 	public String toString(){
