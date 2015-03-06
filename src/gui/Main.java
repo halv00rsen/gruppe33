@@ -23,6 +23,7 @@ public class Main extends Application implements ProgramListener{
 	public final static Pane root = new Pane();
 	public final static Font header1 = new Font("Calibri", 30);
 	private final Program program;
+	private Stage stage;
 	private Window currentWindow;
 	
 	public Main(){
@@ -36,9 +37,10 @@ public class Main extends Application implements ProgramListener{
 	public void start(Stage primaryStage) {
 		try {
 //			DebugMain debuglauncher = new DebugMain(root, this);
-
+			stage = primaryStage;
 			
 			Scene scene = new Scene(root,SCREENHEIGHT,SCREENHEIGHT);
+			stage.setTitle("xKal");
 			primaryStage.setScene(scene);
 			primaryStage.show();
 		} catch(Exception e) {
@@ -84,11 +86,13 @@ public class Main extends Application implements ProgramListener{
 	public void loginSuccess(String username, String name) {
 		HomeScreen homeScreen  = new HomeScreen(this);
 		openNewWindow(homeScreen);
+		stage.setTitle("xKal (" + username + ")");
 	}
 
 	@Override
 	public void logout() {
 		requestLoginWindow();
+		stage.setTitle("xKal");
 	}
 
 	@Override
@@ -155,5 +159,9 @@ public class Main extends Application implements ProgramListener{
 	public void requestLoginWindow(){
 		Window w = new LoginScreen(this);
 		openNewWindow(w);
+	}
+	
+	public void requestSettingsWindow(){
+//		Window w = new 
 	}
 }

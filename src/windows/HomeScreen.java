@@ -14,7 +14,7 @@ import components.*;
 import gui.*;
 public class HomeScreen extends Window{
 	
-	private Button logout;
+	private Button logout, settings;
 
 	public HomeScreen(Main main) {
 		super(main);
@@ -36,6 +36,8 @@ public class HomeScreen extends Window{
 			}
 			
 		});
+		settings = new Button("Brukerinnstillinger");
+		settings.setOnAction(e -> main.requestSettingsWindow());
 		
 		CalendarWeekGUI gui = new CalendarWeekGUI(this, LocalDate.now(), new ArrayList<Event>(), main);
 		SideMenu menu = new SideMenu(this, LocalDate.now(), DebugMain.getEvents(), main);
