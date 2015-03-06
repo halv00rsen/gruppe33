@@ -18,5 +18,9 @@ public class LoginScreen extends Window{
 		this.getChildren().add(login);
 		//
 	}
+	
+	public void loginFailed(){
+		//Do something;
+	}
 
 }

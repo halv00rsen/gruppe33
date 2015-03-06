@@ -33,11 +33,15 @@ public class Main extends Application implements ProgramListener{
 	private Window currentWindow;
 	private TabPane tabPane;
 	
+	private LoginScreen loginScreen;
+	private HomeScreen homeScreen;
+	private NewUserWindow newUserScreen;
+	
 	public Main(){
 		program = new Program();
 
 		program.addListener(this);
-		Window loginScreen = new LoginScreen(this);
+		loginScreen = new LoginScreen(this);
 		openNewWindow(loginScreen);
 	}
 	
@@ -86,8 +90,7 @@ public class Main extends Application implements ProgramListener{
 	
 	@Override
 	public void loginFailed() {
-		
-		
+		loginScreen.loginFailed();
 	}
 
 	@Override
@@ -98,7 +101,7 @@ public class Main extends Application implements ProgramListener{
 		logout.setOnAction(e -> program.logout());
 		tabPane = new TabPane();
 		Tab home = new Tab("Hjem");
-		HomeScreen homeScreen  = new HomeScreen(this);
+		homeScreen  = new HomeScreen(this);
 		home.setContent(homeScreen);
 		
 		Tab newEvent = new Tab("Ny event");
@@ -107,7 +110,14 @@ public class Main extends Application implements ProgramListener{
 		Tab inbox = new Tab("Postkasse");
 		Tab settings = new Tab("Innstillinger");
 		
+		
 		tabPane.getTabs().addAll(home, newEvent, room, persons, inbox, settings);
+		if (program.isAdminLogIn()){
+			Tab newUser = new Tab("Ny bruker");
+			newUserScreen = new NewUserWindow(this);
+			newUser.setContent(newUserScreen);
+			tabPane.getTabs().add(newUser);
+		}
 		for (Tab tab : tabPane.getTabs()){
 			tab.setClosable(false);
 		}
