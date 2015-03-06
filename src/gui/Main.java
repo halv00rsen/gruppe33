@@ -18,23 +18,19 @@ import javafx.scene.text.Font;
 
 
 public class Main extends Application implements ProgramListener{
-	public final static int SCREENHEIGHT = 1000;
-	public final static int SCREENWIDTH = 1000;
+
+	public final static int SCREENHEIGHT = 800;
+	public final static int SCREENWIDTH = 1200;
 	public final static Pane root = new Pane();
 	public final static Font header1 = new Font("Calibri", 30);
+
 	private final Program program;
 	private Window currentWindow;
 	
 	public Main(){
 		program = new Program();
-		program.addListener(this);
-/*		Window loginScreen = new LoginScreen();
-		Window loginScreen2 = new LoginScreen();
-		
-		openNewWindow(loginScreen);
 
-		openNewWindow(loginScreen2);
-		*/
+		program.addListener(this);
 		Window loginScreen = new LoginScreen(this);
 		openNewWindow(loginScreen);
 	}
