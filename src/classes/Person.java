@@ -8,6 +8,7 @@ import java.util.List;
 public class Person {
 	
 	public final String username, name;
+	public final boolean admin;
 	
 	private final Calendar calendar;
 	private final int personid;
@@ -15,13 +16,14 @@ public class Person {
 	
 	private String password;
 	
-	public Person(String username, String password, int personid, String name){
+	public Person(String username, String password, int personid, String name, boolean admin){
 		calendar = new PersonCalendar(this);
 		groups = new ArrayList<Group>();
 		this.username = username;
 		this.password = password;
 		this.personid = personid;
 		this.name = name;
+		this.admin = admin;
 	}
 	
 	public boolean isCorrectPassword(String password){

@@ -143,7 +143,7 @@ public class Program {
 				l.loginFailed();
 			return;
 		}
-		currentPerson = new Person(usernameDatabase, passwordDatabase, personid, name);
+		currentPerson = new Person(usernameDatabase, passwordDatabase, personid, name, DEBUG);
 		activeCalendars.add(currentPerson.getPersonalCalendar());
 		for (ProgramListener l : listeners)
 			l.loginSuccess(username, name);
@@ -198,7 +198,11 @@ public class Program {
 			listeners.remove(l);
 	}
 	
-	private boolean isLoggedIn(){
+	public boolean isLoggedIn(){
 		return currentPerson != null;
+	}
+	
+	public boolean isAdminLogIn(){
+		return isLoggedIn() && currentPerson.admin;
 	}
 }
