@@ -14,46 +14,17 @@ import java.util.HashMap;
 import classes.Event;
 
 public class CalendarMonthGrid extends CalendarGrid{
-	HashMap<LocalDate, CalendarMonthDay> datesHash = new HashMap<LocalDate, CalendarMonthDay>();
-	LocalDate date;
-	Month month; 
-	int daysInMonth;
-	GridPane grid; 
-	String brand = "Kalender";
-	Label l;
-	VBox box;
-	Pane dayBox;
-	CalendarMonthGUI gui;
-	public int calHeight = CalendarMonthGUI.defaultCalHeight;
-	public int calWidth = CalendarMonthGUI.defaultCalWidth;
-	ArrayList<Event> events;
-	public CalendarMonthGrid(CalendarMonthGUI gui, LocalDate date,ArrayList<Event> events) {
-		date = date.minusDays(0);
-		this.events = events;
-		this.date = date;
-		this.month = date.getMonth();
-		this.gui = gui;
-		if( Year.isLeap(date.getYear())){
-			daysInMonth = month.maxLength();
-		}else{
-			daysInMonth = month.minLength();
-		}
-		
-		
-		
-		generateGrid(date);
-		setSize(calHeight, calWidth);
-		
-		box = new VBox();
-		box.getChildren().add(grid);
-		this.getChildren().add(box);
-		grid.setGridLinesVisible(true);
 
+	
+	public CalendarMonthGrid(CalendarBase gui, LocalDate date, ArrayList<Event> events) {
+		super(gui, date, events);
+		// TODO Auto-generated constructor stub
 	}
 	public LocalDate getLocalDate(){
 		return date;
 	}
-	private void generateGrid(LocalDate date) {
+	@Override
+	void generateGrid(LocalDate date) {
 		grid = new GridPane();
 		LocalDate firstDayInMonth = date.minusDays(date.getDayOfMonth()-1);
 		int firstDayInMonthWeekday = firstDayInMonth.getDayOfWeek().getValue();	
@@ -114,9 +85,7 @@ public class CalendarMonthGrid extends CalendarGrid{
 		}
 	}
 
-	public CalendarMonthDay getDateBox(LocalDate date){
-		return datesHash.get(date);
-	};
+
 	public String toString(){
 		return this.date.getMonth().toString();
 	}

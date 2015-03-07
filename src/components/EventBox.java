@@ -33,7 +33,7 @@ public class EventBox extends Pane{
 	LocalDateTime startTime;
 	LocalDateTime endTime;
 	
-	CalendarWeekGUI calGui;
+	CalendarWeekBase calGui;
 	private Label name;
 	public EventBox(Event event){
 		startTime = event.getStartTime();

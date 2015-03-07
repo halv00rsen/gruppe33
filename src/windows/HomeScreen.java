@@ -15,12 +15,10 @@ import components.*;
 import gui.*;
 public class HomeScreen extends Window{
 	
-    ToggleButton weekButton;
-    ToggleButton monthButton;
-    ToggleGroup group;
     
-    CalendarWeekGUI weekGui;
-    CalendarMonthGUI monthGui;
+   
+    
+    CalendarGUI calendargui;
     
     VBox calendarAndInfo;
     HBox mainBox;
@@ -36,14 +34,7 @@ public class HomeScreen extends Window{
 	public void init() {
 		// TODO Auto-generated method stub
 		
-		weekButton = new ToggleButton("Uke");
-		monthButton = new ToggleButton("Måned");
-		group = new ToggleGroup();
-		weekButton.setToggleGroup(group);
-		monthButton.setToggleGroup(group);
 		
-		weekButton.setOnAction(e -> weekButtonMethod(e));
-		monthButton.setOnAction(e -> monthButtonMethod(e));
 		
 		mainBox = new HBox(0);
 		calendarAndInfo = new VBox(10);
@@ -61,16 +52,11 @@ public class HomeScreen extends Window{
 		settings = new Button("Brukerinnstillinger");
 		settings.setOnAction(e -> main.requestSettingsWindow());
 		
-		weekGui = new CalendarWeekGUI(this, LocalDate.now(), new ArrayList<Event>(), main);
-		monthGui = new CalendarMonthGUI(this, LocalDate.now(), new ArrayList<Event>(), main);
+		calendargui = new CalendarGUI(this, main, LocalDate.now(), new ArrayList<Event>());
 		SideMenu menu = new SideMenu(this, LocalDate.now(), DebugMain.getEvents(), main);
+
 		
-		
-		
-		
-		HBox buttons = new HBox(weekButton, monthButton);
-		buttons.setAlignment(Pos.BOTTOM_RIGHT);
-		calendarAndInfo.getChildren().addAll(buttons, weekGui, logout);
+		calendarAndInfo.getChildren().addAll(logout, calendargui);
 		
 		
 		
@@ -83,14 +69,6 @@ public class HomeScreen extends Window{
 	}
 	
 	
-	private void monthButtonMethod(ActionEvent e) {
-		calendarAndInfo.getChildren().remove(weekGui);
-		calendarAndInfo.getChildren().add(monthGui);
-	}
-
-	private void weekButtonMethod(ActionEvent e) {
-		calendarAndInfo.getChildren().remove(monthGui);
-		calendarAndInfo.getChildren().add(weekGui);
-	}
+	
 
 }
