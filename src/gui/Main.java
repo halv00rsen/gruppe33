@@ -37,6 +37,7 @@ public class Main extends Application implements ProgramListener{
 	
 	private HomeScreen homeScreen;
 	private NewUserWindow newUserScreen;
+	private SettingsScreen settingsScreen;
 	
 	public Main(){
 		program = new Program();
@@ -123,6 +124,8 @@ public class Main extends Application implements ProgramListener{
 		Tab persons = new Tab("Personer");
 		Tab inbox = new Tab("Postkasse");
 		Tab settings = new Tab("Innstillinger");
+		settingsScreen = new SettingsScreen();
+		settings.setContent(settingsScreen);
 		
 		
 		tabPane.getTabs().addAll(home, newEvent, room, persons, inbox, settings);
