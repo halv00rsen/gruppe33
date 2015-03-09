@@ -39,20 +39,19 @@ public class EventGUI extends Component {
         addAction();
 		// TODO Auto-generated constructor stub
 	}
-	AnchorPane root = new AnchorPane();
-	Label repeteres_til = new Label();
-    Label hver = new Label();
-    Label dag = new Label();
+	Label repeatTo = new Label();
+    Label every = new Label();
+    Label day = new Label();
 	Button save = new Button();
 	Button cancel = new Button();
 	Button trash = new Button();
-	TextField formalText = new TextField();
+	TextField purposeText = new TextField();
 	TextField romText = new TextField();
 	TextField freqText = new TextField();
 	DatePicker datePicker = new DatePicker();
 	DatePicker datePicker2 = new DatePicker();
-	TextField fraKlokkenText = new TextField();
-	TextField tilKlokkenText = new TextField();
+	TextField fromClockText = new TextField();
+	TextField toClockText = new TextField();
 	ChoiceBox split = new ChoiceBox();
 	int freq = 0;
 
@@ -66,8 +65,8 @@ public class EventGUI extends Component {
     	cancel.setOnAction(e -> close(e));
     	trash.setOnAction(e -> trash(e));
     	save.setOnAction(e -> save(e));
-    	fraKlokkenText.setOnAction(e -> clockValidate(e));
-    	tilKlokkenText.setOnAction(e -> clockValidate(e));
+    	fromClockText.setOnAction(e -> clockValidate(e));
+    	toClockText.setOnAction(e -> clockValidate(e));
     	freqText.setOnAction(e -> numberValidate(e));
     	
 		
@@ -119,11 +118,11 @@ public class EventGUI extends Component {
     	}
 	}
 	private void save(ActionEvent e) {
-    	System.out.println(formalText.getText());
+    	System.out.println(purposeText.getText());
     	System.out.println(romText.getText());
     	System.out.println(datePicker.getValue());
-    	System.out.println(fraKlokkenText.getText());
-    	System.out.println(tilKlokkenText.getText());
+    	System.out.println(fromClockText.getText());
+    	System.out.println(toClockText.getText());
     	System.out.println(datePicker2.getValue());
     	System.out.println("freq " + freq);
 //    	PrintWriter writer;
@@ -139,12 +138,12 @@ public class EventGUI extends Component {
     	
 	}
 	private void trash(ActionEvent e) {
-    	formalText.clear();
+    	purposeText.clear();
     	romText.clear();
     	datePicker.setValue(null);
     	datePicker2.setValue(null);
-    	fraKlokkenText.clear();
-    	tilKlokkenText.clear();
+    	fromClockText.clear();
+    	toClockText.clear();
     	split.getSelectionModel().selectFirst();  
 	}
 	private void close(ActionEvent e) {
@@ -155,11 +154,11 @@ public class EventGUI extends Component {
     	if(! object.equals("Aldri")){
     		freq = 0;
     		datePicker2.setDisable(false);
-    		repeteres_til.setTextFill(Color.web("#000000"));
+    		repeatTo.setTextFill(Color.web("#000000"));
     		
     	}else{
     		datePicker2.setDisable(true);
-    		repeteres_til.setTextFill(Color.web("#AAAAAA"));
+    		repeatTo.setTextFill(Color.web("#AAAAAA"));
     	}
     	if( object.equals("Månedlig")){
     		freq = 30;
@@ -167,25 +166,25 @@ public class EventGUI extends Component {
     		freq = 7;
     	}
     	if( object.equals("Egendefinert")){
-    		hver.setTextFill(Color.web("#000000"));
-    		dag.setTextFill(Color.web("#000000"));
+    		every.setTextFill(Color.web("#000000"));
+    		day.setTextFill(Color.web("#000000"));
     		freqText.setDisable(false);
     	}else{
-    		hver.setTextFill(Color.web("#AAAAAA"));
-    		dag.setTextFill(Color.web("#AAAAAA"));
+    		every.setTextFill(Color.web("#AAAAAA"));
+    		day.setTextFill(Color.web("#AAAAAA"));
     		freqText.setDisable(true);
     	}
     }
 	public void addElements(){
-    	root.setStyle("-fx-background-color: #FFF");
+    	this.setStyle("-fx-background-color: #FFF");
 
         //formaal
         Label formaal = new Label();
         formaal.setText("Formål");
         VBox formalBox = new VBox(5);
         formalBox.getChildren().add(formaal);
-        formalBox.getChildren().add(formalText);
-        formalText.setPrefWidth(275);
+        formalBox.getChildren().add(purposeText);
+        purposeText.setPrefWidth(275);
 //        setPos(formalBox,60,60);
 //        root.getChildren().add(formalBox);
         
@@ -216,11 +215,11 @@ public class EventGUI extends Component {
         til.setText("til");
         HBox klokkeBox = new HBox(20);
         klokkeBox.getChildren().add(fra_klokken);
-        klokkeBox.getChildren().add(fraKlokkenText);
+        klokkeBox.getChildren().add(fromClockText);
         klokkeBox.getChildren().add(til);
-        klokkeBox.getChildren().add(tilKlokkenText);
-        fraKlokkenText.setPrefWidth(60);
-        tilKlokkenText.setPrefWidth(60);
+        klokkeBox.getChildren().add(toClockText);
+        fromClockText.setPrefWidth(60);
+        toClockText.setPrefWidth(60);
 //        setPos(klokkeBox,60,250);
 //        root.getChildren().add(klokkeBox);
         
@@ -237,10 +236,10 @@ public class EventGUI extends Component {
 //        root.getChildren().add(repeteresBox);
         
       //repeteresTil
-        repeteres_til.setText("Repeteres til\t");
-		repeteres_til.setTextFill(Color.web("#AAAAAA"));
+        repeatTo.setText("Repeteres til\t");
+		repeatTo.setTextFill(Color.web("#AAAAAA"));
         HBox repeteresTilBox = new HBox(20);
-        repeteresTilBox.getChildren().add(repeteres_til);
+        repeteresTilBox.getChildren().add(repeatTo);
         repeteresTilBox.getChildren().add(datePicker2);
 
 		datePicker2.setDisable(true);
@@ -250,14 +249,14 @@ public class EventGUI extends Component {
         
         //hver
 
-        hver.setText("hver");
-        dag.setText("dag");
-		hver.setTextFill(Color.web("#AAAAAA"));
-		dag.setTextFill(Color.web("#AAAAAA"));
+        every.setText("hver");
+        day.setText("dag");
+		every.setTextFill(Color.web("#AAAAAA"));
+		day.setTextFill(Color.web("#AAAAAA"));
 		freqText.setPrefWidth(30);
-        repeteresBox.getChildren().add(hver);
+        repeteresBox.getChildren().add(every);
         repeteresBox.getChildren().add(freqText);
-        repeteresBox.getChildren().add(dag);
+        repeteresBox.getChildren().add(day);
 		freqText.setDisable(true);
         
         //buttons
@@ -283,7 +282,7 @@ public class EventGUI extends Component {
         rootBox.getChildren().add(repeteresTilBox);
         rootBox.getChildren().add(buttons);
         setPos(rootBox,50,30);
-        root.getChildren().add(rootBox);
+        this.getChildren().add(rootBox);
         
         
     }

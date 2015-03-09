@@ -5,14 +5,15 @@ import javafx.scene.layout.Pane;
 import gui.Window;
 public class EventScreen extends Window{
 
-	public EventScreen(EventGUI main) {
+	public EventScreen() {
 		// TODO Auto-generated constructor stub
+		init();
 	}
 
 	@Override
 	public void init() {
-		// TODO Auto-generated method stub
-		
+		EventGUI eg = new EventGUI(this);
+		getChildren().add(eg);
 	}
 
 }
