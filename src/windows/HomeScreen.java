@@ -14,9 +14,11 @@ import classes.Event;
 import components.*;
 import gui.*;
 public class HomeScreen extends Window{
+	
+    
+   
     
     CalendarGUI calendargui;
-    UserInfoGUI userInfoGui;
     
     VBox calendarAndInfo;
     HBox mainBox;
@@ -42,9 +44,9 @@ public class HomeScreen extends Window{
 		
 		calendargui = new CalendarGUI(this, main, LocalDate.now(), DebugMain.getEvents());
 		SideMenu menu = new SideMenu(this, LocalDate.now(), DebugMain.getEvents(), main);
-		userInfoGui = new UserInfoGUI(this, main, DebugMain.getPerson());
-		
-		calendarAndInfo.getChildren().addAll(userInfoGui, calendargui);
+
+
+		calendarAndInfo.getChildren().addAll(calendargui);
 
 		
 		
