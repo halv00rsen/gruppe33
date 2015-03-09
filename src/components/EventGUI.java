@@ -7,11 +7,13 @@ import java.io.UnsupportedEncodingException;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import classes.Priority;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
+import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.Scene;
@@ -19,12 +21,15 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.Label;
+import javafx.scene.control.ListView;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.SplitMenuButton;
+import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.input.ContextMenuEvent;
 import javafx.scene.input.InputMethodEvent;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
@@ -33,28 +38,34 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
 public class EventGUI extends Component {
-	public EventGUI(Pane parent) {
-		super(parent);
-		addElements();
-        addAction();
-		// TODO Auto-generated constructor stub
-	}
 	Label repeatTo = new Label();
     Label every = new Label();
     Label day = new Label();
+
+	Button avaibleRoomsBtn = new Button();
 	Button save = new Button();
 	Button cancel = new Button();
 	Button trash = new Button();
 	TextField purposeText = new TextField();
 	TextField romText = new TextField();
 	TextField freqText = new TextField();
+	BorderPane pane = new BorderPane();
+	TextArea infoText = new TextArea();
 	DatePicker datePicker = new DatePicker();
 	DatePicker datePicker2 = new DatePicker();
 	TextField fromClockText = new TextField();
 	TextField toClockText = new TextField();
 	ChoiceBox split = new ChoiceBox();
 	int freq = 0;
-
+	ListView invited = new ListView();
+	public EventGUI(Pane parent) {
+		super(parent);
+		addElements();
+        addAction();
+        this.getChildren().add(pane);
+		// TODO Auto-generated constructor stub
+	}
+	
     private void addAction() {
     	split.getSelectionModel().selectedIndexProperty().addListener(new ChangeListener<Number>() {
     	      @Override
@@ -176,7 +187,7 @@ public class EventGUI extends Component {
     	}
     }
 	public void addElements(){
-    	this.setStyle("-fx-background-color: #FFF");
+    	pane.setStyle("-fx-background-color: #FFF");
 
         //formaal
         Label formaal = new Label();
@@ -185,18 +196,26 @@ public class EventGUI extends Component {
         formalBox.getChildren().add(formaal);
         formalBox.getChildren().add(purposeText);
         purposeText.setPrefWidth(275);
-//        setPos(formalBox,60,60);
-//        root.getChildren().add(formalBox);
+        
+      //info
+        Label info = new Label();
+        info.setText("Informasjon\t");
+        HBox infoBox = new HBox(20);
+        infoBox.getChildren().add(info);
+        infoBox.getChildren().add(infoText);
+        infoText.setPrefWidth(335);
+        infoText.setPrefHeight(120);
         
         //rom
         Label rom = new Label();
+        avaibleRoomsBtn.setText("Se ledige rom");
         rom.setText("Rom\t\t\t");
         HBox romBox = new HBox(20);
         romBox.getChildren().add(rom);
         romBox.getChildren().add(romText);
+        romBox.getChildren().add(avaibleRoomsBtn);
         romText.setPrefWidth(225);
-//        setPos(romBox,60,150);
-//        root.getChildren().add(romBox);
+       
         
         //dato
         Label date = new Label();
@@ -220,8 +239,6 @@ public class EventGUI extends Component {
         klokkeBox.getChildren().add(toClockText);
         fromClockText.setPrefWidth(60);
         toClockText.setPrefWidth(60);
-//        setPos(klokkeBox,60,250);
-//        root.getChildren().add(klokkeBox);
         
         //repeteres
         Label repeteres = new Label();
@@ -232,8 +249,6 @@ public class EventGUI extends Component {
         repeteresBox.getChildren().add(split);
         split.getItems().addAll("Aldri","Ukentlig","Månedlig","Egendefinert");
         split.getSelectionModel().selectFirst();        
-//        setPos(repeteresBox,60,300);
-//        root.getChildren().add(repeteresBox);
         
       //repeteresTil
         repeatTo.setText("Repeteres til\t");
@@ -244,8 +259,6 @@ public class EventGUI extends Component {
 
 		datePicker2.setDisable(true);
         datePicker2.setPrefWidth(225);
-//        setPos(repeteresTilBox,60,350);
-//        root.getChildren().add(repeteresTilBox);
         
         //hver
 
@@ -269,20 +282,42 @@ public class EventGUI extends Component {
         buttons.getChildren().add(trash);
         buttons.getChildren().add(cancel);
         buttons.getChildren().add(save);
-//        setPos(buttons,60,400);
-//        root.getChildren().add(buttons);
+        
+        //ListView
+        Pane blueBox = new Pane();
+        BorderPane.setMargin(blueBox,new Insets(20));
+        VBox listBox = new VBox(20);
+        listBox.getChildren().add(invited);
+        listBox.setPadding(new Insets(30));
+        blueBox.setStyle("-fx-background-color: #AAF");
+        blueBox.setPrefHeight(500);
+        blueBox.setPrefWidth(300);
+        blueBox.getChildren().add(listBox);
+        
+      //Priority
+        
+        HBox priorityList = new HBox(5);
+        priorityList.getChildren().add(Priority.NOT_IMPORTANT.getVisualization());
+        priorityList.getChildren().add(Priority.IMPORTANT.getVisualization());
+        priorityList.getChildren().add(Priority.VERY_IMPORTANT.getVisualization());
+        listBox.getChildren().add(priorityList);
+        
         
         //set alle
         VBox rootBox = new VBox(30);
+        BorderPane.setMargin(rootBox,new Insets(20));
         rootBox.getChildren().add(formalBox);
+        rootBox.getChildren().add(infoBox);
         rootBox.getChildren().add(romBox);
         rootBox.getChildren().add(dateBox);
         rootBox.getChildren().add(klokkeBox);
         rootBox.getChildren().add(repeteresBox);
         rootBox.getChildren().add(repeteresTilBox);
-        rootBox.getChildren().add(buttons);
         setPos(rootBox,50,30);
-        this.getChildren().add(rootBox);
+        pane.setLeft(rootBox);
+        pane.setRight(blueBox);
+        buttons.setAlignment(Pos.BASELINE_CENTER);
+        pane.setBottom(buttons);
         
         
     }

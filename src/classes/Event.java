@@ -1,9 +1,17 @@
 package classes;
 
+import gui.Main;
+
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collection;
+
+import javafx.scene.Cursor;
+import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.Pane;
+import javafx.scene.paint.Color;
+import javafx.scene.shape.Circle;
 
 public class Event {
 	private final Person madeBy;
@@ -17,14 +25,14 @@ public class Event {
 	private LocalDateTime endTime;
 	private Integer freq;
 	private Collection<EventAppliance> appliance;
-	private Boolean priority;
+	private Priority priority;
 	private String info;
-
+	
 	
 	public Event(String eventName, String location, Room room,
 			LocalDate startDate, LocalDate endDate, LocalDateTime startTime,
 			LocalDateTime endTime, Integer freq, Person madeBy,
-			Collection<EventAppliance> appliance, Boolean priority, String info) {
+			Collection<EventAppliance> appliance, Priority priority, String info) {
 		id = 2;
 		this.eventName = eventName;
 		this.location = location;
@@ -118,11 +126,11 @@ public class Event {
 		this.appliance = appliance;
 	}
 
-	public Boolean getPriority() {
+	public Priority getPriority() {
 		return priority;
 	}
 
-	public void setPriority(Boolean priority) {
+	public void setPriority(Priority priority) {
 		this.priority = priority;
 	}
 
