@@ -1,5 +1,7 @@
 package classes;
 
+import gui.DebugMain;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -38,7 +40,10 @@ public class Program {
 	}
 	
 	public void requestEvent(int eventId){
-		
+		System.out.println("Event " + eventId + " was requested");
+		for (ProgramListener l : listeners){
+			l.showEvent(DebugMain.getEvents().get(0));
+		}
 	}
 	
 	public void addCalendar(Object id, TypeOfCalendar type){

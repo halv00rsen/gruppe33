@@ -3,6 +3,7 @@ import java.util.List;
 
 import windows.*;
 import classes.Calendar;
+import classes.Event;
 import classes.Group;
 import classes.Message;
 import classes.Program;
@@ -13,6 +14,7 @@ import javafx.stage.Stage;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.SingleSelectionModel;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
 import javafx.scene.layout.HBox;
@@ -31,13 +33,14 @@ public class Main extends Application implements ProgramListener{
 	private final Program program;
 	private final LoginScreen loginScreen;
 	
-	private Stage stage;
+	private static Stage stage;
 	private Window currentWindow;
 	private TabPane tabPane;
 	
 	private HomeScreen homeScreen;
 	private NewUserWindow newUserScreen;
 	private SettingsScreen settingsScreen;
+	private InboxScreen inboxScreen;
 	
 	public Main(){
 		program = new Program();
@@ -55,6 +58,13 @@ public class Main extends Application implements ProgramListener{
 		
 		public String toString(){
 			return "LoginCall is active";
+		}
+	}
+	
+	public class GoToEvent{
+		
+		public void goToEvent(int eventKey){
+			program.requestEvent(eventKey);
 		}
 	}
 	
@@ -106,7 +116,15 @@ public class Main extends Application implements ProgramListener{
 	public void loginFailed() {
 		loginScreen.loginFailed();
 	}
+	
+	@Override
+	public void showEvent(Event event){
+		SingleSelectionModel<Tab> selectionModel = tabPane.getSelectionModel();
+		selectionModel.select(home);
+	}
 
+	private Tab home;
+	
 	@Override
 	public void loginSuccess(String username, String name) {
 		root.getChildren().remove(loginScreen);
@@ -115,14 +133,23 @@ public class Main extends Application implements ProgramListener{
 		
 		logout.setOnAction(e -> program.logout());
 		tabPane = new TabPane();
-		Tab home = new Tab("Hjem");
+		home = new Tab("Hjem");
 		homeScreen  = new HomeScreen();
 		home.setContent(homeScreen);
 		
 		Tab newEvent = new Tab("Ny event");
+		
+		
 		Tab room = new Tab("Rom");
+		
+		
 		Tab persons = new Tab("Personer");
+		
+		
 		Tab inbox = new Tab("Postkasse");
+		inboxScreen = new InboxScreen(new GoToEvent());
+		inbox.setContent(inboxScreen);
+		
 		Tab settings = new Tab("Innstillinger");
 		settingsScreen = new SettingsScreen();
 		settings.setContent(settingsScreen);
@@ -217,5 +244,17 @@ public class Main extends Application implements ProgramListener{
 	
 	public void requestSettingsWindow(){
 //		Window w = new 
+	}
+	
+	public static final double getHeight(){
+		if (stage == null)
+			return SCREENHEIGHT;
+		return stage.getHeight();
+	}
+	
+	public static final double getWidth(){
+		if (stage == null)
+			return SCREENWIDTH;
+		return stage.getWidth();
 	}
 }

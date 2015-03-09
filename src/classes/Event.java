@@ -20,7 +20,6 @@ public class Event {
 	private Boolean priority;
 	private String info;
 
-	
 	public Event(String eventName, String location, Room room,
 			LocalDate startDate, LocalDate endDate, LocalDateTime startTime,
 			LocalDateTime endTime, Integer freq, Person madeBy,
@@ -137,5 +136,6 @@ public class Event {
 	public Person getMadeBy() {
 		return madeBy;
 	}
+	
 	
 }
