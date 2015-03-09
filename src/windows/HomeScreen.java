@@ -40,7 +40,7 @@ public class HomeScreen extends Window{
 		settings = new Button("Brukerinnstillinger");
 		settings.setOnAction(e -> main.requestSettingsWindow());
 		
-		calendargui = new CalendarGUI(this, main, LocalDate.now(), new ArrayList<Event>());
+		calendargui = new CalendarGUI(this, main, LocalDate.now(), DebugMain.getEvents());
 		SideMenu menu = new SideMenu(this, LocalDate.now(), DebugMain.getEvents(), main);
 		userInfoGui = new UserInfoGUI(this, main, DebugMain.getPerson());
 		

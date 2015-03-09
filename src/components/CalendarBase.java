@@ -46,20 +46,22 @@ public abstract class CalendarBase extends Pane{
 	StackPane calCnt;
 	Pane dayBox;
 	ArrayList<Event> events;
-	static int defaultCalHeight = 450;
-	static int defaultCalWidth = 500;
+	static int defaultCalHeight = 600;
+	static int defaultCalWidth = 700;
 	VBox header;
 	static int headerHeight = 30;
 	Slider sliderLeft;
 	Slider sliderRight;
+	CalendarGUI gui;
 	private BorderPane borderpane;
 
-	public CalendarBase(LocalDate date,ArrayList<Event> events) {
+	public CalendarBase(LocalDate date,ArrayList<Event> events,CalendarGUI gui) {
+		this.gui = gui;
 		this.events = events;
 		updateDate(date);
 		this.setPrefWidth(defaultCalWidth+Slider.width*2);
 		this.setPrefHeight(defaultCalHeight);
-		generateNeighbors();
+		generateCalendars();
 		lastCalendar.setVisible(false);
 		nextCalendar.setVisible(false);
 		borderpane = new BorderPane();
@@ -92,7 +94,6 @@ public abstract class CalendarBase extends Pane{
 		this.setOnKeyPressed(e -> handleOnKeyPressed(e));
 	}
 	
-	abstract void generateNeighbors();
 	private void handleOnKeyPressed(KeyEvent e){
 		if(e.getCode().equals(KeyCode.RIGHT)){
 			Timeline timeline = slideRightAnimation();
@@ -222,7 +223,22 @@ public abstract class CalendarBase extends Pane{
 		updateGridLast();
 		redrawCalendar();
 	}
+	public void generateCalendars(){
+		updateGridLast();
+		updateGridThis();
+		updateGridNext();
+		
+	}
+	public void setNewDate(LocalDate date){
+		updateDate(date);
+		generateCalendars();
+		lastCalendar.setVisible(false);
+		nextCalendar.setVisible(false);
+		redrawCalendar();
+	}
 	abstract void updateGridLast();
+
+	abstract void updateGridThis();
 	abstract void updateGridNext();
 	private void redrawCalendar() {
 		mainCalendar.setVisible(false);
@@ -238,14 +254,12 @@ public abstract class CalendarBase extends Pane{
 			calCnt.getChildren().set(0,lastCalendar);
 			calCnt.getChildren().set(1,mainCalendar);
 			calCnt.getChildren().set(2,nextCalendar);
-		
 		}
 		l.setText(date.getMonth().toString());
-		System.out.println(mainCalendar);
 		
 	}
 	
-	public void highlight(LocalDate date){
+	public void dayClicked(LocalDate date){
 		CalendarDay a = mainCalendar.getDateBox(date);
 		
 		if(boxHighlighted != null){
@@ -265,26 +279,47 @@ public abstract class CalendarBase extends Pane{
 			timeline.setOnFinished( event -> shiftLeftAndHighlight(event,date));
 			timeline.play();
 		}else{
-			highlightContinue(date);
+			highlight(date);
 		}
-		
-		
 	}
 	private void shiftLeftAndHighlight(ActionEvent event,LocalDate date) {
 		shiftLeft(event);
-		highlightContinue(date);
+		highlight(date);
 	}
 	private void shiftRightAndHighlight(ActionEvent event,LocalDate date) {
 		shiftRight(event);
-		highlightContinue(date);
+		highlight(date);
 	}
-	private void highlightContinue(LocalDate date){
-		System.out.println(mainCalendar);
+	private void highlight(LocalDate date){
 		CalendarDay a = mainCalendar.getDateBox(date);
 		boxHighlighted = a;
 		a.setHighlighted(true);
 		a.requestFocus();
+		gui.setHighlighted(date);
 	}
-	
+	public LocalDate getHighlightedDate(){
+		return boxHighlighted.getDate();
+	}
+	public CalendarDay getHighlighted(){
+		return boxHighlighted;
+	}
+	public void removeHighlighted(){
+
+		boxHighlighted.setHighlighted(false);
+		boxHighlighted = null;
+
+	}
+	public LocalDate getDate(){
+
+		return this.date;
+
+	}
+
+	public void dayDoubleClicked(LocalDate date) {
+		highlight(date);
+		gui.setHighlighted(date);
+		gui.doubleClicked(date);
+		
+	}
 	
 }
