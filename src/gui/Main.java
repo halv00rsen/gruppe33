@@ -29,11 +29,12 @@ public class Main extends Application implements ProgramListener{
 	public final static Font header1 = new Font("Calibri", 30);
 
 	private final Program program;
+	private final LoginScreen loginScreen;
+	
 	private Stage stage;
 	private Window currentWindow;
 	private TabPane tabPane;
 	
-	private LoginScreen loginScreen;
 	private HomeScreen homeScreen;
 	private NewUserWindow newUserScreen;
 	
@@ -91,10 +92,14 @@ public class Main extends Application implements ProgramListener{
 	@Override
 	public void loginFailed() {
 		loginScreen.loginFailed();
+		root.getChildren().removeAll(tabPane);
+		tabPane = null;
+		
 	}
 
 	@Override
 	public void loginSuccess(String username, String name) {
+		root.getChildren().remove(loginScreen);
 		HBox box = new HBox(20);
 		Button logout = new Button("Logg ut");
 		
