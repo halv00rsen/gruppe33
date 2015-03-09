@@ -27,28 +27,28 @@ import classes.Event;
 
 public class CalendarWeekBase extends CalendarBase{
 
-	public CalendarWeekBase(Pane parent,LocalDate date, ArrayList<Event> events, Main main) {
-		super(date,events);
+	public CalendarWeekBase(Pane parent,LocalDate date, ArrayList<Event> events, CalendarGUI gui) {
+		super(date,events,gui);
 		
 	}
 	
 	
 	
-	@Override
-	void generateNeighbors() {
-		this.lastCalendar = new CalendarWeekGrid(this,this.date.plusMonths(-1),events);
-		this.mainCalendar = new CalendarWeekGrid(this,date,events);
-		this.nextCalendar = new CalendarWeekGrid(this,this.date.plusMonths(1),events);
-		
-		
-	}
+	
+
 	@Override
 	void updateGridLast() {
-		lastCalendar = new CalendarWeekGrid(this, this.date.plusMonths(-1),events);
+		lastCalendar = new CalendarWeekGrid(this, this.date.plusWeeks(-1),events);
 		
 	}
 	@Override
 	void updateGridNext() {
-		nextCalendar = new CalendarWeekGrid(this, this.date.plusMonths(1),events);
+		nextCalendar = new CalendarWeekGrid(this, this.date.plusWeeks(1),events);
+	}
+
+	@Override
+	void updateGridThis() {
+		this.mainCalendar = new CalendarWeekGrid(this,date,events);
+		
 	}
 }

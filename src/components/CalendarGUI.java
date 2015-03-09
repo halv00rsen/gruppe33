@@ -24,11 +24,12 @@ public class CalendarGUI extends Component{
 	CalendarBase currentCalendarBase;
 	VBox components;
 	HBox buttons;
+	LocalDate date;
 	public CalendarGUI(Pane parent, Main main, LocalDate date, ArrayList<Event> events) {
 		super(parent, main);
-		
-		month = new CalendarMonthBase(parent, date, events, main);
-		week = new CalendarWeekBase(parent, date, events, main);
+		this.date = date;
+		month = new CalendarMonthBase(parent, date, events, this);
+		week = new CalendarWeekBase(parent, date, events, this);
 		currentCalendarBase = week;
 		weekButton = new RadioButton("Uke");
 		monthButton = new RadioButton("Måned");
@@ -39,30 +40,46 @@ public class CalendarGUI extends Component{
 		weekButton.setSelected(true);
 		monthButton.setOnAction(e -> monthButtonMethod(e));
 		buttons = new HBox(5,weekButton, monthButton);
-		components = new VBox();
+		components = new VBox(10);
 		components.getChildren().add(buttons);
 		components.getChildren().add(currentCalendarBase);
-		buttons.setAlignment(Pos.BOTTOM_RIGHT);
+		buttons.setAlignment(Pos.TOP_RIGHT);
 		this.getChildren().add(components);
 	}
-	
-	
-
-
-
 	private void weekButtonMethod(ActionEvent e) {
-//		components.getChildren().clear();
-//		components.getChildren().add(buttons);
+		if(month.getHighlighted() != null){
+			week.setNewDate(month.getHighlightedDate());
+			week.dayClicked(month.getHighlightedDate());
+			month.removeHighlighted();
+		}else{
+			week.setNewDate(month.getDate().minusDays(month.getDate().getDayOfMonth()-1));
+		}
 		currentCalendarBase = week;
 		components.getChildren().set(1,currentCalendarBase);
+		
 	}
 	private void monthButtonMethod(ActionEvent e) {
-//		components.getChildren().clear();
-//		components.getChildren().add(buttons);
-		currentCalendarBase =month;
+		if(week.getHighlighted() != null){
+			month.setNewDate(week.getHighlightedDate());
+			month.dayClicked(week.getHighlightedDate());
+			week.removeHighlighted();
+		}else{
+			month.setNewDate(week.getDate());
+		}
+		currentCalendarBase = month;
 		components.getChildren().set(1,currentCalendarBase);
 	}
-
-
-	
+	public void setHighlighted(LocalDate date) {
+		this.date = date;
+		////////////
+		//returnerer videre
+		///////////
+		
+	}
+	public void doubleClicked(LocalDate date) {
+		if(currentCalendarBase instanceof CalendarMonthBase){
+			weekButton.fire();
+		}
+		
+	}
 }

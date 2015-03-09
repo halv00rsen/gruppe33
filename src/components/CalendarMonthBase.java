@@ -28,18 +28,11 @@ import classes.Event;
 public class CalendarMonthBase extends CalendarBase{
 //	focusProperty = getFocs
 	
-	public CalendarMonthBase(Pane parent,LocalDate date, ArrayList<Event> events, Main main) {
-		super(date,events);
+	public CalendarMonthBase(Pane parent,LocalDate date, ArrayList<Event> events, CalendarGUI gui) {
+		super(date,events,gui);
 		
 	}
-	@Override 
-	void generateNeighbors() {
-		this.lastCalendar = new CalendarMonthGrid(this,this.date.plusMonths(-1),events);
-		this.mainCalendar = new CalendarMonthGrid(this,date,events);
-		this.nextCalendar = new CalendarMonthGrid(this,this.date.plusMonths(1),events);
-		
-		
-	}
+
 	
 	@Override
 	void updateGridLast() {
@@ -49,5 +42,12 @@ public class CalendarMonthBase extends CalendarBase{
 	@Override
 	void updateGridNext() {
 		nextCalendar = new CalendarMonthGrid(this, this.date.plusMonths(1),events);
+	}
+
+
+	@Override
+	void updateGridThis() {
+		this.mainCalendar = new CalendarMonthGrid(this,date,events);
+		
 	}
 }

@@ -68,7 +68,6 @@ public abstract class CalendarDay extends Pane{
 		}else if(date.equals(LocalDate.now())){
 			
 			Pane splitDay = new Pane();
-				System.out.println("action Calheigh:" + calHeight);
 				this.getChildren().add(splitDay);
 				splitDay.toBack();
 				this.toBack();
@@ -123,7 +122,6 @@ public abstract class CalendarDay extends Pane{
 	
 	private void hoverOn(MouseEvent e) {
 		backupStyle = this.getStyle();
-//		System.out.println(backupStyle);
 		int[] a = {0,0,0};
 		Main.applyContrast(this, 0.95,a);
 	}
@@ -151,13 +149,20 @@ public abstract class CalendarDay extends Pane{
 		}
 		
 	}	
-
+	public LocalDate getDate(){
+		return this.date;
+	}
 	private LocalDate onAction(MouseEvent e) {
-		calGui.requestFocus();
-		calGui.highlight(date);
+		if(e.getClickCount() == 2){
+
+			calGui.dayDoubleClicked(date);
+		}else{
+			calGui.dayClicked(date);
+		}
+		
 		
 			
-		return null;
+		return this.date;
 	}
 	private LocalDate getLocalDate() {
 		return this.date;
