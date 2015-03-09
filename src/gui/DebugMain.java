@@ -76,14 +76,14 @@ public class DebugMain {
 		return events;
 	}
 	
-	public DebugMain(Pane root, Main main) {
+	public DebugMain(Pane root) {
 		
 //		Agenda agenda = new Agenda();
 		
 		
 
 		
-		SideMenu c = new SideMenu(root, LocalDate.now(), getEvents(), main);
+		SideMenu c = new SideMenu(root, LocalDate.now(), getEvents());
 		root.getChildren().add(c);
 //		CalendarWeekGUI c = new CalendarWeekGUI(root,LocalDate.now(),events);
 //		LoginGUI l = new LoginGUI(main);

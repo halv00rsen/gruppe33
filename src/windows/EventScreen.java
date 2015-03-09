@@ -6,7 +6,6 @@ import gui.Window;
 public class EventScreen extends Window{
 
 	public EventScreen(Main main) {
-		super(main);
 		// TODO Auto-generated constructor stub
 	}
 

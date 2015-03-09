@@ -2,13 +2,13 @@ package gui;
 import javafx.scene.layout.Pane;
 
 public abstract class Window extends Pane{
-	public final Main main;
-	public Window(Main main){
-		this.main = main;
+	
+	
+	public Window(){
 //		main.root.getChildren().add(main.root);
 		this.setPrefHeight(Main.SCREENHEIGHT);
 		this.setPrefWidth(Main.SCREENWIDTH);
-		init();
+//		init();
 
 //		this.setStyle("-fx-color-background: #FF0000");
 //		this.setStyle("-fx-color-background: #FF0044");

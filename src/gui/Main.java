@@ -42,8 +42,19 @@ public class Main extends Application implements ProgramListener{
 		program = new Program();
 
 		program.addListener(this);
-		loginScreen = new LoginScreen(this);
+		loginScreen = new LoginScreen(new LoginCall());
 		openNewWindow(loginScreen);
+	}
+	
+	public class LoginCall{
+		
+		public void requestLogin(String username, String password){
+			program.personLogin(username, password);
+		}
+		
+		public String toString(){
+			return "LoginCall is active";
+		}
 	}
 	
 	@Override
@@ -86,15 +97,13 @@ public class Main extends Application implements ProgramListener{
 		if (currentWindow != null)
 			currentWindow.exitThisWindow();
 		currentWindow = window;
+		window.setVisible(true);
 		root.getChildren().add(window);
 	}
 	
 	@Override
 	public void loginFailed() {
 		loginScreen.loginFailed();
-		root.getChildren().removeAll(tabPane);
-		tabPane = null;
-		
 	}
 
 	@Override
@@ -106,7 +115,7 @@ public class Main extends Application implements ProgramListener{
 		logout.setOnAction(e -> program.logout());
 		tabPane = new TabPane();
 		Tab home = new Tab("Hjem");
-		homeScreen  = new HomeScreen(this);
+		homeScreen  = new HomeScreen();
 		home.setContent(homeScreen);
 		
 		Tab newEvent = new Tab("Ny event");
@@ -119,7 +128,7 @@ public class Main extends Application implements ProgramListener{
 		tabPane.getTabs().addAll(home, newEvent, room, persons, inbox, settings);
 		if (program.isAdminLogIn()){
 			Tab newUser = new Tab("Ny bruker");
-			newUserScreen = new NewUserWindow(this);
+			newUserScreen = new NewUserWindow();
 			newUser.setContent(newUserScreen);
 			tabPane.getTabs().add(newUser);
 		}
@@ -136,6 +145,8 @@ public class Main extends Application implements ProgramListener{
 
 	@Override
 	public void logout() {
+		root.getChildren().clear();
+		tabPane = null;
 		requestLoginWindow();
 		stage.setTitle("xKal");
 	}
@@ -193,13 +204,12 @@ public class Main extends Application implements ProgramListener{
 	}
 	
 	public void requestNewUserGUI(){
-		NewUserWindow w = new NewUserWindow(this);
+		NewUserWindow w = new NewUserWindow();
 		openNewWindow(w);
 	}
 	
-	public void requestLoginWindow(){
-		Window w = new LoginScreen(this);
-		openNewWindow(w);
+	private void requestLoginWindow(){
+		openNewWindow(loginScreen);
 	}
 	
 	public void requestSettingsWindow(){

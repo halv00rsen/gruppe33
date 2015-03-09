@@ -3,10 +3,9 @@ import javafx.scene.layout.Pane;
 
 public abstract class Component extends Pane{
 	public Pane parent;
-	public final Main main;
-	public Component(Pane parent,Main main){
+
+	public Component(Pane parent){
 		this.parent = parent;
-		this.main = main;
 		
 	}
 	/***

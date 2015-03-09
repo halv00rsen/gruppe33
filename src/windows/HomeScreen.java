@@ -22,9 +22,9 @@ public class HomeScreen extends Window{
     HBox mainBox;
     
 	private Button settings;
-	public HomeScreen(Main main) {
-		super(main);
+	public HomeScreen() {
 //		this.setStyle("-fx-color-background: #ff0044");
+		init();
 		
 	}
 
@@ -38,11 +38,11 @@ public class HomeScreen extends Window{
 		calendarAndInfo = new VBox(10);
 		
 		settings = new Button("Brukerinnstillinger");
-		settings.setOnAction(e -> main.requestSettingsWindow());
+//		settings.setOnAction(e -> main.requestSettingsWindow());
 		
-		calendargui = new CalendarGUI(this, main, LocalDate.now(), DebugMain.getEvents());
-		SideMenu menu = new SideMenu(this, LocalDate.now(), DebugMain.getEvents(), main);
-		userInfoGui = new UserInfoGUI(this, main, DebugMain.getPerson());
+		calendargui = new CalendarGUI(this, LocalDate.now(), DebugMain.getEvents());
+		SideMenu menu = new SideMenu(this, LocalDate.now(), DebugMain.getEvents());
+		userInfoGui = new UserInfoGUI(this, DebugMain.getPerson());
 		
 		calendarAndInfo.getChildren().addAll(userInfoGui, calendargui);
 
