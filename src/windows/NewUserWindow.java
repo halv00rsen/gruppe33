@@ -128,6 +128,18 @@ public class NewUserWindow extends Window{
 		        }
 		    }
 		});
+		firstNameTextField.textProperty().addListener(new ChangeListener<String>(){
+			@Override
+			public void changed(ObservableValue<? extends String> observable,
+					String oldValue, String newValue) {
+				if(!(newValue.matches("[A-Za-z]*"))){
+					firstNameTextField.setText(oldValue);
+				}
+				
+			}
+			
+		});	
+		
 		lastNameTextField = new TextField();
 		lastNameTextField.setPromptText("Nordmann");
 		lastNameTextField.focusedProperty().addListener(new ChangeListener<Boolean>()
@@ -141,6 +153,17 @@ public class NewUserWindow extends Window{
 		        }
 		    }
 		});
+		lastNameTextField.textProperty().addListener(new ChangeListener<String>(){
+			@Override
+			public void changed(ObservableValue<? extends String> observable,
+					String oldValue, String newValue) {
+				if(!(newValue.matches("[A-Za-z]*"))){
+					lastNameTextField.setText(oldValue);
+				}
+				
+			}
+			
+		});	
 		usernameTextField = new TextField();
 		usernameTextField.setPromptText("OlaNordmann86");
 		usernameTextField.focusedProperty().addListener(new ChangeListener<Boolean>()
@@ -200,18 +223,17 @@ public class NewUserWindow extends Window{
 		
 		phoneTextField = new TextField();
 		phoneTextField.setPromptText("12345678");
-		phoneTextField.focusedProperty().addListener(new ChangeListener<Boolean>()
-				{
-		    @Override
-		    public void changed(ObservableValue<? extends Boolean> arg0, Boolean oldPropertyValue, Boolean newPropertyValue)
-		    {
-		        if (newPropertyValue)
-		        {
-		        	System.out.println("get number");
-		        }
-		    }
-		});
-		
+		phoneTextField.textProperty().addListener(new ChangeListener<String>(){
+			@Override
+			public void changed(ObservableValue<? extends String> observable,
+					String oldValue, String newValue) {
+				if(!(newValue.matches("[0-9]*")) || (phoneTextField.getText().length()) == 9){
+					phoneTextField.setText(oldValue);
+				}
+				
+			}
+			
+		});	
 		createUserButton = new Button("Registrer deg");
 		createUserButton.setOnAction(new EventHandler<ActionEvent>(){
 

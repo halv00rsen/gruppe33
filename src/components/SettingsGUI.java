@@ -124,6 +124,18 @@ public class SettingsGUI extends Component{
 		    }
 		    	
 		});
+		firstNameTextField.textProperty().addListener(new ChangeListener<String>(){
+			@Override
+			public void changed(ObservableValue<? extends String> observable,
+					String oldValue, String newValue) {
+				if(!(newValue.matches("[A-Za-z]*"))){
+					firstNameTextField.setText(oldValue);
+				}
+				
+			}
+			
+		});	
+		
 		lastNameTextField = new TextField();
 		lastNameTextField.focusedProperty().addListener(new ChangeListener<Boolean>()
 				{
@@ -142,6 +154,17 @@ public class SettingsGUI extends Component{
 		    }
 		    	
 		});
+		lastNameTextField.textProperty().addListener(new ChangeListener<String>(){
+			@Override
+			public void changed(ObservableValue<? extends String> observable,
+					String oldValue, String newValue) {
+				if(!(newValue.matches("[A-Za-z]*"))){
+					lastNameTextField.setText(oldValue);
+				}
+				
+			}
+			
+		});	
 		usernameTextField = new TextField();
 		usernameTextField.focusedProperty().addListener(new ChangeListener<Boolean>()
 				{
@@ -160,6 +183,7 @@ public class SettingsGUI extends Component{
 		    }
 		    	
 		});
+		
 		
 		passwordTextField = new PasswordField();
 		passwordTextField.setPromptText("******");
@@ -233,6 +257,19 @@ public class SettingsGUI extends Component{
 		    	});
 		    }
 		 });
+		
+		phoneTextField.textProperty().addListener(new ChangeListener<String>(){
+			@Override
+			public void changed(ObservableValue<? extends String> observable,
+					String oldValue, String newValue) {
+				System.out.println("ok");
+				if(!(newValue.matches("[0-9]*")) || (phoneTextField.getText().length()) == 9){
+					phoneTextField.setText(oldValue);
+				}
+				
+			}
+			
+		});	
 		
 		createUserButton = new Button("Lagre endringer");
 		createUserButton.setOnAction(new EventHandler<ActionEvent>(){
@@ -333,14 +370,14 @@ public class SettingsGUI extends Component{
 	private void getUserInfo(){
 		
 		//Hent info fra database
-		firstNameTextField.setText("Fra Database");
-		lastNameTextField.setText("Fra Database");
+		firstNameTextField.setText("Fra");
+		lastNameTextField.setText("Database");
 		emailTextField.setText("Fra Database");
 		lastNameTextField.setText("Fra Database");
 		usernameTextField.setText("Fra Database");
 		
 		//hvis tlf er registrert
-		phoneTextField.setText("Fra Database");
+		phoneTextField.setText("87654321");
 		
 		//hent passord
 		
