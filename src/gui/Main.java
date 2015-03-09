@@ -8,7 +8,6 @@ import classes.Message;
 import classes.Program;
 import classes.ProgramListener;
 import classes.Room;
-import classes.View;
 import javafx.application.Application;
 import javafx.stage.Stage;
 import javafx.scene.Node;
@@ -18,6 +17,7 @@ import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
+import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
 
 
@@ -29,20 +29,33 @@ public class Main extends Application implements ProgramListener{
 	public final static Font header1 = new Font("Calibri", 30);
 
 	private final Program program;
+	private final LoginScreen loginScreen;
+	
 	private Stage stage;
 	private Window currentWindow;
 	private TabPane tabPane;
 	
-	private LoginScreen loginScreen;
 	private HomeScreen homeScreen;
 	private NewUserWindow newUserScreen;
+	private SettingsScreen settingsScreen;
 	
 	public Main(){
 		program = new Program();
 
 		program.addListener(this);
-		loginScreen = new LoginScreen(this);
+		loginScreen = new LoginScreen(new LoginCall());
 		openNewWindow(loginScreen);
+	}
+	
+	public class LoginCall{
+		
+		public void requestLogin(String username, String password){
+			program.personLogin(username, password);
+		}
+		
+		public String toString(){
+			return "LoginCall is active";
+		}
 	}
 	
 	@Override
@@ -85,6 +98,7 @@ public class Main extends Application implements ProgramListener{
 		if (currentWindow != null)
 			currentWindow.exitThisWindow();
 		currentWindow = window;
+		window.setVisible(true);
 		root.getChildren().add(window);
 	}
 	
@@ -95,13 +109,14 @@ public class Main extends Application implements ProgramListener{
 
 	@Override
 	public void loginSuccess(String username, String name) {
-		HBox box = new HBox(20);
+		root.getChildren().remove(loginScreen);
+		VBox box = new VBox(5);
 		Button logout = new Button("Logg ut");
 		
 		logout.setOnAction(e -> program.logout());
 		tabPane = new TabPane();
 		Tab home = new Tab("Hjem");
-		homeScreen  = new HomeScreen(this);
+		homeScreen  = new HomeScreen();
 		home.setContent(homeScreen);
 		
 		Tab newEvent = new Tab("Ny event");
@@ -109,12 +124,14 @@ public class Main extends Application implements ProgramListener{
 		Tab persons = new Tab("Personer");
 		Tab inbox = new Tab("Postkasse");
 		Tab settings = new Tab("Innstillinger");
+		settingsScreen = new SettingsScreen();
+		settings.setContent(settingsScreen);
 		
 		
 		tabPane.getTabs().addAll(home, newEvent, room, persons, inbox, settings);
 		if (program.isAdminLogIn()){
 			Tab newUser = new Tab("Ny bruker");
-			newUserScreen = new NewUserWindow(this);
+			newUserScreen = new NewUserWindow();
 			newUser.setContent(newUserScreen);
 			tabPane.getTabs().add(newUser);
 		}
@@ -131,6 +148,8 @@ public class Main extends Application implements ProgramListener{
 
 	@Override
 	public void logout() {
+		root.getChildren().clear();
+		tabPane = null;
 		requestLoginWindow();
 		stage.setTitle("xKal");
 	}
@@ -162,7 +181,7 @@ public class Main extends Application implements ProgramListener{
 	}
 
 	@Override
-	public void updateCalendar(List<Calendar> cal, View view) {
+	public void updateCalendar(List<Calendar> cal) {
 		// TODO Auto-generated method stub
 		
 	}
@@ -188,13 +207,12 @@ public class Main extends Application implements ProgramListener{
 	}
 	
 	public void requestNewUserGUI(){
-		NewUserWindow w = new NewUserWindow(this);
+		NewUserWindow w = new NewUserWindow();
 		openNewWindow(w);
 	}
 	
-	public void requestLoginWindow(){
-		Window w = new LoginScreen(this);
-		openNewWindow(w);
+	private void requestLoginWindow(){
+		openNewWindow(loginScreen);
 	}
 	
 	public void requestSettingsWindow(){

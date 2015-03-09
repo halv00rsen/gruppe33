@@ -1,6 +1,7 @@
 
 package components;
 import gui.*;
+import gui.Main.LoginCall;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
@@ -26,6 +27,7 @@ import javafx.scene.text.TextFlow;
 
 public class LoginGUI extends Component{
 	
+	private final LoginCall loginCall;
 	
 	Label title;
 	Label errorNameLabel;
@@ -50,8 +52,9 @@ public class LoginGUI extends Component{
 	VBox doBox;
 	GridPane mainGridPane;
 	
-	public LoginGUI(Window parent, Main main) {
-		super(parent,main);
+	public LoginGUI(Window parent, LoginCall loginCall) {
+		super(parent);
+		this.loginCall = loginCall;
 		init();
 	}
 
@@ -60,18 +63,17 @@ public class LoginGUI extends Component{
 		this.setPrefWidth(100);
 		this.setPrefHeight(500);
 		
-		Hyperlink l = new Hyperlink("Ny bruker?");
-		l.setOnMouseClicked(new EventHandler<MouseEvent>(){
-
-			@Override
-			public void handle(MouseEvent event) {
-				System.out.println("CLicked");
-				main.requestNewUserGUI();
-			}
-			
-		});
-		
-		createUserFlow = new TextFlow(l);
+//		Hyperlink l = new Hyperlink("Ny bruker?");
+//		l.setOnMouseClicked(new EventHandler<MouseEvent>(){
+//
+//			@Override
+//			public void handle(MouseEvent event) {
+//				System.out.println("CLicked");
+//			}
+//			
+//		});
+//		
+//		createUserFlow = new TextFlow(l);
 		
 		title = new Label();
 		title.setText("Velkommen");
@@ -108,7 +110,8 @@ public class LoginGUI extends Component{
 			@Override
 			public void handle(KeyEvent event) {
 				if (event.getCode() == KeyCode.ENTER){
-					main.requestLogin(usernameTextField.getText(), passwordField.getText());
+					loginCall.requestLogin(usernameTextField.getText(), passwordField.getText());
+//					main.requestLogin(usernameTextField.getText(), passwordField.getText());
 				}
 			}
 			
@@ -128,7 +131,9 @@ public class LoginGUI extends Component{
 				emailTextField.setVisible(false);
 				emailTextField.clear();
 				
-				if (validateTextFields()) main.requestLogin(usernameTextField.getText(),passwordField.getText());
+				if (validateTextFields()) 
+					loginCall.requestLogin(usernameTextField.getText(), passwordField.getText());
+//					main.requestLogin(usernameTextField.getText(),passwordField.getText());
 				
 				
 			}
@@ -247,7 +252,7 @@ public class LoginGUI extends Component{
 		
 		doBox = new VBox(5);
 		doBox.getChildren().add(loginButton);
-		doBox.getChildren().add(createUserFlow);
+//		doBox.getChildren().add(createUserFlow);
 		
 		mainHBox = new HBox(30);
 		mainHBox.setPadding(new Insets(10, 10, 10, 0));

@@ -10,7 +10,7 @@ public interface ProgramListener {
 	public void passwordChange(final boolean isChanged);
 	public void sendMessage(Message msg);
 	public void updateGroups(Group... groups);
-	public void updateCalendar(List<Calendar> cal, View view);
+	public void updateCalendar(List<Calendar> cal);
 	public void updateRoomNames(Room... rooms);
 	public void sendNotification(String notif);
 }

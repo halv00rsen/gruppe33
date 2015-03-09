@@ -94,8 +94,8 @@ public class EventBox extends Pane{
 	}	
 
 	private LocalDate onAction(MouseEvent e) {
-		calGui.requestFocus();
-		calGui.dayClicked(date);
+//		calGui.requestFocus();
+//		calGui.dayClicked(date);
 		return null;
 	}
 	private LocalDate getLocalDate() {

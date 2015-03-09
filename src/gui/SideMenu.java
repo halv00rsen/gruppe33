@@ -36,10 +36,11 @@ public class SideMenu extends Component {
 	ObservableList<String> items;
 	
 	
+
 	VBox vbox;
-	
-	public SideMenu(Pane parent, ArrayList<Event> events, Main main) {
-		super(parent, main);
+
+	public SideMenu(Pane parent, ArrayList<Event> events) {
+		super(parent);
 		init(events);
 	}
 	

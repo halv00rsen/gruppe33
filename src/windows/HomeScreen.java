@@ -14,45 +14,25 @@ import classes.Event;
 import components.*;
 import gui.*;
 public class HomeScreen extends Window{
+	
     
-    CalendarGUI calendargui;
-    UserInfoGUI userInfoGui;
-    SideMenu sideMenu;
+
     
-    VBox calendarAndInfo;
-    HBox mainBox;
+    SchedulingGUI schedulingGUI;
     
 	private Button settings;
-	public HomeScreen(Main main) {
-		super(main);
+	public HomeScreen() {
 //		this.setStyle("-fx-color-background: #ff0044");
+		init();
 		
 	}
 
 	@Override
 	public void init() {
-		// TODO Auto-generated method stub
+		SchedulingGUI schedulingGUI = new SchedulingGUI(this);
+		this.getChildren().add(schedulingGUI);
 		
-		
-		
-		mainBox = new HBox(0);
-		calendarAndInfo = new VBox(10);
-		
-		settings = new Button("Brukerinnstillinger");
-		settings.setOnAction(e -> main.requestSettingsWindow());
-		
-		calendargui = new CalendarGUI(this, main, LocalDate.now(), DebugMain.getEvents());
-		sideMenu = new SideMenu(this, DebugMain.getEvents(), main);
-		userInfoGui = new UserInfoGUI(this, main, DebugMain.getPerson());
-		
-		
-		calendarAndInfo.getChildren().addAll(userInfoGui, calendargui);
-		
-		
-		
-		mainBox.getChildren().addAll(calendarAndInfo,sideMenu);
-		this.getChildren().add(mainBox);
-		
+
 //		this.getChildren().add(gui);
 //		gui.setTranslateX(300);
 
