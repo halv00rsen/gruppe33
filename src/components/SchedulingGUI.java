@@ -28,11 +28,12 @@ public class SchedulingGUI extends Component{
 		
 		settings = new Button("Brukerinnstillinger");
 //		settings.setOnAction(e -> main.requestSettingsWindow());
+
 		Person p = new Person(null, null, 1, null, true);
 		PersonCalendar cal = new PersonCalendar(p);
 		cal.addEvent(DebugMain.getEvents());
 		calendargui = new CalendarGUI(this, LocalDate.now(), cal);
-		SideMenu menu = new SideMenu(this, LocalDate.now(), DebugMain.getEvents());
+		SideMenu menu = new SideMenu(this, DebugMain.getEvents());
 		calendarAndInfo.getChildren().addAll(calendargui);
 		calendarAndInfo.getChildren().addAll(menu);
 		

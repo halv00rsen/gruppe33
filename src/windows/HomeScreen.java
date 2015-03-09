@@ -16,7 +16,7 @@ import gui.*;
 public class HomeScreen extends Window{
 	
     
-   
+
     
     SchedulingGUI schedulingGUI;
     
@@ -31,6 +31,7 @@ public class HomeScreen extends Window{
 	public void init() {
 		SchedulingGUI schedulingGUI = new SchedulingGUI(this);
 		this.getChildren().add(schedulingGUI);
+
 
 	}
 	

@@ -10,6 +10,7 @@ import classes.Program;
 import classes.ProgramListener;
 import classes.Room;
 import javafx.application.Application;
+import javafx.geometry.Side;
 import javafx.stage.Stage;
 import javafx.scene.Node;
 import javafx.scene.Scene;
@@ -42,8 +43,10 @@ public class Main extends Application implements ProgramListener{
 	private NewUserWindow newUserScreen;
 	private SettingsScreen settingsScreen;
 	private InboxScreen inboxScreen;
-	
 	private EventScreen eventScreen;
+
+	private MessageScreen messageScreen;
+	
 	public Main(){
 		program = new Program();
 
@@ -56,10 +59,6 @@ public class Main extends Application implements ProgramListener{
 		
 		public void requestLogin(String username, String password){
 			program.personLogin(username, password);
-		}
-		
-		public String toString(){
-			return "LoginCall is active";
 		}
 	}
 	
@@ -125,12 +124,11 @@ public class Main extends Application implements ProgramListener{
 		selectionModel.select(home);
 	}
 
-	private Tab home;
+	private Tab home, newEvent, room, persons, inbox, settings;
 	
 	@Override
 	public void loginSuccess(String username, String name) {
 		root.getChildren().remove(loginScreen);
-		VBox box = new VBox(5);
 		Button logout = new Button("Logg ut");
 		
 		logout.setOnAction(e -> program.logout());
@@ -139,24 +137,26 @@ public class Main extends Application implements ProgramListener{
 		homeScreen  = new HomeScreen();
 		home.setContent(homeScreen);
 		
-		Tab newEvent = new Tab("Ny event");
+		newEvent = new Tab("Ny event");
 		eventScreen = new EventScreen();
-		Tab room = new Tab("Rom");
+		newEvent.setContent(eventScreen);
+		
+		room = new Tab("Rom");
 		
 		
-		Tab persons = new Tab("Personer");
+		persons = new Tab("Personer");
 		
 		
-		Tab inbox = new Tab("Postkasse");
+		inbox = new Tab("Postkasse");
 		inboxScreen = new InboxScreen(new GoToEvent());
 		inbox.setContent(inboxScreen);
 		
-		Tab settings = new Tab("Innstillinger");
+		settings = new Tab("Innstillinger");
 		settingsScreen = new SettingsScreen();
 		settings.setContent(settingsScreen);
-		newEvent.setContent(eventScreen);
 		
 		tabPane.getTabs().addAll(home, newEvent, room, persons, inbox, settings);
+		tabPane.setTabMinWidth(75);
 		if (program.isAdminLogIn()){
 			Tab newUser = new Tab("Ny bruker");
 			newUserScreen = new NewUserWindow();
@@ -166,11 +166,14 @@ public class Main extends Application implements ProgramListener{
 		for (Tab tab : tabPane.getTabs()){
 			tab.setClosable(false);
 		}
-		box.getChildren().addAll(logout, tabPane);
+//		box.getChildren().addAll(logout, tabPane);
 //		openNewWindow(homeScreen);
 		if (currentWindow != null)
 			currentWindow.exitThisWindow();
-		root.getChildren().add(box);
+		messageScreen = new MessageScreen();
+		root.getChildren().addAll(tabPane, logout, messageScreen);
+		logout.setLayoutX(1020);
+		logout.setLayoutY(2);
 		stage.setTitle("xKal (" + username + ")");
 	}
 
