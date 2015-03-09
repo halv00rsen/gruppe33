@@ -72,4 +72,17 @@ public class Person {
 			return null;
 		}
 	}
+
+	public String getUsername() {
+		return username;
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public List<Group> getGroups() {
+		return groups;
+	}
+	
 }
