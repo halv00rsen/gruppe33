@@ -42,6 +42,7 @@ public class Main extends Application implements ProgramListener{
 	private SettingsScreen settingsScreen;
 	private InboxScreen inboxScreen;
 	
+	private EventScreen eventScreen;
 	public Main(){
 		program = new Program();
 
@@ -138,8 +139,7 @@ public class Main extends Application implements ProgramListener{
 		home.setContent(homeScreen);
 		
 		Tab newEvent = new Tab("Ny event");
-		
-		
+		eventScreen = new EventScreen();
 		Tab room = new Tab("Rom");
 		
 		
@@ -153,7 +153,7 @@ public class Main extends Application implements ProgramListener{
 		Tab settings = new Tab("Innstillinger");
 		settingsScreen = new SettingsScreen();
 		settings.setContent(settingsScreen);
-		
+		newEvent.setContent(eventScreen);
 		
 		tabPane.getTabs().addAll(home, newEvent, room, persons, inbox, settings);
 		if (program.isAdminLogIn()){

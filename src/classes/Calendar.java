@@ -62,6 +62,12 @@ public abstract class Calendar {
 		if (event != null)
 			events.add(event);
 	}
+	public void addEvent(ArrayList<Event> args){
+		for(Event i : args){
+			events.add(i);
+		}
+			
+	}
 	
 	public void removeEvent(Event event){
 		if (event != null)

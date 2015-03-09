@@ -5,7 +5,7 @@ import javafx.scene.layout.Pane;
 import gui.Window;
 public class GroupScreen extends Window{
 
-	public GroupScreen(Main main) {
+	public GroupScreen(EventGUI main) {
 		// TODO Auto-generated constructor stub
 	}
 
