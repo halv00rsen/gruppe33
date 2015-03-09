@@ -25,6 +25,7 @@ public class Inbox extends Component{
 		
 		ScrollPane scroll = new ScrollPane(box);
 		scroll.setCenterShape(true);
+		
 		scroll.setPrefViewportHeight(Main.SCREENHEIGHT - 300);
 		scroll.setVbarPolicy(ScrollBarPolicy.ALWAYS);
 		getChildren().add(scroll);

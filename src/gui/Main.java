@@ -10,6 +10,7 @@ import classes.Program;
 import classes.ProgramListener;
 import classes.Room;
 import javafx.application.Application;
+import javafx.geometry.Side;
 import javafx.stage.Stage;
 import javafx.scene.Node;
 import javafx.scene.Scene;
@@ -41,8 +42,10 @@ public class Main extends Application implements ProgramListener{
 	private NewUserWindow newUserScreen;
 	private SettingsScreen settingsScreen;
 	private InboxScreen inboxScreen;
-	
 	private EventScreen eventScreen;
+
+	private MessageScreen messageScreen;
+	
 	public Main(){
 		program = new Program();
 
@@ -125,7 +128,6 @@ public class Main extends Application implements ProgramListener{
 	@Override
 	public void loginSuccess(String username, String name) {
 		root.getChildren().remove(loginScreen);
-		VBox box = new VBox(5);
 		Button logout = new Button("Logg ut");
 		
 		logout.setOnAction(e -> program.logout());
@@ -153,6 +155,7 @@ public class Main extends Application implements ProgramListener{
 		settings.setContent(settingsScreen);
 		
 		tabPane.getTabs().addAll(home, newEvent, room, persons, inbox, settings);
+		tabPane.setTabMinWidth(75);
 		if (program.isAdminLogIn()){
 			Tab newUser = new Tab("Ny bruker");
 			newUserScreen = new NewUserWindow();
@@ -162,11 +165,14 @@ public class Main extends Application implements ProgramListener{
 		for (Tab tab : tabPane.getTabs()){
 			tab.setClosable(false);
 		}
-		box.getChildren().addAll(logout, tabPane);
+//		box.getChildren().addAll(logout, tabPane);
 //		openNewWindow(homeScreen);
 		if (currentWindow != null)
 			currentWindow.exitThisWindow();
-		root.getChildren().add(box);
+		messageScreen = new MessageScreen();
+		root.getChildren().addAll(tabPane, logout, messageScreen);
+		logout.setLayoutX(1020);
+		logout.setLayoutY(2);
 		stage.setTitle("xKal (" + username + ")");
 	}
 
