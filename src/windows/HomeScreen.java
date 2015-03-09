@@ -18,40 +18,21 @@ public class HomeScreen extends Window{
     
    
     
-    CalendarGUI calendargui;
-    
-    VBox calendarAndInfo;
-    HBox mainBox;
+    SchedulingGUI schedulingGUI;
     
 	private Button settings;
-	public HomeScreen(Main main) {
-		super(main);
+	public HomeScreen() {
 //		this.setStyle("-fx-color-background: #ff0044");
+		init();
 		
 	}
 
 	@Override
 	public void init() {
-		// TODO Auto-generated method stub
+		SchedulingGUI schedulingGUI = new SchedulingGUI(this);
+		this.getChildren().add(schedulingGUI);
 		
-		
-		
-		mainBox = new HBox(0);
-		calendarAndInfo = new VBox(10);
-		
-		settings = new Button("Brukerinnstillinger");
-		settings.setOnAction(e -> main.requestSettingsWindow());
-		
-		calendargui = new CalendarGUI(this, main, LocalDate.now(), DebugMain.getEvents());
-		SideMenu menu = new SideMenu(this, LocalDate.now(), DebugMain.getEvents(), main);
 
-
-		calendarAndInfo.getChildren().addAll(calendargui);
-
-		
-		
-		mainBox.getChildren().addAll(calendarAndInfo,menu);
-		this.getChildren().add(mainBox);
 
 //		this.getChildren().add(gui);
 //		gui.setTranslateX(300);

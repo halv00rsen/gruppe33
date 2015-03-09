@@ -29,8 +29,8 @@ public class UserInfoGUI extends Component{
 	ListView<String> grupper = new ListView<String>();
 	ObservableList<String> items =FXCollections.observableArrayList ();
 
-	public UserInfoGUI(Pane parent, Main main, Person person) {
-		super(parent, main);
+	public UserInfoGUI(Pane parent, Person person) {
+		super(parent);
 		init(person);
 	}
 

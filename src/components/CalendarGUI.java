@@ -25,8 +25,8 @@ public class CalendarGUI extends Component{
 	VBox components;
 	HBox buttons;
 	LocalDate date;
-	public CalendarGUI(Pane parent, Main main, LocalDate date, ArrayList<Event> events) {
-		super(parent, main);
+	public CalendarGUI(Pane parent, LocalDate date, ArrayList<Event> events) {
+		super(parent);
 		this.date = date;
 		month = new CalendarMonthBase(parent, date, events, this);
 		week = new CalendarWeekBase(parent, date, events, this);

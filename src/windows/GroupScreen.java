@@ -6,7 +6,6 @@ import gui.Window;
 public class GroupScreen extends Window{
 
 	public GroupScreen(Main main) {
-		super(main);
 		// TODO Auto-generated constructor stub
 	}
 
