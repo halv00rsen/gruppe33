@@ -20,6 +20,7 @@ import javafx.scene.control.TabPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 
 
@@ -257,4 +258,11 @@ public class Main extends Application implements ProgramListener{
 			return SCREENWIDTH;
 		return stage.getWidth();
 	}
+	public static String colorToHex(Color color){
+		return String.format( "#%02X%02X%02X",
+	            (int)( color.getRed() * 255 ),
+	            (int)( color.getGreen() * 255 ),
+	            (int)( color.getBlue() * 255 ) );
+	}
+	
 }

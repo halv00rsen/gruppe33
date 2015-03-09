@@ -27,6 +27,7 @@ public class Event {
 	private Collection<EventAppliance> appliance;
 	private Priority priority;
 	private String info;
+	private LocalDateTime freqEnd;
 
 	public Event(String eventName, String location, Room room,
 			LocalDate startDate, LocalDate endDate, LocalDateTime startTime,
@@ -116,7 +117,9 @@ public class Event {
 	public void setFreq(Integer freq) {
 		this.freq = freq;
 	}
-
+	public void setFreqEndTime(LocalDateTime endTime) {
+		this.freqEnd = endTime;
+	}
 	public Collection<EventAppliance> getAppliance() {
 		return appliance;
 	}
@@ -144,6 +147,8 @@ public class Event {
 	public Person getMadeBy() {
 		return madeBy;
 	}
+	
+	
 	
 	
 }

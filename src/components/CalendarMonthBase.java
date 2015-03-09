@@ -23,31 +23,32 @@ import java.time.Month;
 import java.time.Year;
 import java.util.ArrayList;
 
+import classes.Calendar;
 import classes.Event;
 
 public class CalendarMonthBase extends CalendarBase{
 //	focusProperty = getFocs
 	
-	public CalendarMonthBase(Pane parent,LocalDate date, ArrayList<Event> events, CalendarGUI gui) {
-		super(date,events,gui);
+	public CalendarMonthBase(Pane parent,LocalDate date, Calendar[] args, CalendarGUI gui) {
+		super(date,args,gui);
 		
 	}
 
 	
 	@Override
 	void updateGridLast() {
-		lastCalendar = new CalendarMonthGrid(this, this.date.plusMonths(-1),events);
+		lastCalendar = new CalendarMonthGrid(this, this.date.plusMonths(-1),calendars);
 		
 	}
 	@Override
 	void updateGridNext() {
-		nextCalendar = new CalendarMonthGrid(this, this.date.plusMonths(1),events);
+		nextCalendar = new CalendarMonthGrid(this, this.date.plusMonths(1),calendars);
 	}
 
 
 	@Override
 	void updateGridThis() {
-		this.mainCalendar = new CalendarMonthGrid(this,date,events);
+		this.mainCalendar = new CalendarMonthGrid(this,date,calendars);
 		
 	}
 }

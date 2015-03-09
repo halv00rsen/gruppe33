@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 
+import classes.Calendar;
 import classes.Event;
 import javafx.geometry.Insets;
 import javafx.scene.control.Label;
@@ -30,12 +31,14 @@ public abstract class CalendarGrid extends Pane{
 	VBox box;
 	Pane dayBox;
 	CalendarBase gui;
+	Calendar[] calendars;
 	public int calHeight = CalendarBase.defaultCalHeight;
 	public int calWidth = CalendarBase.defaultCalWidth;
 
 	public ArrayList<Label> dayTitles = new ArrayList<Label>();
 	ArrayList<Event> events;
-	public CalendarGrid(CalendarBase gui, LocalDate date,ArrayList<Event> events) {
+	public CalendarGrid(CalendarBase gui, LocalDate date,Calendar... calendars) {
+		this.calendars = calendars;
 		date = date.minusDays(0);
 		this.events = events;
 		this.date = date;
@@ -105,7 +108,15 @@ public abstract class CalendarGrid extends Pane{
 
 	public CalendarDay getDateBox(LocalDate date){
 		return datesHash.get(date);
-	};
+	}
+	public ArrayList<Event> getEventsByDay(LocalDate date){
+		ArrayList<Event> events = new ArrayList<Event>();
+		for (Calendar calendar : calendars) {
+			events.addAll(calendar.getEventsByDay(date));
+			
+		}
+		return events;
+	}
 
 	
 }

@@ -11,13 +11,14 @@ import java.time.Year;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import classes.Calendar;
 import classes.Event;
 
 public class CalendarWeekGrid extends CalendarGrid{
 	
 	public CalendarWeekGrid(CalendarBase gui, LocalDate date,
-			ArrayList<Event> events) {
-		super(gui, date, events);
+			Calendar... cal) {
+		super(gui, date, cal);
 
 		// TODO Auto-generated constructor stub
 	}
@@ -28,7 +29,7 @@ public class CalendarWeekGrid extends CalendarGrid{
 		System.out.println(dayLooper);
 		int y = 0;
 		for (int x = 0; x < 7; x++) {
-			CalendarWeekDay thisBox = new CalendarWeekDay(gui,dayLooper,events,false,false);
+			CalendarWeekDay thisBox = new CalendarWeekDay(gui,dayLooper,getEventsByDay(dayLooper),false,false);
 			grid.add(thisBox,x,y);
 
 			datesHash.put(dayLooper, thisBox);

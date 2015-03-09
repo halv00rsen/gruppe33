@@ -29,17 +29,17 @@ public class CalendarGUI extends Component{
 	ArrayList<Event> allEvents;
 	public CalendarGUI(Pane parent, LocalDate date, Calendar... args) {
 		super(parent);
-		allEvents = new ArrayList<Event>();
-		for(Calendar k : args){
-			System.out.println(k);
-			if(! k.getEvents().isEmpty()){
-
-				allEvents.addAll(k.getEvents());
-			}
-		}
+//		allEvents = new ArrayList<Event>();
+//		for(Calendar k : args){
+//			System.out.println(k);
+//			if(! k.getEvents().isEmpty()){
+//
+//				allEvents.addAll(k.getEvents());
+//			}
+//		}
 		this.date = date;
-		month = new CalendarMonthBase(parent, date, allEvents, this);
-		week = new CalendarWeekBase(parent, date, allEvents, this);
+		month = new CalendarMonthBase(parent, date, args, this);
+		week = new CalendarWeekBase(parent, date, args, this);
 		currentCalendarBase = week;
 		weekButton = new RadioButton("Uke");
 		monthButton = new RadioButton("Måned");

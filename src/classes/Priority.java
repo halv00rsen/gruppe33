@@ -11,8 +11,8 @@ public enum Priority{
 	NOT_IMPORTANT(Color.BEIGE), IMPORTANT(Color.ORANGE), VERY_IMPORTANT(Color.RED);
 	private Pane pane = new Pane();
 	private Circle circle = new Circle();
-
 	private Color c;
+	
 	Priority(Color color){
 		this.c = color;
 		circle.setRadius(20.0f);
@@ -28,6 +28,9 @@ public enum Priority{
 	}
 	private void hoverOn(MouseEvent e) {
 		circle.setFill(Color.valueOf("#FFFFAA"));
+	}
+	public Color getColor() {
+		return c;
 	}
 
 }
