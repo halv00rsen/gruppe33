@@ -17,6 +17,7 @@ public class HomeScreen extends Window{
     
     CalendarGUI calendargui;
     UserInfoGUI userInfoGui;
+    SideMenu sideMenu;
     
     VBox calendarAndInfo;
     HBox mainBox;
@@ -41,16 +42,17 @@ public class HomeScreen extends Window{
 		settings.setOnAction(e -> main.requestSettingsWindow());
 		
 		calendargui = new CalendarGUI(this, main, LocalDate.now(), DebugMain.getEvents());
-		SideMenu menu = new SideMenu(this, LocalDate.now(), DebugMain.getEvents(), main);
+		sideMenu = new SideMenu(this, DebugMain.getEvents(), main);
 		userInfoGui = new UserInfoGUI(this, main, DebugMain.getPerson());
 		
+		
 		calendarAndInfo.getChildren().addAll(userInfoGui, calendargui);
-
 		
 		
-		mainBox.getChildren().addAll(calendarAndInfo,menu);
+		
+		mainBox.getChildren().addAll(calendarAndInfo,sideMenu);
 		this.getChildren().add(mainBox);
-
+		
 //		this.getChildren().add(gui);
 //		gui.setTranslateX(300);
 

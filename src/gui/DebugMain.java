@@ -83,8 +83,7 @@ public class DebugMain {
 		
 
 		
-		SideMenu c = new SideMenu(root, LocalDate.now(), getEvents(), main);
-		root.getChildren().add(c);
+		
 //		CalendarWeekGUI c = new CalendarWeekGUI(root,LocalDate.now(),events);
 //		LoginGUI l = new LoginGUI(main);
 		
