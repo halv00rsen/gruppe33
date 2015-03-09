@@ -6,8 +6,8 @@ public abstract class Window extends Pane{
 	
 	public Window(){
 //		main.root.getChildren().add(main.root);
-		this.setPrefHeight(Main.SCREENHEIGHT);
-		this.setPrefWidth(Main.SCREENWIDTH);
+		this.setPrefHeight(Main.SCREENHEIGHT- 100);
+		this.setPrefWidth(Main.SCREENWIDTH- 100);
 //		init();
 
 //		this.setStyle("-fx-color-background: #FF0000");

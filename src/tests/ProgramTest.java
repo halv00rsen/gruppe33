@@ -65,6 +65,11 @@ public class ProgramTest implements ProgramListener{
 	}
 	
 	@Override
+	public void showEvent(Event event){
+		
+	}
+	
+	@Override
 	public void sendMessage(Message msg) {
 		// TODO Auto-generated method stub
 		
