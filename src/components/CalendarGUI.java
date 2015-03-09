@@ -3,6 +3,7 @@ package components;
 import java.time.LocalDate;
 import java.util.ArrayList;
 
+import classes.Calendar;
 import classes.Event;
 import javafx.beans.Observable;
 import javafx.event.ActionEvent;
@@ -25,11 +26,20 @@ public class CalendarGUI extends Component{
 	VBox components;
 	HBox buttons;
 	LocalDate date;
-	public CalendarGUI(Pane parent, LocalDate date, ArrayList<Event> events) {
+	ArrayList<Event> allEvents;
+	public CalendarGUI(Pane parent, LocalDate date, Calendar... args) {
 		super(parent);
+		allEvents = new ArrayList<Event>();
+		for(Calendar k : args){
+			System.out.println(k);
+			if(! k.getEvents().isEmpty()){
+
+				allEvents.addAll(k.getEvents());
+			}
+		}
 		this.date = date;
-		month = new CalendarMonthBase(parent, date, events, this);
-		week = new CalendarWeekBase(parent, date, events, this);
+		month = new CalendarMonthBase(parent, date, allEvents, this);
+		week = new CalendarWeekBase(parent, date, allEvents, this);
 		currentCalendarBase = week;
 		weekButton = new RadioButton("Uke");
 		monthButton = new RadioButton("Måned");
