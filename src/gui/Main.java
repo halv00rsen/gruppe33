@@ -8,7 +8,6 @@ import classes.Message;
 import classes.Program;
 import classes.ProgramListener;
 import classes.Room;
-import classes.View;
 import javafx.application.Application;
 import javafx.stage.Stage;
 import javafx.scene.Node;
@@ -18,6 +17,7 @@ import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
+import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
 
 
@@ -110,7 +110,7 @@ public class Main extends Application implements ProgramListener{
 	@Override
 	public void loginSuccess(String username, String name) {
 		root.getChildren().remove(loginScreen);
-		HBox box = new HBox(20);
+		VBox box = new VBox(5);
 		Button logout = new Button("Logg ut");
 		
 		logout.setOnAction(e -> program.logout());
@@ -181,7 +181,7 @@ public class Main extends Application implements ProgramListener{
 	}
 
 	@Override
-	public void updateCalendar(List<Calendar> cal, View view) {
+	public void updateCalendar(List<Calendar> cal) {
 		// TODO Auto-generated method stub
 		
 	}
