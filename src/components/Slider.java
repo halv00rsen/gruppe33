@@ -1,6 +1,7 @@
 package components;
 import gui.*;
 import javafx.geometry.Pos;
+import javafx.scene.Cursor;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
@@ -45,6 +46,7 @@ public class Slider extends StackPane{
 		System.out.println(backupStyle);
 		int[] a = {0,0,0};
 		Main.applyContrast(this, 0.9,a);
+		setCursor(Cursor.HAND);
 	}
 	
 }

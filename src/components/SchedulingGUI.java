@@ -7,6 +7,9 @@ import gui.Window;
 
 import java.time.LocalDate;
 
+import classes.Calendar;
+import classes.Person;
+import classes.PersonCalendar;
 import javafx.scene.control.Button;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
@@ -25,9 +28,11 @@ public class SchedulingGUI extends Component{
 		
 		settings = new Button("Brukerinnstillinger");
 //		settings.setOnAction(e -> main.requestSettingsWindow());
-		
-		
-		calendargui = new CalendarGUI(this, LocalDate.now(), DebugMain.getEvents());
+
+		Person p = new Person(null, null, 1, null, true);
+		PersonCalendar cal = new PersonCalendar(p);
+		cal.addEvent(DebugMain.getEvents());
+		calendargui = new CalendarGUI(this, LocalDate.now(), cal);
 		SideMenu menu = new SideMenu(this, DebugMain.getEvents());
 		calendarAndInfo.getChildren().addAll(calendargui);
 		calendarAndInfo.getChildren().addAll(menu);

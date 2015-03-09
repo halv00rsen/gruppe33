@@ -31,10 +31,7 @@ public class HomeScreen extends Window{
 	public void init() {
 		SchedulingGUI schedulingGUI = new SchedulingGUI(this);
 		this.getChildren().add(schedulingGUI);
-		
 
-//		this.getChildren().add(gui);
-//		gui.setTranslateX(300);
 
 	}
 	
