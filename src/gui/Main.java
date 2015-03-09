@@ -56,10 +56,6 @@ public class Main extends Application implements ProgramListener{
 		public void requestLogin(String username, String password){
 			program.personLogin(username, password);
 		}
-		
-		public String toString(){
-			return "LoginCall is active";
-		}
 	}
 	
 	public class GoToEvent{
@@ -124,7 +120,7 @@ public class Main extends Application implements ProgramListener{
 		selectionModel.select(home);
 	}
 
-	private Tab home;
+	private Tab home, newEvent, room, persons, inbox, settings;
 	
 	@Override
 	public void loginSuccess(String username, String name) {
@@ -138,22 +134,23 @@ public class Main extends Application implements ProgramListener{
 		homeScreen  = new HomeScreen();
 		home.setContent(homeScreen);
 		
-		Tab newEvent = new Tab("Ny event");
+		newEvent = new Tab("Ny event");
 		eventScreen = new EventScreen();
-		Tab room = new Tab("Rom");
+		newEvent.setContent(eventScreen);
+		
+		room = new Tab("Rom");
 		
 		
-		Tab persons = new Tab("Personer");
+		persons = new Tab("Personer");
 		
 		
-		Tab inbox = new Tab("Postkasse");
+		inbox = new Tab("Postkasse");
 		inboxScreen = new InboxScreen(new GoToEvent());
 		inbox.setContent(inboxScreen);
 		
-		Tab settings = new Tab("Innstillinger");
+		settings = new Tab("Innstillinger");
 		settingsScreen = new SettingsScreen();
 		settings.setContent(settingsScreen);
-		newEvent.setContent(eventScreen);
 		
 		tabPane.getTabs().addAll(home, newEvent, room, persons, inbox, settings);
 		if (program.isAdminLogIn()){
