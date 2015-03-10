@@ -1,7 +1,5 @@
 package classes;
 
-import gui.Main;
-import javafx.scene.Cursor;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
@@ -18,6 +16,7 @@ public enum Priority{
 		circle.setRadius(20.0f);
 		circle.setFill(color);
 		circle.setOnMouseEntered(e -> hoverOn(e));
+		circle.setOnMouseExited(e -> hoverOff(e));
 		this.pane.getChildren().add(circle);
 	}
 	public Pane getVisualization(){
