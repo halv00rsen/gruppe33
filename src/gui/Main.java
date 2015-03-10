@@ -149,7 +149,7 @@ public class Main extends Application implements ProgramListener{
 		newEvent.setContent(eventScreen);
 		
 		room = new Tab("Reserver Rom");
-		reserveRoomScreen = new ReserveRoomScreen();
+		reserveRoomScreen = new ReserveRoomScreen(DebugMain.getRooms());
 		room.setContent(reserveRoomScreen);
 		
 		

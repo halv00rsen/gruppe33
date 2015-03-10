@@ -11,6 +11,7 @@ import classes.Event;
 import classes.Group;
 import classes.Person;
 import classes.Priority;
+import classes.Room;
 import javafx.scene.layout.Pane;
 //import jfxtras.scene.control.agenda.Agenda;
 
@@ -23,6 +24,16 @@ public class DebugMain {
 	 * 
 	 * 
 	 */
+	
+	public static ArrayList<Room> getRooms() {
+		Room r1 = new Room(0, "Det gule");
+		Room r2 = new Room(1, "Det andre");
+		
+		ArrayList<Room> list = new ArrayList<Room>(); 
+		list.addAll(Arrays.asList(r1, r2));
+		return list;
+		
+	}
 	
 	public static Person getPerson() {
 		Person ola = new Person("olaNord", "hei", 4, "Ola Nordmann", true);
