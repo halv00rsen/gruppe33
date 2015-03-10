@@ -11,6 +11,8 @@ import javafx.scene.control.ToggleGroup;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import classes.Event;
+import classes.Person;
+import classes.PersonCalendar;
 import components.*;
 import gui.*;
 public class HomeScreen extends Window{
@@ -19,9 +21,13 @@ public class HomeScreen extends Window{
 
     
     SchedulingGUI schedulingGUI;
+    Person p;
+    PersonCalendar cal;
     
 	private Button settings;
 	public HomeScreen() {
+		p = DebugMain.getPerson();
+		cal = new PersonCalendar(p);
 //		this.setStyle("-fx-color-background: #ff0044");
 		init();
 		
@@ -29,7 +35,7 @@ public class HomeScreen extends Window{
 
 	@Override
 	public void init() {
-		SchedulingGUI schedulingGUI = new SchedulingGUI(this);
+		schedulingGUI = new SchedulingGUI(this, cal, p);
 		this.getChildren().add(schedulingGUI);
 
 
