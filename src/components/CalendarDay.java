@@ -175,4 +175,7 @@ public abstract class CalendarDay extends Pane{
 		this.setPrefWidth(calWidth);
 		this.setPrefHeight(calHeight);
 	}
+	public ArrayList<Event> getDayEvents(){
+		return events;
+	}
 }

@@ -19,6 +19,7 @@ import gui.Main;
 public class CalendarGUI extends Component{
 	RadioButton weekButton;
 	RadioButton monthButton;
+	ArrayList<CalendarGUIListener> listeners = new ArrayList<CalendarGUIListener>();
 	CalendarBase month;
 	CalendarBase week;
 	ToggleGroup group;
@@ -79,11 +80,11 @@ public class CalendarGUI extends Component{
 		currentCalendarBase = month;
 		components.getChildren().set(1,currentCalendarBase);
 	}
-	public void setHighlighted(LocalDate date) {
+	public void setHighlighted(LocalDate date, ArrayList<Event> events) {
 		this.date = date;
-		////////////
-		//returnerer videre
-		///////////
+		for (CalendarGUIListener event : listeners) {
+			event.dayIsHighligthed(date, events);
+		}
 		
 	}
 	public void doubleClicked(LocalDate date) {
@@ -91,5 +92,13 @@ public class CalendarGUI extends Component{
 			weekButton.fire();
 		}
 		
+	}
+	public void addListener(CalendarGUIListener hei){
+		this.listeners.add(hei);
+	}
+	public interface CalendarGUIListener {
+		public void dayIsHighligthed(LocalDate date, ArrayList<Event> events);
+		public void eventIsHighligthed(Event event);
+
 	}
 }

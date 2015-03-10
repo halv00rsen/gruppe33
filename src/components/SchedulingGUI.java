@@ -23,27 +23,23 @@ public class SchedulingGUI extends Component{
     HBox mainBox;
     
 	private Button settings;
-	public SchedulingGUI(Window parent) {
+	public SchedulingGUI(Window parent, Calendar cal, Person p) {
 		super(parent);
 		mainBox = new HBox(0);
 		calendarAndInfo = new VBox(30);
 		
 		settings = new Button("Brukerinnstillinger");
 //		settings.setOnAction(e -> main.requestSettingsWindow());
-		Person p = DebugMain.getPerson();
 		
-		PersonCalendar cal = new PersonCalendar(p);
 		cal.addEvent(DebugMain.getEvents());
 		calendargui = new CalendarGUI(this, LocalDate.now(), cal);
 		menu = new SideMenu(this, DebugMain.getEvents());
+		calendargui.addListener(menu);
 		userInfo = new UserInfoGUI(this, p);
 		
 		calendarAndInfo.getChildren().addAll(userInfo, menu);
 		
 		mainBox.getChildren().addAll(calendargui, calendarAndInfo);
 		this.getChildren().add(mainBox);
-		
-		
-
 	}
 }
