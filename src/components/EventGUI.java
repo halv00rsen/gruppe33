@@ -55,7 +55,7 @@ public class EventGUI extends Component {
 	DatePicker datePicker2 = new DatePicker();
 	TextField fromClockText = new TextField();
 	TextField toClockText = new TextField();
-	ChoiceBox split = new ChoiceBox();
+	ChoiceBox<String> split = new ChoiceBox<String>();
 	int freq = 0;
 	ListView invited = new ListView();
 	public EventGUI(Pane parent) {
