@@ -7,16 +7,16 @@ import gui.Window;
 public class OtherPersonScreen extends Window{
 	SchedulingGUI schedulingGUI;
 	
-	ChoiceBox<String> choiceBox;
+	 ChoiceBox cb = new ChoiceBox();
+	 cb.getItems().addAll("item1", "item2", "item3");
 	
 	public OtherPersonScreen() {
-		choiceBox = new ChoiceBox<String>();
 		init();
 	}
 	
 	@Override
 	public void init() {
-		
+
 		
 	}
 

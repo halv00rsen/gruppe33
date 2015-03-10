@@ -34,6 +34,7 @@ public class SchedulingGUI extends Component{
 		cal.addEvent(DebugMain.getEvents());
 		calendargui = new CalendarGUI(this, LocalDate.now(), cal);
 		menu = new SideMenu(this, DebugMain.getEvents());
+		calendargui.addListener(menu);
 		userInfo = new UserInfoGUI(this, p);
 		
 		calendarAndInfo.getChildren().addAll(userInfo, menu);
