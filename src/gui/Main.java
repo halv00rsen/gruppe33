@@ -171,7 +171,7 @@ public class Main extends Application implements ProgramListener{
 		if (currentWindow != null)
 			currentWindow.exitThisWindow();
 		messageScreen = new MessageScreen();
-		root.getChildren().addAll(tabPane, logout, messageScreen);
+		root.getChildren().addAll(tabPane, logout);
 		logout.setLayoutX(1020);
 		logout.setLayoutY(2);
 		stage.setTitle("xKal (" + username + ")");

@@ -16,6 +16,8 @@ import javafx.scene.layout.VBox;
 
 public class SchedulingGUI extends Component{
     CalendarGUI calendargui;
+    SideMenu menu;
+    UserInfoGUI userInfo;
     
     VBox calendarAndInfo;
     HBox mainBox;
@@ -24,27 +26,24 @@ public class SchedulingGUI extends Component{
 	public SchedulingGUI(Window parent) {
 		super(parent);
 		mainBox = new HBox(0);
-		calendarAndInfo = new VBox(10);
+		calendarAndInfo = new VBox(30);
 		
 		settings = new Button("Brukerinnstillinger");
 //		settings.setOnAction(e -> main.requestSettingsWindow());
-
-		Person p = new Person(null, null, 1, null, true);
+		Person p = DebugMain.getPerson();
+		
 		PersonCalendar cal = new PersonCalendar(p);
 		cal.addEvent(DebugMain.getEvents());
 		calendargui = new CalendarGUI(this, LocalDate.now(), cal);
-		SideMenu menu = new SideMenu(this, DebugMain.getEvents());
-		calendarAndInfo.getChildren().addAll(calendargui);
-		calendarAndInfo.getChildren().addAll(menu);
+		menu = new SideMenu(this, DebugMain.getEvents());
+		userInfo = new UserInfoGUI(this, p);
 		
-		mainBox.getChildren().addAll();
-		this.getChildren().add(calendarAndInfo);
+		calendarAndInfo.getChildren().addAll(userInfo, menu);
 		
-
-		
-		
-		mainBox.getChildren().addAll(calendarAndInfo,menu);
+		mainBox.getChildren().addAll(calendargui, calendarAndInfo);
 		this.getChildren().add(mainBox);
+		
+		
 
 	}
 }

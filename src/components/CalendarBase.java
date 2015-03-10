@@ -47,8 +47,8 @@ public abstract class CalendarBase extends Pane{
 	StackPane calCnt;
 	Pane dayBox;
 	ArrayList<Event> events;
-	static int defaultCalHeight = 600;
-	static int defaultCalWidth = 700;
+	static int defaultCalHeight = 300;
+	static int defaultCalWidth = 500;
 	VBox header;
 	static int headerHeight = 30;
 	Slider sliderLeft;
