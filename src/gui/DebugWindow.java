@@ -14,7 +14,7 @@ public class DebugWindow extends Application{
 			Pane pane = new Pane();
 			GroupGUI g = new GroupGUI(pane);
 			pane.getChildren().add(g);
-			Scene scene = new Scene(pane, 500, 500);
+			Scene scene = new Scene(pane, 1000, 500);
 			stage.setScene(scene);
 			stage.show();
 		}catch (Exception e){
