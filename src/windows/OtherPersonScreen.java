@@ -57,10 +57,7 @@ public class OtherPersonScreen extends Window{
 		        cal = new PersonCalendar(person);
 		        schedulingGUI = new SchedulingGUI(getThis(), cal, person);
 		        mainBox.getChildren().add(schedulingGUI);
-		        
 			}
-			
-			
 		});
 		
 		pane.add(chosePersonLabel, 0, 0);

@@ -67,8 +67,8 @@ public class DebugMain {
 		event2.setStartTime(LocalDateTime.of(2015, Month.MARCH, 14, 7, 31));
 		event2.setEndTime(LocalDateTime.of(2015, Month.MARCH, 14, 18, 30));
 		
-		event3.setStartTime(LocalDateTime.of(2015, Month.MARCH, 10, 12, 32));
-		event3.setEndTime(LocalDateTime.of(2015, Month.MARCH, 10, 20, 30));
+		event3.setStartTime(LocalDateTime.of(LocalDate.now().getYear(), LocalDate.now().getMonth(), LocalDate.now().getDayOfMonth(), 12, 32));
+		event3.setEndTime(LocalDateTime.of(LocalDate.now().getYear(), LocalDate.now().getMonth(), LocalDate.now().getDayOfMonth(), 20, 30));
 		
 		event4.setStartTime(LocalDateTime.of(2015, Month.APRIL, 2, 4, 33));
 		event4.setEndTime(LocalDateTime.of(2015, Month.APRIL, 2, 8, 30));
