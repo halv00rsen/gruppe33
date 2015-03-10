@@ -1,4 +1,5 @@
 package gui;
+import java.awt.Insets;
 import java.util.List;
 
 import windows.*;
@@ -27,10 +28,11 @@ import javafx.scene.text.Font;
 
 public class Main extends Application implements ProgramListener{
 
-	public final static int SCREENHEIGHT = 800;
+	public final static int SCREENHEIGHT = 600;
 	public final static int SCREENWIDTH = 1200;
 	public final static Pane root = new Pane();
-	public final static Font header1 = new Font("Calibri", 30);
+	public final static Font header1 = new Font("Verdana", 20);
+	public final static Insets paddingInsets = new Insets(10, 0, 0, 0);
 
 	private final Program program;
 	private final LoginScreen loginScreen;
@@ -45,6 +47,7 @@ public class Main extends Application implements ProgramListener{
 	private InboxScreen inboxScreen;
 	private EventScreen eventScreen;
 	private OtherPersonScreen otherPersonScreen;
+	private ReserveRoomScreen reserveRoomScreen;
 
 	private MessageScreen messageScreen;
 	
@@ -75,8 +78,8 @@ public class Main extends Application implements ProgramListener{
 		try {
 //			DebugMain debuglauncher = new DebugMain(root, this);
 			stage = primaryStage;
-			
-			Scene scene = new Scene(root,SCREENHEIGHT,SCREENHEIGHT);
+			Scene scene = new Scene(root,SCREENWIDTH,SCREENHEIGHT);
+			stage.setFullScreen(false);
 			stage.setTitle("xKal");
 			primaryStage.setScene(scene);
 			primaryStage.show();
@@ -145,7 +148,9 @@ public class Main extends Application implements ProgramListener{
 		eventScreen = new EventScreen();
 		newEvent.setContent(eventScreen);
 		
-		room = new Tab("Rom");
+		room = new Tab("Reserver Rom");
+		reserveRoomScreen = new ReserveRoomScreen();
+		room.setContent(reserveRoomScreen);
 		
 		
 		persons = new Tab("Personer");
