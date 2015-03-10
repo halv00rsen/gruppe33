@@ -1,11 +1,8 @@
 package gui;
 
 
-import javafx.animation.Timeline;
 import javafx.animation.TranslateTransition;
-import javafx.application.Platform;
 import javafx.scene.Group;
-import javafx.scene.control.TextArea;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Text;
@@ -16,6 +13,8 @@ public class MessageScreen extends Group{
 	private final int height = 100, width = 200;
 	private final Rectangle rec;
 	private final Text message;
+	
+	private boolean showing;
 	
 	public MessageScreen(){
 		rec = new Rectangle(width, height);
@@ -32,21 +31,28 @@ public class MessageScreen extends Group{
 		getChildren().addAll(rec, header, message);
 		setLayoutX(280);
 		setLayoutY(- 1 * height - 5);
+		showing = false;
 	}
 	
 	public void show(String message){
+		if (showing)
+			return;
 		TranslateTransition tt = new TranslateTransition(Duration.seconds(1), this);
 		tt.setFromY(- 1 * height);
 		tt.setToY(40 + height);
 	    tt.setCycleCount(1);
 	    tt.play();
+	    showing = true;
 	}
 	
 	public void hide(){
+		if (!showing)
+			return;
 		TranslateTransition tt = new TranslateTransition(Duration.seconds(1), this);
 		tt.setFromY(40 + height);
 		tt.setToY(- 1 * height);
 		tt.setCycleCount(1);
 		tt.play();
+		showing = false;
 	}
 }
