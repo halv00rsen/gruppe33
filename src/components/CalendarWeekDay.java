@@ -28,7 +28,9 @@ public class CalendarWeekDay extends CalendarDay{
 	void addEvents(){
 		int mente = 0;
 		innerBody = new StackPane();
-		for (int i = 0; i < events.size(); i++) {
+		
+		for (int i = 0; i < events.size()-1; i++) {
+			System.out.println(events.size());
 			Event thisEvent = events.get(i);
 			
 			EventBox eventBox = new EventBox(thisEvent);
@@ -38,7 +40,7 @@ public class CalendarWeekDay extends CalendarDay{
 				eventBox.overlapCount += 1;
 				mente = 0;
 			}
-			if(events.get(i).getStartTime().isBefore(thisEvent.getEndTime())){
+			if(events.get(i+1).getStartTime().isBefore(thisEvent.getEndTime())){
 				eventBox.addToOverlapp(1);
 				mente = 1;
 			}
@@ -46,6 +48,23 @@ public class CalendarWeekDay extends CalendarDay{
 			
 			
 		}
+		if(events.size()>0){
+			Event thisEvent = events.get(events.size()-1);
+			
+			EventBox eventBox = new EventBox(thisEvent);
+			if(mente > 0){
+
+				eventBox.addToOverlapp(mente);
+				eventBox.overlapCount += 1;
+				mente = 0;
+			}
+			innerBody.getChildren().add(eventBox);	
+		}
+				
+			
+			
+		
+		
 		body.getChildren().add(innerBody);	
 	}
 
