@@ -1,5 +1,6 @@
 package classes;
 
+import javafx.scene.Cursor;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
@@ -46,6 +47,7 @@ public enum Priority{
 	}
 	private void hoverOn(MouseEvent e) {
 		circle.setFill(Color.valueOf("#FFFFAA"));
+		circle.setCursor(Cursor.HAND);
 	}
 	public Color getColor() {
 		return c;
