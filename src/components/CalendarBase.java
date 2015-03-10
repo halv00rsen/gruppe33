@@ -298,7 +298,7 @@ public abstract class CalendarBase extends Pane{
 		boxHighlighted = a;
 		a.setHighlighted(true);
 		a.requestFocus();
-		gui.setHighlighted(date);
+		gui.setHighlighted(date,boxHighlighted.getDayEvents());
 	}
 	public LocalDate getHighlightedDate(){
 		return boxHighlighted.getDate();
@@ -320,7 +320,7 @@ public abstract class CalendarBase extends Pane{
 
 	public void dayDoubleClicked(LocalDate date) {
 		highlight(date);
-		gui.setHighlighted(date);
+		gui.setHighlighted(date,boxHighlighted.getDayEvents());
 		gui.doubleClicked(date);
 		
 	}
