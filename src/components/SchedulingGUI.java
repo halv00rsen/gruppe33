@@ -6,8 +6,10 @@ import gui.SideMenu;
 import gui.Window;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 
 import classes.Calendar;
+import classes.Event;
 import classes.Person;
 import classes.PersonCalendar;
 import javafx.scene.control.Button;
@@ -33,7 +35,7 @@ public class SchedulingGUI extends Component{
 		
 		cal.addEvent(DebugMain.getEvents());
 		calendargui = new CalendarGUI(this, LocalDate.now(), cal);
-		menu = new SideMenu(this, DebugMain.getEvents());
+		menu = new SideMenu(this, cal.getEventsByDay(LocalDate.now()));
 		calendargui.addListener(menu);
 		userInfo = new UserInfoGUI(this, p);
 		

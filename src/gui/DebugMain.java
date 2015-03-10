@@ -4,6 +4,7 @@ import windows.*;
 
 import java.time.*;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import classes.Event;
@@ -34,6 +35,17 @@ public class DebugMain {
 		return ola;
 	}
 	
+	public static ArrayList<Person> getPeople() {
+		Person kari = new Person("kariHols", "hallo", 5, "Kari Holst", false);
+		Person benjamin = new Person("bennyBoy", "naughty", 6, "Benjamin Button", false);
+		Person erlend = new Person("erlbe", "passord123", 1, "Erlend Berger", true);
+		
+		ArrayList<Person> list = new ArrayList<Person>(); 
+		list.addAll(Arrays.asList(kari, benjamin, erlend));
+		return list;
+		
+	}
+	
 	public static ArrayList<Event> getEvents(){
 		ArrayList<Event> events = new ArrayList<Event>();
 		Event event1 = new Event(null, null, null, null, null, null, null, null, null, null, null, null);
@@ -55,8 +67,8 @@ public class DebugMain {
 		event2.setStartTime(LocalDateTime.of(2015, Month.MARCH, 14, 7, 31));
 		event2.setEndTime(LocalDateTime.of(2015, Month.MARCH, 14, 18, 30));
 		
-		event3.setStartTime(LocalDateTime.of(2015, Month.MARCH, 14, 17, 32));
-		event3.setEndTime(LocalDateTime.of(2015, Month.MARCH, 14, 20, 30));
+		event3.setStartTime(LocalDateTime.of(2015, Month.MARCH, 10, 12, 32));
+		event3.setEndTime(LocalDateTime.of(2015, Month.MARCH, 10, 20, 30));
 		
 		event4.setStartTime(LocalDateTime.of(2015, Month.APRIL, 2, 4, 33));
 		event4.setEndTime(LocalDateTime.of(2015, Month.APRIL, 2, 8, 30));

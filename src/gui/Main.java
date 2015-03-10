@@ -44,6 +44,7 @@ public class Main extends Application implements ProgramListener{
 	private SettingsScreen settingsScreen;
 	private InboxScreen inboxScreen;
 	private EventScreen eventScreen;
+	private OtherPersonScreen otherPersonScreen;
 
 	private MessageScreen messageScreen;
 	
@@ -145,6 +146,8 @@ public class Main extends Application implements ProgramListener{
 		
 		
 		persons = new Tab("Personer");
+		otherPersonScreen = new OtherPersonScreen(DebugMain.getPeople());
+		persons.setContent(otherPersonScreen);
 		
 		
 		inbox = new Tab("Postkasse");
