@@ -11,7 +11,6 @@ import classes.Program;
 import classes.ProgramListener;
 import classes.Room;
 import javafx.application.Application;
-import javafx.geometry.Side;
 import javafx.stage.Stage;
 import javafx.scene.Node;
 import javafx.scene.Scene;
@@ -19,7 +18,6 @@ import javafx.scene.control.Button;
 import javafx.scene.control.SingleSelectionModel;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
-import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
@@ -128,7 +126,7 @@ public class Main extends Application implements ProgramListener{
 		selectionModel.select(home);
 	}
 
-	private Tab home, newEvent, room, persons, inbox, settings;
+	private Tab home, newEvent, room, persons, inbox, settings, groups;
 	
 	@Override
 	public void loginSuccess(String username, String name) {
@@ -152,6 +150,9 @@ public class Main extends Application implements ProgramListener{
 		reserveRoomScreen = new ReserveRoomScreen(DebugMain.getRooms());
 		room.setContent(reserveRoomScreen);
 		
+		groups = new Tab("Grupper");
+		groups.setContent(new GroupScreen());
+		
 		
 		persons = new Tab("Personer");
 		otherPersonScreen = new OtherPersonScreen(DebugMain.getPeople());
@@ -166,7 +167,7 @@ public class Main extends Application implements ProgramListener{
 		settingsScreen = new SettingsScreen();
 		settings.setContent(settingsScreen);
 		
-		tabPane.getTabs().addAll(home, newEvent, room, persons, inbox, settings);
+		tabPane.getTabs().addAll(home, newEvent, room, persons, inbox, settings, groups);
 		tabPane.setTabMinWidth(75);
 		if (program.isAdminLogIn()){
 			Tab newUser = new Tab("Ny bruker");
