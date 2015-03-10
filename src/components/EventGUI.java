@@ -13,6 +13,8 @@ import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
+import javafx.event.Event;
+import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
@@ -58,6 +60,9 @@ public class EventGUI extends Component {
 	ChoiceBox<String> split = new ChoiceBox<String>();
 	int freq = 0;
 	ListView invited = new ListView();
+	
+	private Priority priority;
+	
 	public EventGUI(Pane parent) {
 		super(parent);
 		addElements();
@@ -297,11 +302,34 @@ public class EventGUI extends Component {
       //Priority
         
         HBox priorityList = new HBox(5);
-        priorityList.getChildren().add(Priority.NOT_IMPORTANT.getVisualization());
-        priorityList.getChildren().add(Priority.IMPORTANT.getVisualization());
-        priorityList.getChildren().add(Priority.VERY_IMPORTANT.getVisualization());
+        priority = null;
+        Priority[] pList = new Priority[3];
+        pList[0] = Priority.NOT_IMPORTANT;
+        pList[1] = Priority.IMPORTANT;
+        pList[2] = Priority.VERY_IMPORTANT;
+        priorityList.getChildren().add(pList[0].getVisualization());
+        priorityList.getChildren().add(pList[1].getVisualization());
+        priorityList.getChildren().add(pList[2].getVisualization());
         listBox.getChildren().add(priorityList);
         
+        EventHandler<Event> event = new EventHandler<Event>(){
+
+			@Override
+			public void handle(Event event) {
+				for (Priority p : pList){
+					if (p.getVisualization() == event.getSource()){
+						if (p.isActive())
+							p.turnOff();
+						else
+							p.turnOn();
+					}else
+						p.turnOff();
+				}
+			}
+        	
+        };
+        for (Priority p : pList)
+        	p.getVisualization().setOnMouseClicked(event);
         
         //set alle
         VBox rootBox = new VBox(30);

@@ -10,6 +10,7 @@ public enum Priority{
 	private Pane pane = new Pane();
 	private Circle circle = new Circle();
 	private Color c;
+	private boolean active;
 	
 	Priority(Color color){
 		this.c = color;
@@ -18,10 +19,28 @@ public enum Priority{
 		circle.setOnMouseEntered(e -> hoverOn(e));
 		circle.setOnMouseExited(e -> hoverOff(e));
 		this.pane.getChildren().add(circle);
+		circle.setStroke(color);
+		active = false;
 	}
 	public Pane getVisualization(){
 		return pane;
 	}
+	
+	public boolean isActive(){
+		return active;
+	}
+	
+	public void turnOff(){
+		active = false;
+		circle.setStroke(c);
+		hoverOff(null);
+	}
+	
+	public void turnOn(){
+		active = true;
+		circle.setStroke(Color.BLACK);
+	}
+	
 	private void hoverOff(MouseEvent e) {
 		circle.setFill(c);
 	}
