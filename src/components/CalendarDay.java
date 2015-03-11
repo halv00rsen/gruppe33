@@ -1,11 +1,11 @@
 package components;
 
-import gui.*;
-import java.util.ArrayList;
 import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 
+import classes.Event;
 import javafx.geometry.Insets;
 import javafx.scene.control.Label;
 import javafx.scene.input.MouseEvent;
@@ -14,9 +14,11 @@ import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Line;
-import classes.Event;
+import gui.Component;
+import gui.Main;
 
-public class CalendarDayBox extends Pane{
+public abstract class CalendarDay extends Pane{
+
 	int dayOfMonth;
 	int[] def = {0,0,0};
 	int month;
@@ -33,10 +35,11 @@ public class CalendarDayBox extends Pane{
 	BorderPane base;
 	VBox body;
 	ArrayList<Event> events;
-	public int calHeight = 100;
-	public int calWidth = 100;
-	CalendarMonthGUI calGui;
-	public CalendarDayBox(CalendarMonthGUI gui, LocalDate date,ArrayList<Event> events, boolean isUpperDisabled, boolean isLowerDisabled){
+	int calHeight;
+	public int calWidth = CalendarBase.defaultCalWidth/7;
+	CalendarBase calGui;
+	public CalendarDay(CalendarBase gui, LocalDate date,ArrayList<Event> events, boolean isUpperDisabled, boolean isLowerDisabled){
+		setCalHeight();
 		this.calGui = gui;
 		this.events = events;
 		this.date = date;
@@ -46,8 +49,7 @@ public class CalendarDayBox extends Pane{
 		this.month = date.getMonthValue();
 //		this.dayOfMonth = 31;
 		this.setPrefWidth(calWidth);
-		this.setPrefHeight(calHeight);
-		
+		this.setPrefHeight(calWidth);
 		if(isUpperDisabled || isLowerDisabled){
 			this.defaultStyle = "-fx-background-color: #D0D0D0";
 			
@@ -103,21 +105,9 @@ public class CalendarDayBox extends Pane{
 		this.setOnMouseExited(e -> hoverOff(e));
 	}
 
-	private void addEvents() {
-		for (int i = 0; i < events.size(); i++) {
-			Event thisEvent = events.get(i);
-			
-			Pane thisEventPane = new Pane();
-				Label eventLabel = new Label();
-					eventLabel.setText(thisEvent.getEventName());
-					thisEventPane.getChildren().add(eventLabel);
-			
-			body.getChildren().add(thisEventPane);		
-			
-			
-		}
-		
-	}
+	abstract void setCalHeight();
+
+	abstract void addEvents();
 
 	public void setIsUpperDisabled(boolean t){
 		this.isUpperDisabled = t;
@@ -132,7 +122,6 @@ public class CalendarDayBox extends Pane{
 	
 	private void hoverOn(MouseEvent e) {
 		backupStyle = this.getStyle();
-//		System.out.println(backupStyle);
 		int[] a = {0,0,0};
 		Main.applyContrast(this, 0.95,a);
 	}
@@ -160,13 +149,20 @@ public class CalendarDayBox extends Pane{
 		}
 		
 	}	
-
+	public LocalDate getDate(){
+		return this.date;
+	}
 	private LocalDate onAction(MouseEvent e) {
-		calGui.requestFocus();
-		calGui.highlight(date);
+		if(e.getClickCount() == 2){
+
+			calGui.dayDoubleClicked(date);
+		}else{
+			calGui.dayClicked(date);
+		}
+		
 		
 			
-		return null;
+		return this.date;
 	}
 	private LocalDate getLocalDate() {
 		return this.date;

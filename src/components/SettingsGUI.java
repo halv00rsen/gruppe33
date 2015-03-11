@@ -55,8 +55,8 @@ public class SettingsGUI extends Component{
 	VBox vbox;
 	GridPane mainGridPane;
 
-	public SettingsGUI(Window parent, Main main) {
-		super(parent,main);
+	public SettingsGUI(Window parent) {
+		super(parent);
 		init();
 	}
 

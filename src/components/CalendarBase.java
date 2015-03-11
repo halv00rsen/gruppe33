@@ -1,38 +1,37 @@
 package components;
 
-import gui.*;
-import javafx.animation.KeyFrame;
-import javafx.animation.KeyValue;
-import javafx.animation.Timeline;
-import javafx.event.ActionEvent;
-import javafx.scene.control.Label;
-import javafx.scene.input.KeyCode;
-import javafx.scene.input.KeyEvent;
-import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.GridPane;
-import javafx.scene.layout.StackPane;
-import javafx.scene.layout.VBox;
-import javafx.scene.layout.Pane;
-import javafx.scene.paint.Color;
-import javafx.scene.shape.Rectangle;
-import javafx.util.Duration;
-
 import java.time.LocalDate;
 import java.time.Month;
 import java.time.Year;
 import java.util.ArrayList;
 
 import classes.Event;
+import gui.Component;
+import gui.Main;
+import javafx.animation.KeyFrame;
+import javafx.animation.KeyValue;
+import javafx.animation.Timeline;
+import javafx.event.ActionEvent;
+import javafx.geometry.Pos;
+import javafx.scene.control.Label;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
+import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.GridPane;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.Pane;
+import javafx.scene.layout.StackPane;
+import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
+import javafx.scene.shape.Rectangle;
+import javafx.util.Duration;
 
-public class CalendarMonthGUI extends Component{
-//	focusProperty = getFocs
+public abstract class CalendarBase extends Pane{
 	LocalDate date;
-	static int defaultCalHeight = 400;
-	static int defaultCalWidth = 600;
-	CalendarMonthBase mainCalendar;
-	CalendarMonthBase nextCalendar;
-	CalendarMonthBase lastCalendar;
+	CalendarGrid mainCalendar;
+	CalendarGrid nextCalendar;
+	CalendarGrid lastCalendar;
 	Month month; 
 	int daysInMonth;
 	GridPane grid; 
@@ -41,87 +40,62 @@ public class CalendarMonthGUI extends Component{
 	VBox box;
 	HBox hbox;
 	VBox innerBox;
-	VBox header;
+	
 	HBox dayTitles;
-
+	CalendarDay boxHighlighted;
 	StackPane calCnt;
 	Pane dayBox;
+	ArrayList<Event> events;
+	static int defaultCalHeight = 600;
+	static int defaultCalWidth = 700;
+	VBox header;
+	static int headerHeight = 30;
 	Slider sliderLeft;
 	Slider sliderRight;
-	ArrayList<Event> events;
-	public CalendarMonthGUI(Pane parent,LocalDate date, ArrayList<Event> events, Main main) {
-		super(parent, main);
-		init(date,events);
-		
-	}
-	private void init(LocalDate date,ArrayList<Event> events) {
+	CalendarGUI gui;
+	private BorderPane borderpane;
+
+	public CalendarBase(LocalDate date,ArrayList<Event> events,CalendarGUI gui) {
+		this.gui = gui;
+		this.events = events;
 		updateDate(date);
-		this.requestFocus();
-		this.setTranslateX(0);
 		this.setPrefWidth(defaultCalWidth+Slider.width*2);
 		this.setPrefHeight(defaultCalHeight);
-		this.events = events;
-		
-		this.lastCalendar = new CalendarMonthBase(this,this.date.plusMonths(-1),events);
-		this.mainCalendar = new CalendarMonthBase(this,date,events);
-		this.nextCalendar = new CalendarMonthBase(this,this.date.plusMonths(1),events);
-		
-		
+		generateCalendars();
 		lastCalendar.setVisible(false);
 		nextCalendar.setVisible(false);
-		innerBox = new VBox();
-		header = new VBox();            
-		l = new Label();
-		l.setText(date.getMonth().toString());
-		dayTitles = new HBox(0.595*CalendarMonthGUI.defaultCalWidth/7);
-		Label mon = new Label();
-		Label tus = new Label();
-		Label wed = new Label();
-		Label tur = new Label();
-		Label fri = new Label();
-		Label sat = new Label();
-		Label sun = new Label();
-		mon.setText("Mandag");
-		tus.setText("Tirsdag");
-		wed.setText("Onsdag");
-		tur.setText("Torsdag");
-		fri.setText("Fredag");
-		sat.setText("Lørdag");
-		sun.setText("Søndag");
-		sun.setTextFill(Color.RED);
-		dayTitles.getChildren().addAll(mon,tus,wed,tur,fri,sat,sun);
-		header.getChildren().add(l);
-		header.getChildren().add(dayTitles);
-		innerBox.getChildren().add(header);
-		//animeBox.getChildren().add(lastCalendar);
-		calCnt = new StackPane();
-		calCnt.getChildren().add(lastCalendar);
-		calCnt.getChildren().add(mainCalendar);
-		calCnt.getChildren().add(nextCalendar);
-		//animeBox.getChildren().add(nextCalendar);
-		
-		innerBox.getChildren().add(calCnt);
-//		clip.getChildren().add(clippingShape);
-//		clip.getChildren().get(0).setClip(clippingShape);
-		
-		sliderLeft = new Slider(true);
-		sliderRight = new Slider(false);
-		hbox = new HBox();
-		hbox.getChildren().add(sliderLeft);
-		hbox.getChildren().add(innerBox);
-		hbox.getChildren().add(sliderRight);
-		this.getChildren().add(hbox);
-		sliderRight.setOnMouseClicked(e -> nextSlide(e));
-		sliderLeft.setOnMouseClicked(e -> nextSlide(e));
+		borderpane = new BorderPane();
+			this.getChildren().add(borderpane);
+			header = new VBox();  
+				borderpane.setCenter(header);
+				borderpane.setAlignment(header, Pos.BASELINE_RIGHT);
+				header.setPrefHeight(headerHeight);
+				l = new Label();
+					header.getChildren().add(l);
+					header.setAlignment(Pos.TOP_CENTER);
+					l.setText(date.getMonth().toString());
+					
+			hbox = new HBox();
+				borderpane.setBottom(hbox);
+				sliderLeft = new Slider(true);
+					hbox.getChildren().add(sliderLeft);
+					sliderLeft.setOnMouseClicked(e -> nextSlide(e));
+				innerBox = new VBox();
+					hbox.getChildren().add(innerBox);
+					calCnt = new StackPane();
+						innerBox.getChildren().add(calCnt);
+						calCnt.getChildren().add(lastCalendar);
+						calCnt.getChildren().add(mainCalendar);
+						calCnt.getChildren().add(nextCalendar);
+				sliderRight = new Slider(false);
+					hbox.getChildren().add(sliderRight);
+					sliderRight.setOnMouseClicked(e -> nextSlide(e));
 		this.requestFocus();
 		this.setOnKeyPressed(e -> handleOnKeyPressed(e));
-//		System.out.println(innerBox.getWidth());
-		
 	}
+	
 	private void handleOnKeyPressed(KeyEvent e){
-		System.out.println("HEIHEIHEIHIE");
 		if(e.getCode().equals(KeyCode.RIGHT)){
-			System.out.println("HØYRE");
 			Timeline timeline = slideRightAnimation();
 			timeline.setOnFinished( event -> shiftRight(event));
 			timeline.play();
@@ -172,23 +146,25 @@ public class CalendarMonthGUI extends Component{
 		
 		
 		Rectangle clippingShape1 = new Rectangle();
-		clippingShape1.setHeight(CalendarMonthGUI.defaultCalHeight);
-		clippingShape1.setWidth(CalendarMonthGUI.defaultCalWidth);
+		clippingShape1.setHeight(CalendarBase.defaultCalHeight+20);
+		clippingShape1.translateYProperty().set( -20 );
+		clippingShape1.setWidth(CalendarBase.defaultCalWidth);
 		mainCalendar.setClip(clippingShape1);
 		mainCalendar.translateXProperty().set( 0 );
 		
 		KeyValue kvPr1 = new KeyValue(clippingShape1.widthProperty(),  0 );
-		KeyValue kvPr3 = new KeyValue(mainCalendar.translateXProperty(), CalendarMonthGUI.defaultCalWidth);
+		KeyValue kvPr3 = new KeyValue(mainCalendar.translateXProperty(), CalendarBase.defaultCalWidth);
 		
 		Rectangle clippingShape2 = new Rectangle();
 		clippingShape2 = new Rectangle();
-		clippingShape2.setHeight(CalendarMonthGUI.defaultCalHeight);
+		clippingShape2.setHeight(CalendarBase.defaultCalHeight+20);
 		clippingShape2.setWidth(0);
-		clippingShape2.translateXProperty().set(CalendarMonthGUI.defaultCalWidth);
+		clippingShape2.translateXProperty().set(CalendarBase.defaultCalWidth);
+		clippingShape2.translateYProperty().set(-20);
 		lastCalendar.setClip(clippingShape2);
-		lastCalendar.translateXProperty().set(- CalendarMonthGUI.defaultCalWidth);
+		lastCalendar.translateXProperty().set(- CalendarBase.defaultCalWidth);
 		
-		KeyValue kvNxt1 = new KeyValue(clippingShape2.widthProperty(), CalendarMonthGUI.defaultCalWidth);
+		KeyValue kvNxt1 = new KeyValue(clippingShape2.widthProperty(), CalendarBase.defaultCalWidth);
 		KeyValue kvNxt2 = new KeyValue(clippingShape2.translateXProperty(), 0);
 		KeyValue kvNxt3 = new KeyValue(lastCalendar.translateXProperty(), 0);
 		
@@ -206,23 +182,25 @@ public class CalendarMonthGUI extends Component{
 		nextCalendar.setVisible(true);
 		
 		Rectangle clippingShape1 = new Rectangle();
-		clippingShape1.setHeight(CalendarMonthGUI.defaultCalHeight);
-		clippingShape1.setWidth(CalendarMonthGUI.defaultCalWidth);
-
+		clippingShape1.setHeight(CalendarBase.defaultCalHeight+20);
+		clippingShape1.setWidth(CalendarBase.defaultCalWidth);
+		clippingShape1.translateYProperty().set( - 20);
 		clippingShape1.translateXProperty().set(0);
 		mainCalendar.setClip(clippingShape1);
 		mainCalendar.translateXProperty().set( 0 );
 		KeyValue kvPr1 = new KeyValue(clippingShape1.widthProperty(),  0 );
-		KeyValue kvPr2 = new KeyValue(clippingShape1.translateXProperty(), CalendarMonthGUI.defaultCalWidth);
-		KeyValue kvPr3 = new KeyValue(mainCalendar.translateXProperty(), -CalendarMonthGUI.defaultCalWidth);
+		KeyValue kvPr2 = new KeyValue(clippingShape1.translateXProperty(), CalendarBase.defaultCalWidth);
+		KeyValue kvPr3 = new KeyValue(mainCalendar.translateXProperty(), -CalendarBase.defaultCalWidth);
 		
 		Rectangle clippingShape2 = new Rectangle();
 		clippingShape2 = new Rectangle();
-		clippingShape2.setHeight(CalendarMonthGUI.defaultCalHeight);
-		clippingShape2.setWidth(CalendarMonthGUI.defaultCalWidth);
-		clippingShape2.translateXProperty().set( - CalendarMonthGUI.defaultCalWidth);
+		clippingShape2.setHeight(CalendarBase.defaultCalHeight+20);
+		clippingShape2.translateYProperty().set( - 20);
+		clippingShape2.translateXProperty().set( - CalendarBase.defaultCalWidth);
+		clippingShape2.setWidth(CalendarBase.defaultCalWidth);
+		clippingShape2.translateXProperty().set( - CalendarBase.defaultCalWidth);
 		nextCalendar.setClip(clippingShape2);
-		nextCalendar.translateXProperty().set( CalendarMonthGUI.defaultCalWidth);
+		nextCalendar.translateXProperty().set( CalendarBase.defaultCalWidth);
 		KeyValue kvNxt2 = new KeyValue(clippingShape2.translateXProperty(), 0);
 		KeyValue kvNxt3 = new KeyValue(nextCalendar.translateXProperty(), 0);
 		
@@ -234,16 +212,34 @@ public class CalendarMonthGUI extends Component{
 		lastCalendar = mainCalendar;
 		mainCalendar = nextCalendar;
 		updateDate(mainCalendar.getLocalDate());
-		nextCalendar = new CalendarMonthBase(this, this.date.plusMonths(1),events);
+		updateGridNext();
+		
 		redrawCalendar();
 	}
 	private void shiftLeft(ActionEvent e) {
 		nextCalendar = mainCalendar;
 		mainCalendar = lastCalendar;
 		updateDate(mainCalendar.getLocalDate());
-		lastCalendar = new CalendarMonthBase(this,this.date.plusMonths(-1),events);
+		updateGridLast();
 		redrawCalendar();
 	}
+	public void generateCalendars(){
+		updateGridLast();
+		updateGridThis();
+		updateGridNext();
+		
+	}
+	public void setNewDate(LocalDate date){
+		updateDate(date);
+		generateCalendars();
+		lastCalendar.setVisible(false);
+		nextCalendar.setVisible(false);
+		redrawCalendar();
+	}
+	abstract void updateGridLast();
+
+	abstract void updateGridThis();
+	abstract void updateGridNext();
 	private void redrawCalendar() {
 		mainCalendar.setVisible(false);
 		lastCalendar.setVisible(false);
@@ -258,16 +254,13 @@ public class CalendarMonthGUI extends Component{
 			calCnt.getChildren().set(0,lastCalendar);
 			calCnt.getChildren().set(1,mainCalendar);
 			calCnt.getChildren().set(2,nextCalendar);
-		
 		}
 		l.setText(date.getMonth().toString());
-		System.out.println(mainCalendar);
 		
 	}
-	CalendarDayBox boxHighlighted;
-	public void highlight(LocalDate date){
-		CalendarDayBox a = mainCalendar.getDateBox(date);
-		
+	
+	public void dayClicked(LocalDate date){
+		CalendarDay a = mainCalendar.getDateBox(date);
 		
 		if(boxHighlighted != null){
 			boxHighlighted.setHighlighted(false);
@@ -286,25 +279,47 @@ public class CalendarMonthGUI extends Component{
 			timeline.setOnFinished( event -> shiftLeftAndHighlight(event,date));
 			timeline.play();
 		}else{
-			highlightContinue(date);
+			highlight(date);
 		}
-		
-		
 	}
 	private void shiftLeftAndHighlight(ActionEvent event,LocalDate date) {
 		shiftLeft(event);
-		highlightContinue(date);
+		highlight(date);
 	}
 	private void shiftRightAndHighlight(ActionEvent event,LocalDate date) {
 		shiftRight(event);
-		highlightContinue(date);
+		highlight(date);
 	}
-	private void highlightContinue(LocalDate date){
-		System.out.println(mainCalendar);
-		CalendarDayBox a = mainCalendar.getDateBox(date);
+	private void highlight(LocalDate date){
+		CalendarDay a = mainCalendar.getDateBox(date);
 		boxHighlighted = a;
 		a.setHighlighted(true);
 		a.requestFocus();
+		gui.setHighlighted(date);
+	}
+	public LocalDate getHighlightedDate(){
+		return boxHighlighted.getDate();
+	}
+	public CalendarDay getHighlighted(){
+		return boxHighlighted;
+	}
+	public void removeHighlighted(){
+
+		boxHighlighted.setHighlighted(false);
+		boxHighlighted = null;
+
+	}
+	public LocalDate getDate(){
+
+		return this.date;
+
+	}
+
+	public void dayDoubleClicked(LocalDate date) {
+		highlight(date);
+		gui.setHighlighted(date);
+		gui.doubleClicked(date);
+		
 	}
 	
 }

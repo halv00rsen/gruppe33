@@ -60,8 +60,7 @@ public class NewUserWindow extends Window{
 	GridPane mainGridPane;
 	private boolean clicked = false;
 	
-	public NewUserWindow(Main main) {
-		super(main);
+	public NewUserWindow() {
 		init();
 	}
 
@@ -242,8 +241,8 @@ public class NewUserWindow extends Window{
 				
 				if(validateTextFields()){
 					System.out.println("lag bruker");
-					main.requestCreateUser(usernameTextField.getText(), passwordTextField.getText(), firstNameTextField.getText()
-							+ " " + lastNameTextField.getText());
+//					main.requestCreateUser(usernameTextField.getText(), passwordTextField.getText(), firstNameTextField.getText()
+//							+ " " + lastNameTextField.getText());
 				}
 				
 			}
@@ -292,7 +291,7 @@ public class NewUserWindow extends Window{
 
 			@Override
 			public void handle(ActionEvent event) {
-				main.requestLoginWindow();
+				
 			}
 			
 		});

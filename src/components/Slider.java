@@ -9,12 +9,13 @@ import javafx.scene.shape.Polygon;
 public class Slider extends StackPane{
 	private String backupStyle;
 	public static int width = 40;
+	
 
 	public Slider(boolean left){
 		
 		this.getChildren();
-		this.setPrefHeight(CalendarMonthGUI.defaultCalHeight);
-		this.setPrefWidth(width);
+		this.setMaxHeight(CalendarBase.defaultCalHeight);
+		this.setMaxWidth(width);
 		this.setStyle("-fx-background-color: #E0E0E0");
 		Polygon arrow = new Polygon();
 		arrow.getPoints().add(0.0);

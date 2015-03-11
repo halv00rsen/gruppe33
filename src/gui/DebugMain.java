@@ -7,6 +7,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import classes.Event;
+import classes.Group;
+import classes.Person;
 import javafx.scene.layout.Pane;
 //import jfxtras.scene.control.agenda.Agenda;
 
@@ -19,6 +21,17 @@ public class DebugMain {
 	 * 
 	 * 
 	 */
+	
+	public static Person getPerson() {
+		Person ola = new Person("olaNord", "hei", 4, "Ola Nordmann", true);
+		Group konsernetGruppe = new Group("Konsernet", 0, ola);
+		Group langrennsGruppe = new Group("Langrennslaget", 1, ola);
+		
+		ola.addGroup(konsernetGruppe);
+		ola.addGroup(langrennsGruppe);
+		
+		return ola;
+	}
 	
 	public static ArrayList<Event> getEvents(){
 		ArrayList<Event> events = new ArrayList<Event>();
@@ -55,10 +68,6 @@ public class DebugMain {
 		event3.setInfo("Morradi");
 		
 //		event1.setStartTime(new LocalDateTime(new LocalDate(5,5,5),new LocalTime(4,4, 0, 0)));
-		event2.setEventName("Ski");
-		event3.setEventName("Jakt");
-		event4.setEventName("Skydiving");
-		event5.setEventName("Handle");
 		events.add(event1);
 		events.add(event2);
 		events.add(event3);
@@ -67,14 +76,14 @@ public class DebugMain {
 		return events;
 	}
 	
-	public DebugMain(Pane root, Main main) {
+	public DebugMain(Pane root) {
 		
 //		Agenda agenda = new Agenda();
 		
 		
 
 		
-		SideMenu c = new SideMenu(root, LocalDate.now(), getEvents(), main);
+		SideMenu c = new SideMenu(root, LocalDate.now(), getEvents());
 		root.getChildren().add(c);
 //		CalendarWeekGUI c = new CalendarWeekGUI(root,LocalDate.now(),events);
 //		LoginGUI l = new LoginGUI(main);
