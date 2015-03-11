@@ -36,7 +36,7 @@ public class DebugMain {
 	}
 	
 	public static Person getPerson() {
-		Person ola = new Person("olaNord", "hei", 4, "Ola Nordmann", true);
+		Person ola = new Person("olaNord", "hei", "Ola Nordmann", true);
 		Group konsernetGruppe = new Group("Konsernet", 0, ola);
 		Group langrennsGruppe = new Group("Langrennslaget", 1, ola);
 		
@@ -47,9 +47,9 @@ public class DebugMain {
 	}
 	
 	public static ArrayList<Person> getPeople() {
-		Person kari = new Person("kariHols", "hallo", 5, "Kari Holst", false);
-		Person benjamin = new Person("bennyBoy", "naughty", 6, "Benjamin Button", false);
-		Person erlend = new Person("erlbe", "passord123", 1, "Erlend Berger", true);
+		Person kari = new Person("kariHols", "hallo", "Kari Holst", false);
+		Person benjamin = new Person("bennyBoy", "naughty", "Benjamin Button", false);
+		Person erlend = new Person("erlbe", "passord123", "Erlend Berger", true);
 		
 		ArrayList<Person> list = new ArrayList<Person>(); 
 		list.addAll(Arrays.asList(kari, benjamin, erlend));

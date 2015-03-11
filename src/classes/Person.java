@@ -11,17 +11,15 @@ public class Person {
 	public final boolean admin;
 	
 	private final Calendar calendar;
-	private final int personid;
 	private final List<Group> groups;
 	
 	private String password;
 	
-	public Person(String username, String password, int personid, String name, boolean admin){
+	public Person(String username, String password, String name, boolean admin){
 		calendar = new PersonCalendar(this);
 		groups = new ArrayList<Group>();
 		this.username = username;
 		this.password = password;
-		this.personid = personid;
 		this.name = name;
 		this.admin = admin;
 	}
