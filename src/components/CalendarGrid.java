@@ -117,6 +117,10 @@ public abstract class CalendarGrid extends Pane{
 		}
 		return events;
 	}
+	public void highlightedEvent(Event event) {
+		datesHash.get(event.getStartDate()).highlightEvent(event);
+		
+	}
 
 	
 }

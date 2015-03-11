@@ -124,6 +124,8 @@ public class Main extends Application implements ProgramListener{
 	public void showEvent(Event event){
 		SingleSelectionModel<Tab> selectionModel = tabPane.getSelectionModel();
 		selectionModel.select(home);
+		
+		homeScreen.highlightEvent(event);
 	}
 
 	private Tab home, newEvent, room, persons, inbox, settings, groups;

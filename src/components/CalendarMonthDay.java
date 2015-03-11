@@ -45,4 +45,9 @@ public class CalendarMonthDay extends CalendarDay{
 		calHeight = CalendarBase.defaultCalHeight/6;
 		
 	}
+	@Override
+	void continueHighlightEvent(Event event) {
+		// TODO Auto-generated method stub
+		
+	}
 }

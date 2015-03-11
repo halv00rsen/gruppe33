@@ -27,7 +27,7 @@ public class EventBox extends Pane{
 	String backupStyle;
 	String defaultStyle;
 	Priority priority;
-	String highLightStyle = "-fx-background-color: #00FF88";
+	String highLightStyle = "-fx-background-color: #8888FF";
 	boolean isHighLighted = false;
 	LocalDateTime startTimeDay;
 	boolean isUpperDisabled = false;
@@ -79,6 +79,7 @@ public class EventBox extends Pane{
 		this.setMaxHeight(height);
 		this.setMaxWidth(CalendarBase.defaultCalWidth/(7));
 		this.setTranslateY(startPos);
+		this.toFront();
 	}
 
 	public void addToOverlapp(int i) {
@@ -97,7 +98,7 @@ public class EventBox extends Pane{
 		backupStyle = this.getStyle();
 //		System.out.println(backupStyle);
 		int[] a = {0,0,0};
-		Main.applyContrast(this, 0.95,a);
+		Main.applyContrast(this, 0.90,a);
 	}
 
 
@@ -118,10 +119,8 @@ public class EventBox extends Pane{
 		
 	}	
 
-	private LocalDate onAction(MouseEvent e) {
-//		calGui.requestFocus();
-//		calGui.dayClicked(date);
-		return null;
+	private void onAction(MouseEvent e) {
+		setHighlighted(true);
 	}
 	private LocalDate getLocalDate() {
 		return this.date;
@@ -132,4 +131,6 @@ public class EventBox extends Pane{
 		this.setPrefWidth(calWidth);
 		this.setPrefHeight(calHeight);
 	}
+
+	
 }

@@ -56,6 +56,7 @@ public abstract class CalendarBase extends Pane{
 	CalendarGUI gui;
 	Calendar[] calendars;
 	private BorderPane borderpane;
+	private EventBox eventHighlighted;
 
 	public CalendarBase(LocalDate date,Calendar[] args,CalendarGUI gui) {
 		this.calendars = args;
@@ -322,6 +323,12 @@ public abstract class CalendarBase extends Pane{
 		highlight(date);
 		gui.setHighlighted(date,boxHighlighted.getDayEvents());
 		gui.doubleClicked(date);
+		
+	}
+
+	public void highlightEvent(Event event) {
+		setNewDate(event.getStartDate());
+		mainCalendar.highlightedEvent(event);
 		
 	}
 	

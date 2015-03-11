@@ -40,6 +40,11 @@ public class HomeScreen extends Window{
 
 
 	}
+
+	public void highlightEvent(Event event) {
+		schedulingGUI.highlightEvent(event);
+		
+	}
 	
 	
 	
