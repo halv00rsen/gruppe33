@@ -3,8 +3,12 @@ package components;
 import java.util.ArrayList;
 import java.util.List;
 
+import components.GroupList.Fancy;
+
 import classes.Group;
 import classes.Person;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -38,11 +42,15 @@ public class GroupGUI extends Component{
 	private final ListView<Group> groupList;
 	private final ObservableList<Group> groupItems;
 	
+	private Group selectedGroup;
+	
 	public GroupGUI(Pane parent) {
 		super(parent);
 		
-		subGroups = new GroupList<Group>("Undergrupper");
-		persons = new GroupList<Person>("Medlemmer");
+		selectedGroup = null;
+		
+		subGroups = new GroupList<Group>("Undergrupper", Fancy.Group, new FieldListener());
+		persons = new GroupList<Person>("Medlemmer", Fancy.Person, new FieldListener());
 		persons.addChoices(DebugMain.getPeople());
 		
 		VBox vBox = new VBox(10);
@@ -54,6 +62,11 @@ public class GroupGUI extends Component{
 		Label header = new Label("Grupper");
 		header.setFont(Main.header1);
 		Button delete = new Button("Slett");
+		delete.setOnAction(e -> {
+			Group group = groupList.getSelectionModel().getSelectedItem();
+			groupItems.remove(group);
+			changeStatus();
+		});
 		ToggleButton addToggle = new ToggleButton("Legg til ...");
 		delete.setPrefWidth(GroupList.width / 2 - 5);
 		addToggle.setPrefWidth(GroupList.width / 2 - 5);
@@ -81,6 +94,7 @@ public class GroupGUI extends Component{
 				createGroup.setVisible(selected);
 				name.setVisible(selected);
 				groupName.setVisible(selected);
+				groupName.setText("");
 				
 			}
 		}; 
@@ -92,8 +106,32 @@ public class GroupGUI extends Component{
 		createGroup.setOnAction(new EventHandler<ActionEvent>(){
 			
 			public void handle(ActionEvent event){
-				
+				String name = groupName.getText();
+				if (!"".equals(name)){
+					Group g = new Group(name, 1);
+					groupItems.add(g);
+					groupList.getSelectionModel().select(g);
+					groupList.requestFocus();
+					
+				}
+				addToggle.setSelected(false);
+				actionEvent.handle(null);
 			}
+		});
+		
+		groupList.focusedProperty().addListener(obs -> {
+			changeStatus();
+		});
+		
+		groupList.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<Group>() {
+
+		    @Override
+		    public void changed(ObservableValue<? extends Group> observable, Group oldValue, Group newValue) {
+		        // Your action here
+		    	changeStatus();
+		    	selectedGroup = newValue;
+		    	updateFields();
+		    }
 		});
 		
 		
@@ -181,6 +219,49 @@ public class GroupGUI extends Component{
 //		botLef.getChildren().addAll(botLefHead);
 //		
 //		
+	}
+	
+	private void updateFields(){
+		if (selectedGroup == null)
+			return;
+		persons.setValues(selectedGroup.getMembers());
+		subGroups.setValues(selectedGroup.getSubGroups());
+	}
+	
+	class FieldListener{
+		
+		public void addMember(Person p){
+			if (selectedGroup != null){
+				selectedGroup.addMembers(p);
+			}
+		}
+		
+		public void removeMember(Person p){
+			if (selectedGroup != null)
+				selectedGroup.removePerson(p);
+		}
+		
+		public void addGroup(Group g){
+			if (selectedGroup != null)
+				selectedGroup.addSubGroups(g);
+		}
+		
+		public void removeGroup(Group g){
+			if (selectedGroup != null)
+				selectedGroup.removeSubGroup(g);
+		}
+	}
+	
+	private void changeStatus(){
+		if (groupList.getSelectionModel().isEmpty()){
+			persons.setDisable(true);
+			subGroups.setDisable(true);
+			selectedGroup = null;
+		}else{
+			persons.setDisable(false);
+			subGroups.setDisable(false);
+			selectedGroup = groupList.getSelectionModel().getSelectedItem();
+		}
 	}
 	
 	
