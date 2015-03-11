@@ -42,7 +42,9 @@ public class Program {
 	public void requestEvent(int eventId){
 		System.out.println("Event " + eventId + " was requested");
 		for (ProgramListener l : listeners){
-			l.showEvent(DebugMain.getEvents().get(0));
+			l.showEvent(DebugMain.getEvents().get(3));
+
+			
 		}
 	}
 	

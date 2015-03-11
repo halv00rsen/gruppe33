@@ -29,16 +29,27 @@ public class Event {
 	private String info;
 	private LocalDateTime freqEnd;
 
-	public Event(String eventName, String location, Room room,
-			LocalDate startDate, LocalDate endDate, LocalDateTime startTime,
+	public Event(){
+		id = (int)Math.random()*100000000;
+		this.madeBy = null;
+		
+	}
+	public Event(LocalDateTime startTime,LocalDateTime endTime,Person person){
+		id = (int)Math.random()*100000000;
+		this.startDate = startTime.toLocalDate();
+		this.endDate = endTime.toLocalDate();
+		this.madeBy = person;
+		
+	}
+	public Event(String eventName, String location, Room room, LocalDateTime startTime,
 			LocalDateTime endTime, Integer freq, Person madeBy,
 			Collection<EventAppliance> appliance, Priority priority, String info) {
-		id = 2;
+		id = (int)Math.random()*100000000;
 		this.eventName = eventName;
 		this.location = location;
 		this.room = room;
-		this.startDate = startDate;
-		this.endDate = endDate;
+		this.startDate = startTime.toLocalDate();
+		this.endDate = endTime.toLocalDate();
 		this.startTime = startTime;
 		this.endTime = endTime;
 		this.freq = freq;
@@ -81,18 +92,14 @@ public class Event {
 		return startDate;
 	}
 
-	public void setStartDate(LocalDate startDate) {
-		this.startDate = startDate;
-	}
+
 	
 	public LocalDate getEndDate() {
 		return endDate;
 	}
 
 
-	public void setEndDate(LocalDate endDate) {
-		this.endDate = endDate;
-	}
+	
 
 	public LocalDateTime getStartTime() {
 		return startTime;
@@ -100,6 +107,7 @@ public class Event {
 
 	public void setStartTime(LocalDateTime startTime) {
 		this.startTime = startTime;
+		this.startDate = startTime.toLocalDate();
 	}
 
 	public LocalDateTime getEndTime() {
@@ -108,6 +116,7 @@ public class Event {
 
 	public void setEndTime(LocalDateTime endTime) {
 		this.endTime = endTime;
+		this.endDate = endTime.toLocalDate();
 	}
 
 	public Integer getFreq() {
@@ -138,6 +147,9 @@ public class Event {
 
 	public String getInfo() {
 		return info;
+	}
+	public int getID() {
+		return id;
 	}
 
 	public void setInfo(String info) {

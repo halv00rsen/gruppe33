@@ -59,11 +59,11 @@ public class DebugMain {
 	
 	public static ArrayList<Event> getEvents(){
 		ArrayList<Event> events = new ArrayList<Event>();
-		Event event1 = new Event(null, null, null, null, null, null, null, null, null, null, null, null);
-		Event event2 = new Event(null, null, null, null, null, null, null, null, null, null, null, null);
-		Event event3 = new Event(null, null, null, null, null, null, null, null, null, null, null, null);
-		Event event4 = new Event(null, null, null, null, null, null, null, null, null, null, null, null);
-		Event event5 = new Event(null, null, null, null, null, null, null, null, null, null, null, null);
+		Event event1 = new Event();
+		Event event2 = new Event();
+		Event event3 = new Event();
+		Event event4 = new Event();
+		Event event5 = new Event();
 
 		
 		event1.setEventName("Bowling");

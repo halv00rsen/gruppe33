@@ -2,6 +2,7 @@ package components;
 import gui.Main;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -18,6 +19,7 @@ import javafx.scene.shape.Line;
 import classes.Event;
 
 public class CalendarWeekDay extends CalendarDay{
+	HashMap<Integer, EventBox> eventsHash;
 	StackPane innerBody;
 	public CalendarWeekDay(CalendarBase gui, LocalDate date,ArrayList<Event> events, boolean isUpperDisabled,boolean isLowerDisabled) {
 		super(gui, date, events, isUpperDisabled, isLowerDisabled);
@@ -26,14 +28,14 @@ public class CalendarWeekDay extends CalendarDay{
 	
 	@Override
 	void addEvents(){
+		eventsHash = new HashMap<Integer, EventBox>();
 		int mente = 0;
 		innerBody = new StackPane();
 		
 		for (int i = 0; i < events.size()-1; i++) {
-			System.out.println(events.size());
 			Event thisEvent = events.get(i);
-			
 			EventBox eventBox = new EventBox(thisEvent);
+			eventsHash.put(thisEvent.getID(), eventBox);
 			if(mente > 0){
 
 				eventBox.addToOverlapp(mente);
@@ -49,9 +51,13 @@ public class CalendarWeekDay extends CalendarDay{
 			
 		}
 		if(events.size()>0){
+			
+
 			Event thisEvent = events.get(events.size()-1);
 			
 			EventBox eventBox = new EventBox(thisEvent);
+
+			eventsHash.put(thisEvent.getID(), eventBox);
 			if(mente > 0){
 
 				eventBox.addToOverlapp(mente);
@@ -71,6 +77,13 @@ public class CalendarWeekDay extends CalendarDay{
 	@Override
 	void setCalHeight() {
 		calHeight = CalendarBase.defaultCalHeight;
+		
+	}
+
+	@Override
+	void continueHighlightEvent(Event event) {
+
+		eventsHash.get(event.getID()).setHighlighted(true);
 		
 	}
 }
