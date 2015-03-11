@@ -11,6 +11,7 @@ import classes.Program;
 import classes.ProgramListener;
 import classes.Room;
 import javafx.application.Application;
+import javafx.event.EventHandler;
 import javafx.stage.Stage;
 import javafx.scene.Node;
 import javafx.scene.Scene;
@@ -18,6 +19,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.SingleSelectionModel;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
@@ -198,7 +200,13 @@ public class Main extends Application implements ProgramListener{
 //		logout.setLayoutY(2);
 //		slideButton.setLayoutX(1050);
 //		slideButton.setLayoutY(2);
-		messageScreen.setOnMouseClicked(e -> messageScreen.hide());
+		messageScreen.setOnMouseClicked(new EventHandler<MouseEvent>(){
+			
+			public void handle(MouseEvent event){
+				messageScreen.hide();
+				tabPane.getSelectionModel().select(inbox);
+			}
+		});
 		stage.setTitle("xKal (" + username + ")");
 	}
 

@@ -112,6 +112,7 @@ public class Program {
 			return;
 		}
 		Map<String, String> info = PersonInformation.getPersonInformation(username, Person.hashPassword(password));
+
 		// Map<String, String> infoFromDatabase = ConnectionMySQL.getUserInfo(username, Person.hashPassword(password));
 		String stringId = info.get("personid");
 		// String infoUsername = infoFromDatabase.get("username") + ", " + infoFromDatabase.get("password");
@@ -132,11 +133,11 @@ public class Program {
 				return;
 			}
 		}
+
 		String usernameDatabase = info.get("username");
 		String passwordDatabase = info.get("password");
-		String name = info.get("firsName");
-		int personid = Integer.parseInt(stringId);
-		if (!Person.hashPassword(password).equals(passwordDatabase) || personid == -1 || username != usernameDatabase){
+		String name = info.get("name");
+		if (!Person.hashPassword(password).equals(passwordDatabase) || username != usernameDatabase){
 			if (DEBUG){
 				System.out.println("Feil med passord");
 			}
@@ -144,7 +145,7 @@ public class Program {
 				l.loginFailed();
 			return;
 		}
-		currentPerson = new Person(usernameDatabase, passwordDatabase, personid, name, DEBUG);
+		currentPerson = new Person(usernameDatabase, passwordDatabase, name, DEBUG);
 		activeCalendars.add(currentPerson.getPersonalCalendar());
 		for (ProgramListener l : listeners)
 			l.loginSuccess(username, name);
