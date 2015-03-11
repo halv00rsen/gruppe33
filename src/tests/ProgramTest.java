@@ -9,7 +9,6 @@ import classes.Message;
 import classes.Program;
 import classes.ProgramListener;
 import classes.Room;
-import classes.View;
 
 public class ProgramTest implements ProgramListener{
 	
@@ -65,10 +64,11 @@ public class ProgramTest implements ProgramListener{
 		System.out.println("Events er satt");
 	}
 	
-	public void changeView(View view){
-		System.out.println("View changed to: " + view);
+	@Override
+	public void showEvent(Event event){
+		
 	}
-
+	
 	@Override
 	public void sendMessage(Message msg) {
 		// TODO Auto-generated method stub
@@ -94,7 +94,7 @@ public class ProgramTest implements ProgramListener{
 	}
 
 	@Override
-	public void updateCalendar(List<Calendar> cal, View view) {
+	public void updateCalendar(List<Calendar> cal) {
 		// TODO Auto-generated method stub
 		
 	}

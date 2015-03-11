@@ -1,5 +1,7 @@
 package classes;
 
+import gui.DebugMain;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -15,13 +17,11 @@ public class Program {
 	private final List<Calendar> activeCalendars, unactive;
 
 	private Person currentPerson;
-	private View currentView;
 	
 	public Program(){
 		listeners = new ArrayList<ProgramListener>();
 		activeCalendars = new ArrayList<Calendar>();
 		unactive = new ArrayList<Calendar>();
-		currentView = View.Month;
 		//opprett kobling med database og/eller socketprogram
 	}
 	
@@ -40,7 +40,10 @@ public class Program {
 	}
 	
 	public void requestEvent(int eventId){
-		
+		System.out.println("Event " + eventId + " was requested");
+		for (ProgramListener l : listeners){
+			l.showEvent(DebugMain.getEvents().get(0));
+		}
 	}
 	
 	public void addCalendar(Object id, TypeOfCalendar type){
@@ -78,7 +81,7 @@ public class Program {
 	
 	private void updateCalendarListeners(){
 		for (ProgramListener l: listeners)
-			l.updateCalendar(new ArrayList<Calendar>(activeCalendars), currentView);
+			l.updateCalendar(new ArrayList<Calendar>(activeCalendars));
 	}
 	
 	
@@ -89,24 +92,16 @@ public class Program {
 	
 	
 	public void createUser(String username, String password, String name){
-		if (username == null || password == null || name == null || currentPerson != null){
+		if (username == null || password == null || name == null || currentPerson == null){
 			callCreateUser(false);
 			return;
 		}
-		if (username.length() < 6 || username.length() > 15 || password.length() < 6 || password.length() > 25){
+		if (username.length() < 6 || username.length() > 15 || password.length() < 6 || password.length() > 25 || !currentPerson.admin){
 			callCreateUser(false);
 			return;
 		}
 		callCreateUser(CreateUser.isValidNewUser(username, Person.hashPassword(password), name));
 	}
-	
-	public void changeView(View view){
-		if (currentView == view)
-			return;
-		currentView = view;
-		updateCalendarListeners();
-	}
-	
 	
 	public void personLogin(String username, String password){
 		if (username == null || password == null || isLoggedIn()){

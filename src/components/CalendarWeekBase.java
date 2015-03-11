@@ -23,12 +23,13 @@ import java.time.Month;
 import java.time.Year;
 import java.util.ArrayList;
 
+import classes.Calendar;
 import classes.Event;
 
 public class CalendarWeekBase extends CalendarBase{
 
-	public CalendarWeekBase(Pane parent,LocalDate date, ArrayList<Event> events, CalendarGUI gui) {
-		super(date,events,gui);
+	public CalendarWeekBase(Pane parent,LocalDate date, Calendar[] args, CalendarGUI gui) {
+		super(date,args,gui);
 		
 	}
 	
@@ -38,17 +39,17 @@ public class CalendarWeekBase extends CalendarBase{
 
 	@Override
 	void updateGridLast() {
-		lastCalendar = new CalendarWeekGrid(this, this.date.plusWeeks(-1),events);
+		lastCalendar = new CalendarWeekGrid(this, this.date.plusWeeks(-1),calendars);
 		
 	}
 	@Override
 	void updateGridNext() {
-		nextCalendar = new CalendarWeekGrid(this, this.date.plusWeeks(1),events);
+		nextCalendar = new CalendarWeekGrid(this, this.date.plusWeeks(1),calendars);
 	}
 
 	@Override
 	void updateGridThis() {
-		this.mainCalendar = new CalendarWeekGrid(this,date,events);
+		this.mainCalendar = new CalendarWeekGrid(this,date,calendars);
 		
 	}
 }

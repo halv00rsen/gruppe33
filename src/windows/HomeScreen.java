@@ -11,18 +11,23 @@ import javafx.scene.control.ToggleGroup;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import classes.Event;
+import classes.Person;
+import classes.PersonCalendar;
 import components.*;
 import gui.*;
 public class HomeScreen extends Window{
+	
     
-    CalendarGUI calendargui;
-    UserInfoGUI userInfoGui;
+
     
-    VBox calendarAndInfo;
-    HBox mainBox;
+    SchedulingGUI schedulingGUI;
+    Person p;
+    PersonCalendar cal;
     
 	private Button settings;
 	public HomeScreen() {
+		p = DebugMain.getPerson();
+		cal = new PersonCalendar(p);
 //		this.setStyle("-fx-color-background: #ff0044");
 		init();
 		
@@ -30,29 +35,9 @@ public class HomeScreen extends Window{
 
 	@Override
 	public void init() {
-		// TODO Auto-generated method stub
-		
-		
-		
-		mainBox = new HBox(0);
-		calendarAndInfo = new VBox(10);
-		
-		settings = new Button("Brukerinnstillinger");
-//		settings.setOnAction(e -> main.requestSettingsWindow());
-		
-		calendargui = new CalendarGUI(this, LocalDate.now(), DebugMain.getEvents());
-		SideMenu menu = new SideMenu(this, LocalDate.now(), DebugMain.getEvents());
-		userInfoGui = new UserInfoGUI(this, DebugMain.getPerson());
-		
-		calendarAndInfo.getChildren().addAll(userInfoGui, calendargui);
+		schedulingGUI = new SchedulingGUI(this, cal, p);
+		this.getChildren().add(schedulingGUI);
 
-		
-		
-		mainBox.getChildren().addAll(calendarAndInfo,menu);
-		this.getChildren().add(mainBox);
-
-//		this.getChildren().add(gui);
-//		gui.setTranslateX(300);
 
 	}
 	

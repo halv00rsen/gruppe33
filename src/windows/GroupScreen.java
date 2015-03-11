@@ -1,18 +1,18 @@
 package windows;
-import components.*;
-import gui.*;
-import javafx.scene.layout.Pane;
+
+import components.GroupGUI;
+
 import gui.Window;
 public class GroupScreen extends Window{
 
-	public GroupScreen(Main main) {
-		// TODO Auto-generated constructor stub
+	public GroupScreen() {
+		init();
 	}
 
 	@Override
 	public void init() {
-		// TODO Auto-generated method stub
-		
+		GroupGUI g = new GroupGUI(this);
+		getChildren().add(g);
 	}
 
 }

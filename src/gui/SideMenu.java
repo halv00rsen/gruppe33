@@ -4,6 +4,8 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 
+import components.CalendarGUI.CalendarGUIListener;
+
 import classes.Event;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
@@ -20,7 +22,7 @@ import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 
 
-public class SideMenu extends Component {
+public class SideMenu extends Component implements CalendarGUIListener{
 
 	Button createEvent;
 	Button editEvent;
@@ -32,20 +34,30 @@ public class SideMenu extends Component {
 	Label priority;
 	
 	
-	ListView<String> list = new ListView<String>();
-	ObservableList<String> items =FXCollections.observableArrayList ();
+	ListView<String> list;
+	ObservableList<String> items;
 	
 	
-	public SideMenu(Pane parent, LocalDate date, ArrayList<Event> events) {
+
+	VBox vbox;
+
+	public SideMenu(Pane parent, ArrayList<Event> events) {
 		super(parent);
-		init(date, events);
+		init(events);
 	}
 	
-	private void init(LocalDate date, ArrayList<Event> events) {
+	private void init(ArrayList<Event> events) {
 		
 		// Viser dagens events
 		daysEvents = new Label("Dagens arrangementer");
 		daysEvents.setFont(Main.header1);
+		
+		list = new ListView<String>();
+
+		list.setMaxWidth(150);
+		list.setPrefHeight(150);
+		items =FXCollections.observableArrayList ();
+		
 		addListElements(events);
 		
 		createEvent = new Button("Opprett nytt arrangement");
@@ -53,9 +65,6 @@ public class SideMenu extends Component {
 		
 		editEvent = new Button("Endre eksisterende arrangement");
 		editEvent.setOnAction(e -> editEventMethod(e));
-		
-		String eventName = list.getSelectionModel().getSelectedItem();
-		
 		
 		
 		
@@ -94,7 +103,7 @@ public class SideMenu extends Component {
 		    public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
 		        System.out.println("ListView selection changed from oldValue = " 
 		                + oldValue + " to newValue = " + newValue);
-		        for (Event event : events) {
+		        	 for (Event event : events) {
 					if(event.getEventName().equals(newValue)) {
 						DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
 						String formattedStartTime = event.getStartTime().format(formatter);
@@ -117,7 +126,9 @@ public class SideMenu extends Component {
 						eventInformation.add(locationData, 1, 2);
 						eventInformation.add(infoData, 1, 3);
 					}
-				}
+		        }
+		       
+				
 		        /*
 		        Label temp = new Label(newValue);
 		        eventInformation.getChildren().remove(5);
@@ -136,7 +147,7 @@ public class SideMenu extends Component {
 		
 		
 		
-		VBox vbox = new VBox();
+		vbox = new VBox();
 		vbox.getChildren().addAll(daysEvents, listAndInformation, eventButtons);
 		this.getChildren().add(vbox);
 	}
@@ -153,12 +164,36 @@ public class SideMenu extends Component {
 	}
 
 	private void addListElements(ArrayList<Event> events) {
-		for (Event event : events) {
-			items.add(event.getEventName());
-		}
-		list.setItems(items);
-		list.setMaxWidth(150);
-		list.setPrefHeight(150);
+			for (Event event : events) {
+				try { items.add(event.getEventName()); }
+				catch (NullPointerException e) {}
+			}
+			if (items != null) {
+				list.setItems(items);
+			}
+			else {
+				items.add(" ");
+				list.setItems(items);
+			}
+			
+			
+		
+	}
+	
+	public void changeDate(ArrayList<Event> events) {
+		vbox.getChildren().clear();
+		init(events);
+	}
+
+	@Override
+	public void dayIsHighligthed(LocalDate date, ArrayList<Event> events) {
+		changeDate(events);
+	}
+
+	@Override
+	public void eventIsHighligthed(Event event) {
+		// TODO Auto-generated method stub
+		
 	}
 	
 }

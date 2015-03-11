@@ -7,6 +7,7 @@ import java.util.ArrayList;
 
 import classes.Event;
 import javafx.geometry.Insets;
+import javafx.scene.Cursor;
 import javafx.scene.control.Label;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
@@ -123,7 +124,8 @@ public abstract class CalendarDay extends Pane{
 	private void hoverOn(MouseEvent e) {
 		backupStyle = this.getStyle();
 		int[] a = {0,0,0};
-		Main.applyContrast(this, 0.95,a);
+		Main.applyContrast(this,0.95,a);
+		setCursor(Cursor.HAND);
 	}
 
 	public boolean isUpperDisabled() {
@@ -172,5 +174,8 @@ public abstract class CalendarDay extends Pane{
 		this.calWidth = calWidth;
 		this.setPrefWidth(calWidth);
 		this.setPrefHeight(calHeight);
+	}
+	public ArrayList<Event> getDayEvents(){
+		return events;
 	}
 }

@@ -1,42 +1,53 @@
 package gui;
+import java.awt.Insets;
 import java.util.List;
 
 import windows.*;
 import classes.Calendar;
+import classes.Event;
 import classes.Group;
 import classes.Message;
 import classes.Program;
 import classes.ProgramListener;
 import classes.Room;
-import classes.View;
 import javafx.application.Application;
 import javafx.stage.Stage;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.SingleSelectionModel;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
-import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
+import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 
 
 public class Main extends Application implements ProgramListener{
 
-	public final static int SCREENHEIGHT = 800;
+	public final static int SCREENHEIGHT = 600;
 	public final static int SCREENWIDTH = 1200;
 	public final static Pane root = new Pane();
-	public final static Font header1 = new Font("Calibri", 30);
+	public final static Font header1 = new Font("Verdana", 20);
+	public final static Insets paddingInsets = new Insets(10, 0, 0, 0);
 
 	private final Program program;
 	private final LoginScreen loginScreen;
 	
-	private Stage stage;
+	private static Stage stage;
 	private Window currentWindow;
 	private TabPane tabPane;
 	
 	private HomeScreen homeScreen;
 	private NewUserWindow newUserScreen;
+	private SettingsScreen settingsScreen;
+	private InboxScreen inboxScreen;
+	private EventScreen eventScreen;
+	private OtherPersonScreen otherPersonScreen;
+	private ReserveRoomScreen reserveRoomScreen;
+
+	private MessageScreen messageScreen;
 	
 	public Main(){
 		program = new Program();
@@ -51,9 +62,12 @@ public class Main extends Application implements ProgramListener{
 		public void requestLogin(String username, String password){
 			program.personLogin(username, password);
 		}
+	}
+	
+	public class GoToEvent{
 		
-		public String toString(){
-			return "LoginCall is active";
+		public void goToEvent(int eventKey){
+			program.requestEvent(eventKey);
 		}
 	}
 	
@@ -62,8 +76,8 @@ public class Main extends Application implements ProgramListener{
 		try {
 //			DebugMain debuglauncher = new DebugMain(root, this);
 			stage = primaryStage;
-			
-			Scene scene = new Scene(root,SCREENHEIGHT,SCREENHEIGHT);
+			Scene scene = new Scene(root,SCREENWIDTH,SCREENHEIGHT);
+			stage.setFullScreen(false);
 			stage.setTitle("xKal");
 			primaryStage.setScene(scene);
 			primaryStage.show();
@@ -105,27 +119,56 @@ public class Main extends Application implements ProgramListener{
 	public void loginFailed() {
 		loginScreen.loginFailed();
 	}
+	
+	@Override
+	public void showEvent(Event event){
+		SingleSelectionModel<Tab> selectionModel = tabPane.getSelectionModel();
+		selectionModel.select(home);
+	}
 
+	private Tab home, newEvent, room, persons, inbox, settings, groups;
+	
 	@Override
 	public void loginSuccess(String username, String name) {
 		root.getChildren().remove(loginScreen);
-		HBox box = new HBox(20);
 		Button logout = new Button("Logg ut");
 		
 		logout.setOnAction(e -> program.logout());
+		
+		
+		
 		tabPane = new TabPane();
-		Tab home = new Tab("Hjem");
+		home = new Tab("Hjem");
 		homeScreen  = new HomeScreen();
 		home.setContent(homeScreen);
 		
-		Tab newEvent = new Tab("Ny event");
-		Tab room = new Tab("Rom");
-		Tab persons = new Tab("Personer");
-		Tab inbox = new Tab("Postkasse");
-		Tab settings = new Tab("Innstillinger");
+		newEvent = new Tab("Ny event");
+		eventScreen = new EventScreen();
+		newEvent.setContent(eventScreen);
+		
+		room = new Tab("Reserver Rom");
+		reserveRoomScreen = new ReserveRoomScreen(DebugMain.getRooms());
+		room.setContent(reserveRoomScreen);
+		
+		groups = new Tab("Grupper");
+		groups.setContent(new GroupScreen());
 		
 		
-		tabPane.getTabs().addAll(home, newEvent, room, persons, inbox, settings);
+		persons = new Tab("Personer");
+		otherPersonScreen = new OtherPersonScreen(DebugMain.getPeople());
+		persons.setContent(otherPersonScreen);
+		
+		
+		inbox = new Tab("Postkasse");
+		inboxScreen = new InboxScreen(new GoToEvent());
+		inbox.setContent(inboxScreen);
+		
+		settings = new Tab("Innstillinger");
+		settingsScreen = new SettingsScreen();
+		settings.setContent(settingsScreen);
+		
+		tabPane.getTabs().addAll(home, newEvent, room, persons, inbox, settings, groups);
+		tabPane.setTabMinWidth(75);
 		if (program.isAdminLogIn()){
 			Tab newUser = new Tab("Ny bruker");
 			newUserScreen = new NewUserWindow();
@@ -135,11 +178,25 @@ public class Main extends Application implements ProgramListener{
 		for (Tab tab : tabPane.getTabs()){
 			tab.setClosable(false);
 		}
-		box.getChildren().addAll(logout, tabPane);
+//		box.getChildren().addAll(logout, tabPane);
 //		openNewWindow(homeScreen);
 		if (currentWindow != null)
 			currentWindow.exitThisWindow();
-		root.getChildren().add(box);
+		messageScreen = new MessageScreen();
+		Button slideButton = new Button("Vis melding");
+		VBox vBox = new VBox(3);
+		vBox.setLayoutX(1020);
+		vBox.setLayoutY(2);
+		Button slideAway = new Button("Fjern melding");
+		slideAway.setOnAction(e -> messageScreen.hide());
+		vBox.getChildren().addAll(logout, slideButton, slideAway);
+		slideButton.setOnAction(e -> messageScreen.show("heisann"));
+		root.getChildren().addAll(tabPane, messageScreen, vBox);
+//		logout.setLayoutX(1020);
+//		logout.setLayoutY(2);
+//		slideButton.setLayoutX(1050);
+//		slideButton.setLayoutY(2);
+		messageScreen.setOnMouseClicked(e -> messageScreen.hide());
 		stage.setTitle("xKal (" + username + ")");
 	}
 
@@ -178,7 +235,7 @@ public class Main extends Application implements ProgramListener{
 	}
 
 	@Override
-	public void updateCalendar(List<Calendar> cal, View view) {
+	public void updateCalendar(List<Calendar> cal) {
 		// TODO Auto-generated method stub
 		
 	}
@@ -215,4 +272,23 @@ public class Main extends Application implements ProgramListener{
 	public void requestSettingsWindow(){
 //		Window w = new 
 	}
+	
+	public static final double getHeight(){
+		if (stage == null)
+			return SCREENHEIGHT;
+		return stage.getHeight();
+	}
+	
+	public static final double getWidth(){
+		if (stage == null)
+			return SCREENWIDTH;
+		return stage.getWidth();
+	}
+	public static String colorToHex(Color color){
+		return String.format( "#%02X%02X%02X",
+	            (int)( color.getRed() * 255 ),
+	            (int)( color.getGreen() * 255 ),
+	            (int)( color.getBlue() * 255 ) );
+	}
+	
 }

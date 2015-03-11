@@ -5,6 +5,7 @@ import java.time.Month;
 import java.time.Year;
 import java.util.ArrayList;
 
+import classes.Calendar;
 import classes.Event;
 import gui.Component;
 import gui.Main;
@@ -46,18 +47,20 @@ public abstract class CalendarBase extends Pane{
 	StackPane calCnt;
 	Pane dayBox;
 	ArrayList<Event> events;
-	static int defaultCalHeight = 600;
-	static int defaultCalWidth = 700;
+	static int defaultCalHeight = 300;
+	static int defaultCalWidth = 500;
 	VBox header;
 	static int headerHeight = 30;
 	Slider sliderLeft;
 	Slider sliderRight;
 	CalendarGUI gui;
+	Calendar[] calendars;
 	private BorderPane borderpane;
 
-	public CalendarBase(LocalDate date,ArrayList<Event> events,CalendarGUI gui) {
+	public CalendarBase(LocalDate date,Calendar[] args,CalendarGUI gui) {
+		this.calendars = args;
 		this.gui = gui;
-		this.events = events;
+//		this.events = args;
 		updateDate(date);
 		this.setPrefWidth(defaultCalWidth+Slider.width*2);
 		this.setPrefHeight(defaultCalHeight);
@@ -295,7 +298,7 @@ public abstract class CalendarBase extends Pane{
 		boxHighlighted = a;
 		a.setHighlighted(true);
 		a.requestFocus();
-		gui.setHighlighted(date);
+		gui.setHighlighted(date,boxHighlighted.getDayEvents());
 	}
 	public LocalDate getHighlightedDate(){
 		return boxHighlighted.getDate();
@@ -317,7 +320,7 @@ public abstract class CalendarBase extends Pane{
 
 	public void dayDoubleClicked(LocalDate date) {
 		highlight(date);
-		gui.setHighlighted(date);
+		gui.setHighlighted(date,boxHighlighted.getDayEvents());
 		gui.doubleClicked(date);
 		
 	}
