@@ -73,7 +73,7 @@ public class NewUserWindow extends Window{
 		title = new Label();
 		title.setText("Lag bruker");
 		title.setFont(Font.font ("Verdana", 20));
-		title.setPadding(new Insets(10, 0, 0, 20));
+		title.setPadding(new Insets(10, 0, 0, 0));
 		
 		firstNameLabel = new Label("Fornavn*");;
 		firstNameLabel.setFont(Font.font("Verdana", 12));

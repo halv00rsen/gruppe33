@@ -1,4 +1,5 @@
 package gui;
+import java.awt.Insets;
 import java.util.List;
 
 import windows.*;
@@ -10,7 +11,6 @@ import classes.Program;
 import classes.ProgramListener;
 import classes.Room;
 import javafx.application.Application;
-import javafx.geometry.Side;
 import javafx.stage.Stage;
 import javafx.scene.Node;
 import javafx.scene.Scene;
@@ -18,7 +18,6 @@ import javafx.scene.control.Button;
 import javafx.scene.control.SingleSelectionModel;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
-import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
@@ -27,10 +26,11 @@ import javafx.scene.text.Font;
 
 public class Main extends Application implements ProgramListener{
 
-	public final static int SCREENHEIGHT = 800;
+	public final static int SCREENHEIGHT = 600;
 	public final static int SCREENWIDTH = 1200;
 	public final static Pane root = new Pane();
-	public final static Font header1 = new Font("Calibri", 30);
+	public final static Font header1 = new Font("Verdana", 20);
+	public final static Insets paddingInsets = new Insets(10, 0, 0, 0);
 
 	private final Program program;
 	private final LoginScreen loginScreen;
@@ -44,6 +44,8 @@ public class Main extends Application implements ProgramListener{
 	private SettingsScreen settingsScreen;
 	private InboxScreen inboxScreen;
 	private EventScreen eventScreen;
+	private OtherPersonScreen otherPersonScreen;
+	private ReserveRoomScreen reserveRoomScreen;
 
 	private MessageScreen messageScreen;
 	
@@ -74,8 +76,8 @@ public class Main extends Application implements ProgramListener{
 		try {
 //			DebugMain debuglauncher = new DebugMain(root, this);
 			stage = primaryStage;
-			
-			Scene scene = new Scene(root,SCREENHEIGHT,SCREENHEIGHT);
+			Scene scene = new Scene(root,SCREENWIDTH,SCREENHEIGHT);
+			stage.setFullScreen(false);
 			stage.setTitle("xKal");
 			primaryStage.setScene(scene);
 			primaryStage.show();
@@ -126,7 +128,7 @@ public class Main extends Application implements ProgramListener{
 		homeScreen.highlightEvent(event);
 	}
 
-	private Tab home, newEvent, room, persons, inbox, settings;
+	private Tab home, newEvent, room, persons, inbox, settings, groups;
 	
 	@Override
 	public void loginSuccess(String username, String name) {
@@ -134,6 +136,9 @@ public class Main extends Application implements ProgramListener{
 		Button logout = new Button("Logg ut");
 		
 		logout.setOnAction(e -> program.logout());
+		
+		
+		
 		tabPane = new TabPane();
 		home = new Tab("Hjem");
 		homeScreen  = new HomeScreen();
@@ -143,10 +148,17 @@ public class Main extends Application implements ProgramListener{
 		eventScreen = new EventScreen();
 		newEvent.setContent(eventScreen);
 		
-		room = new Tab("Rom");
+		room = new Tab("Reserver Rom");
+		reserveRoomScreen = new ReserveRoomScreen(DebugMain.getRooms());
+		room.setContent(reserveRoomScreen);
+		
+		groups = new Tab("Grupper");
+		groups.setContent(new GroupScreen());
 		
 		
 		persons = new Tab("Personer");
+		otherPersonScreen = new OtherPersonScreen(DebugMain.getPeople());
+		persons.setContent(otherPersonScreen);
 		
 		
 		inbox = new Tab("Postkasse");
@@ -157,7 +169,7 @@ public class Main extends Application implements ProgramListener{
 		settingsScreen = new SettingsScreen();
 		settings.setContent(settingsScreen);
 		
-		tabPane.getTabs().addAll(home, newEvent, room, persons, inbox, settings);
+		tabPane.getTabs().addAll(home, newEvent, room, persons, inbox, settings, groups);
 		tabPane.setTabMinWidth(75);
 		if (program.isAdminLogIn()){
 			Tab newUser = new Tab("Ny bruker");
@@ -173,9 +185,20 @@ public class Main extends Application implements ProgramListener{
 		if (currentWindow != null)
 			currentWindow.exitThisWindow();
 		messageScreen = new MessageScreen();
-		root.getChildren().addAll(tabPane, logout);
-		logout.setLayoutX(1020);
-		logout.setLayoutY(2);
+		Button slideButton = new Button("Vis melding");
+		VBox vBox = new VBox(3);
+		vBox.setLayoutX(1020);
+		vBox.setLayoutY(2);
+		Button slideAway = new Button("Fjern melding");
+		slideAway.setOnAction(e -> messageScreen.hide());
+		vBox.getChildren().addAll(logout, slideButton, slideAway);
+		slideButton.setOnAction(e -> messageScreen.show("heisann"));
+		root.getChildren().addAll(tabPane, messageScreen, vBox);
+//		logout.setLayoutX(1020);
+//		logout.setLayoutY(2);
+//		slideButton.setLayoutX(1050);
+//		slideButton.setLayoutY(2);
+		messageScreen.setOnMouseClicked(e -> messageScreen.hide());
 		stage.setTitle("xKal (" + username + ")");
 	}
 

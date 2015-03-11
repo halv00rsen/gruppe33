@@ -4,6 +4,8 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 
+import components.CalendarGUI.CalendarGUIListener;
+
 import classes.Event;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
@@ -20,7 +22,7 @@ import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 
 
-public class SideMenu extends Component {
+public class SideMenu extends Component implements CalendarGUIListener{
 
 	Button createEvent;
 	Button editEvent;
@@ -181,6 +183,17 @@ public class SideMenu extends Component {
 	public void changeDate(ArrayList<Event> events) {
 		vbox.getChildren().clear();
 		init(events);
+	}
+
+	@Override
+	public void dayIsHighligthed(LocalDate date, ArrayList<Event> events) {
+		changeDate(events);
+	}
+
+	@Override
+	public void eventIsHighligthed(Event event) {
+		// TODO Auto-generated method stub
+		
 	}
 	
 }

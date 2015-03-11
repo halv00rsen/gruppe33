@@ -94,8 +94,8 @@ public class CalendarGUI extends Component{
 		}
 		
 	}
-	public void addListener(){
-		
+	public void addListener(CalendarGUIListener hei){
+		this.listeners.add(hei);
 	}
 	public interface CalendarGUIListener {
 		public void dayIsHighligthed(LocalDate date, ArrayList<Event> events);

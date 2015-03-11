@@ -4,12 +4,14 @@ import windows.*;
 
 import java.time.*;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import classes.Event;
 import classes.Group;
 import classes.Person;
 import classes.Priority;
+import classes.Room;
 import javafx.scene.layout.Pane;
 //import jfxtras.scene.control.agenda.Agenda;
 
@@ -23,6 +25,16 @@ public class DebugMain {
 	 * 
 	 */
 	
+	public static ArrayList<Room> getRooms() {
+		Room r1 = new Room(0, "Det gule");
+		Room r2 = new Room(1, "Det andre");
+		
+		ArrayList<Room> list = new ArrayList<Room>(); 
+		list.addAll(Arrays.asList(r1, r2));
+		return list;
+		
+	}
+	
 	public static Person getPerson() {
 		Person ola = new Person("olaNord", "hei", 4, "Ola Nordmann", true);
 		Group konsernetGruppe = new Group("Konsernet", 0, ola);
@@ -32,6 +44,17 @@ public class DebugMain {
 		ola.addGroup(langrennsGruppe);
 		
 		return ola;
+	}
+	
+	public static ArrayList<Person> getPeople() {
+		Person kari = new Person("kariHols", "hallo", 5, "Kari Holst", false);
+		Person benjamin = new Person("bennyBoy", "naughty", 6, "Benjamin Button", false);
+		Person erlend = new Person("erlbe", "passord123", 1, "Erlend Berger", true);
+		
+		ArrayList<Person> list = new ArrayList<Person>(); 
+		list.addAll(Arrays.asList(kari, benjamin, erlend));
+		return list;
+		
 	}
 	
 	public static ArrayList<Event> getEvents(){
@@ -55,8 +78,8 @@ public class DebugMain {
 		event2.setStartTime(LocalDateTime.of(2015, Month.MARCH, 14, 7, 31));
 		event2.setEndTime(LocalDateTime.of(2015, Month.MARCH, 14, 18, 30));
 		
-		event3.setStartTime(LocalDateTime.of(2015, Month.MARCH, 14, 17, 32));
-		event3.setEndTime(LocalDateTime.of(2015, Month.MARCH, 14, 20, 30));
+		event3.setStartTime(LocalDateTime.of(LocalDate.now().getYear(), LocalDate.now().getMonth(), LocalDate.now().getDayOfMonth(), 12, 32));
+		event3.setEndTime(LocalDateTime.of(LocalDate.now().getYear(), LocalDate.now().getMonth(), LocalDate.now().getDayOfMonth(), 20, 30));
 		
 		event4.setStartTime(LocalDateTime.of(2015, Month.APRIL, 2, 4, 33));
 		event4.setEndTime(LocalDateTime.of(2015, Month.APRIL, 2, 8, 30));
