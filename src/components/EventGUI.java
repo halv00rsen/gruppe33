@@ -9,7 +9,6 @@ import java.io.UnsupportedEncodingException;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import np.com.ngopal.control.AutoFillTextBox;
 import classes.Priority;
 import javafx.application.Application;
 import javafx.application.Platform;

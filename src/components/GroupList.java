@@ -2,13 +2,15 @@ package components;
 
 import java.util.List;
 
+import classes.Person;
+import gui.FxUtil;
 import gui.Main;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.control.Button;
-import javafx.scene.control.ChoiceBox;
+import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.scene.control.ToggleButton;
@@ -20,16 +22,17 @@ public class GroupList<Value> extends VBox{
 	public static final int width = 150, height = 200;
 	
 	private final ListView<Value> list;
-	private final ObservableList<Value> items, choices;
+	private final ObservableList<Value> items;//, choices;
 	private final Button delete, addButton;
 	private final ToggleButton addValue;
-	private final ChoiceBox<Value> valueChooser;
+	private final ComboBox<Value> valueChooser;
+	private final ObservableList<Value> valueList; 
 	
 	public GroupList(String header){
 		super(10);
 		list = new ListView<Value>();
 		items = FXCollections.observableArrayList();
-		choices = FXCollections.observableArrayList();
+//		choices = FXCollections.observableArrayList();
 		list.setPrefHeight(height);
 		list.setPrefWidth(width);
 		list.setItems(items);
@@ -45,7 +48,8 @@ public class GroupList<Value> extends VBox{
 				Value selected = list.getSelectionModel().getSelectedItem();
 				if (selected == null)
 					return;
-				choices.add(selected);
+//				choices.add(selected);
+				valueList.add(selected);
 				items.remove(selected);
 			}
 		});
@@ -63,24 +67,37 @@ public class GroupList<Value> extends VBox{
 		
 		buttons.getChildren().addAll(addValue, delete);
 		
-		valueChooser = new ChoiceBox<Value>();
+		valueChooser = new ComboBox<Value>();
+		FxUtil.autoCompleteComboBox(valueChooser, FxUtil.AutoCompleteMode.CONTAINING);
+		valueList = valueChooser.getItems();
 		valueChooser.setPrefWidth(width);
-		valueChooser.setItems(choices);
+//		valueChooser.setItems(choices);
 		
 		addButton = new Button("Legg til");
 		addButton.setPrefWidth(width);
 		
 		addButton.setOnAction(new EventHandler<ActionEvent>(){
 			
-			private Value last = null;
 			
 			public void handle(ActionEvent event){
-				Value selected = valueChooser.getSelectionModel().getSelectedItem();
-				if (selected == null || last == selected)
+//				Value selected = valueChooser.getValue();
+				int val = valueChooser.getSelectionModel().getSelectedIndex();
+				System.out.println(val);
+				if (val == -1)
+					return;
+				Value selected = valueList.remove(val);
+				if (selected == null)
 					return;
 				items.add(selected);
-				choices.remove(selected);
-				last = selected;
+//				valueChooser.getItems().clear();
+//				if (valueChooser.getItems().isEmpty()){
+//					System.out.println("slettet!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
+//				}
+//				valueChooser.getSelectionModel().
+//				valueChooser.getSelectionModel().clearSelection();
+//				choices.remove(selected);
+				valueChooser.getSelectionModel().clearSelection();
+//				valueChooser.getEditor().setText("");
 				
 			}
 		});
@@ -93,17 +110,20 @@ public class GroupList<Value> extends VBox{
 	
 	public void addChoices(List<Value> choices){
 		for (Value v : choices){
-			this.choices.add(v);
+			valueChooser.getItems().add(v);
+//			this.choices.add(v);
 		}
 	}
 	
 	public void clearChoices(){
-		choices.clear();
+		valueChooser.getItems().clear();
+//		choices.clear();
 	}
 	
 	public void removeChoices(List<Value> choices){
 		for (Value v : choices)
-			this.choices.remove(v);
+			valueChooser.getItems().remove(v);
+//			this.choices.remove(v);
 	}
 	
 	public void addItems(List<Value> items){
