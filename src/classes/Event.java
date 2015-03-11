@@ -91,15 +91,10 @@ public class Event {
 	public LocalDate getStartDate() {
 		return startDate;
 	}
-
-
 	
 	public LocalDate getEndDate() {
 		return endDate;
 	}
-
-
-	
 
 	public LocalDateTime getStartTime() {
 		return startTime;
@@ -123,8 +118,14 @@ public class Event {
 		return freq;
 	}
 
-	public void setFreq(Integer freq) {
-		this.freq = freq;
+	public void setFreq(Integer freq,boolean monthlyRepeat) {
+		if(! monthlyRepeat){
+			monthlyRepeat = false;
+			this.freq = freq;
+		}else if(monthlyRepeat){
+			monthlyRepeat = true;
+			this.freq = null;
+		}
 	}
 	public void setFreqEndTime(LocalDateTime endTime) {
 		this.freqEnd = endTime;

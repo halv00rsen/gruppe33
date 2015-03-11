@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Map;
 
 import classes.Calendar.TypeOfCalendar;
+import database.ConnectionMySQL;
 import database.CreateUser;
 import database.PersonInformation;
 
@@ -111,6 +112,28 @@ public class Program {
 			return;
 		}
 		Map<String, String> info = PersonInformation.getPersonInformation(username, Person.hashPassword(password));
+
+		// Map<String, String> infoFromDatabase = ConnectionMySQL.getUserInfo(username, Person.hashPassword(password));
+		String stringId = info.get("personid");
+		// String infoUsername = infoFromDatabase.get("username") + ", " + infoFromDatabase.get("password");
+		System.out.println(stringId);
+		if (stringId == null){
+			if (DEBUG){
+				System.out.println("Stringid er null");
+			}
+			loginFailListeners();
+			return;
+		}
+		for (char a : stringId.toCharArray()){
+			if ("0123456789".indexOf(a) == -1){
+				if (DEBUG){
+					System.out.println(stringId + " kan ikke parses");
+				}
+				loginFailListeners();
+				return;
+			}
+		}
+
 		String usernameDatabase = info.get("username");
 		String passwordDatabase = info.get("password");
 		String name = info.get("name");

@@ -1,5 +1,7 @@
 package components;
+import gui.AutoCompleteComboBoxListener;
 import gui.Component;
+import gui.FxUtil;
 
 import java.io.FileNotFoundException;
 import java.io.PrintWriter;
@@ -7,11 +9,14 @@ import java.io.UnsupportedEncodingException;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import np.com.ngopal.control.AutoFillTextBox;
 import classes.Priority;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.Event;
 import javafx.event.EventHandler;
@@ -21,6 +26,7 @@ import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.ChoiceBox;
+import javafx.scene.control.ComboBox;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
@@ -57,7 +63,7 @@ public class EventGUI extends Component {
 	DatePicker datePicker2 = new DatePicker();
 	TextField fromClockText = new TextField();
 	TextField toClockText = new TextField();
-	ChoiceBox<String> split = new ChoiceBox<String>();
+	ComboBox<String> split = new ComboBox<String>();
 	int freq = 0;
 	ListView invited = new ListView();
 	
@@ -249,13 +255,20 @@ public class EventGUI extends Component {
         Label repeteres = new Label();
         repeteres.setText("Repeteres\t");
         HBox repeteresBox = new HBox(20);
+       
+//        split.setEditable(true);
         split.setPrefWidth(100);
         repeteresBox.getChildren().add(repeteres);
         repeteresBox.getChildren().add(split);
-        split.getItems().addAll("Aldri","Ukentlig","Månedlig","Egendefinert");
-        split.getSelectionModel().selectFirst();        
+        split.getItems().addAll("Aldri","Aldrg","Ukentlig","Månedlig","Egendefinert");
+        split.getSelectionModel().selectFirst(); 
+        FxUtil.autoCompleteComboBox(split, FxUtil.AutoCompleteMode.CONTAINING);    
+//        split.show();
+//        AutoCompleteComboBoxListener<String> hei = new AutoCompleteComboBoxListener<String>(split);
+  
         
-      //repeteresTil
+        
+        //repeteresTil
         repeatTo.setText("Repeteres til\t");
 		repeatTo.setTextFill(Color.web("#AAAAAA"));
         HBox repeteresTilBox = new HBox(20);
@@ -300,16 +313,21 @@ public class EventGUI extends Component {
         blueBox.getChildren().add(listBox);
         
       //Priority
-        
+        Label prio = new Label();
+        prio.setText("Prioritet:\t");
         HBox priorityList = new HBox(5);
         priority = null;
         Priority[] pList = new Priority[3];
         pList[0] = Priority.NOT_IMPORTANT;
+        pList[0].turnOn();
         pList[1] = Priority.IMPORTANT;
         pList[2] = Priority.VERY_IMPORTANT;
+
+        priorityList.getChildren().add(prio);
         priorityList.getChildren().add(pList[0].getVisualization());
         priorityList.getChildren().add(pList[1].getVisualization());
         priorityList.getChildren().add(pList[2].getVisualization());
+        priorityList.setAlignment(Pos.BASELINE_CENTER);
         listBox.getChildren().add(priorityList);
         
         EventHandler<Event> event = new EventHandler<Event>(){

@@ -80,6 +80,7 @@ public class EventBox extends Pane{
 		this.setMaxWidth(CalendarBase.defaultCalWidth/(7));
 		this.setTranslateY(startPos);
 		this.toFront();
+		this.setMouseTransparent(false);
 	}
 
 	public void addToOverlapp(int i) {

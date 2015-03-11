@@ -28,7 +28,7 @@ public abstract class CalendarDay extends Pane{
 	String backupStyle;
 	String defaultStyle;
 	
-	String highLightStyle = "-fx-background-color: #00FF88";
+	String highLightStyle = "-fx-background-color: #DDDDFF";
 	boolean isHighLighted = false;
 
 	boolean isUpperDisabled = false;
@@ -104,6 +104,8 @@ public abstract class CalendarDay extends Pane{
 		this.setOnMouseClicked(e -> onAction(e));
 		this.setOnMouseEntered(e -> hoverOn(e));
 		this.setOnMouseExited(e -> hoverOff(e));
+
+		this.setMouseTransparent(false);
 	}
 
 	abstract void setCalHeight();
