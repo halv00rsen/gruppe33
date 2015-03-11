@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Map;
 
 import classes.Calendar.TypeOfCalendar;
+import database.ConnectionMySQL;
 import database.CreateUser;
 import database.PersonInformation;
 
@@ -111,7 +112,11 @@ public class Program {
 			return;
 		}
 		Map<String, String> info = PersonInformation.getPersonInformation(username, Person.hashPassword(password));
+
+		// Map<String, String> infoFromDatabase = ConnectionMySQL.getUserInfo(username, Person.hashPassword(password));
 		String stringId = info.get("personid");
+		// String infoUsername = infoFromDatabase.get("username") + ", " + infoFromDatabase.get("password");
+		System.out.println(stringId);
 		if (stringId == null){
 			if (DEBUG){
 				System.out.println("Stringid er null");
@@ -128,11 +133,11 @@ public class Program {
 				return;
 			}
 		}
+
 		String usernameDatabase = info.get("username");
 		String passwordDatabase = info.get("password");
 		String name = info.get("name");
-		int personid = Integer.parseInt(stringId);
-		if (!Person.hashPassword(password).equals(passwordDatabase) || personid == -1 || username != usernameDatabase){
+		if (!Person.hashPassword(password).equals(passwordDatabase) || username != usernameDatabase){
 			if (DEBUG){
 				System.out.println("Feil med passord");
 			}
@@ -140,7 +145,7 @@ public class Program {
 				l.loginFailed();
 			return;
 		}
-		currentPerson = new Person(usernameDatabase, passwordDatabase, personid, name, DEBUG);
+		currentPerson = new Person(usernameDatabase, passwordDatabase, name, DEBUG);
 		activeCalendars.add(currentPerson.getPersonalCalendar());
 		for (ProgramListener l : listeners)
 			l.loginSuccess(username, name);
