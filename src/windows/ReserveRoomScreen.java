@@ -22,8 +22,6 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
-import jfxtras.scene.control.LocalDateTimePicker;
-import jfxtras.scene.control.LocalTimePicker;
 import gui.Main;
 import gui.Window;
 
