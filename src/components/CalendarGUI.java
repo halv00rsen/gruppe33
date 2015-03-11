@@ -82,8 +82,9 @@ public class CalendarGUI extends Component{
 	}
 	public void setHighlighted(LocalDate date, ArrayList<Event> events) {
 		this.date = date;
-		for (CalendarGUIListener event : listeners) {
-			event.dayIsHighligthed(date, events);
+		for (CalendarGUIListener i : listeners) {
+			i.dayIsHighligthed(date, events);
+			
 		}
 		
 	}
@@ -100,5 +101,12 @@ public class CalendarGUI extends Component{
 		public void dayIsHighligthed(LocalDate date, ArrayList<Event> events);
 		public void eventIsHighligthed(Event event);
 
+	}
+	public void highlightEvent(Event event) {
+		for (CalendarGUIListener i : listeners) {
+			i.eventIsHighligthed( event);
+		}
+		
+		currentCalendarBase.highlightEvent(event);
 	}
 }

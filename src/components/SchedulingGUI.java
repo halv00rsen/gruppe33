@@ -8,6 +8,7 @@ import gui.Window;
 import java.time.LocalDate;
 
 import classes.Calendar;
+import classes.Event;
 import classes.Person;
 import classes.PersonCalendar;
 import javafx.scene.control.Button;
@@ -45,5 +46,9 @@ public class SchedulingGUI extends Component{
 		
 		
 
+	}
+	public void highlightEvent(Event event) {
+		calendargui.highlightEvent(event);
+		
 	}
 }

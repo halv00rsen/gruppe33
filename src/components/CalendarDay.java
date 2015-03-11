@@ -178,4 +178,11 @@ public abstract class CalendarDay extends Pane{
 	public ArrayList<Event> getDayEvents(){
 		return events;
 	}
+
+	public void highlightEvent(Event event) {
+		continueHighlightEvent(event);
+		
+	}
+
+	abstract void continueHighlightEvent(Event event);
 }

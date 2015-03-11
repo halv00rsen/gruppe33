@@ -29,10 +29,15 @@ public class HomeScreen extends Window{
 
 	@Override
 	public void init() {
-		SchedulingGUI schedulingGUI = new SchedulingGUI(this);
+		schedulingGUI = new SchedulingGUI(this);
 		this.getChildren().add(schedulingGUI);
 
 
+	}
+
+	public void highlightEvent(Event event) {
+		schedulingGUI.highlightEvent(event);
+		
 	}
 	
 	
