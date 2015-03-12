@@ -35,7 +35,7 @@ public class HomeScreen extends Window{
 
 	@Override
 	public void init() {
-		schedulingGUI = new SchedulingGUI(this, cal, p);
+		schedulingGUI = new SchedulingGUI(this,p,cal);
 		this.getChildren().add(schedulingGUI);
 
 

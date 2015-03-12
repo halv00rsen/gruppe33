@@ -142,6 +142,7 @@ public class Main extends Application implements ProgramListener{
 		
 		
 		tabPane = new TabPane();
+		tabPane.setPrefHeight(1000);
 		home = new Tab("Hjem");
 		homeScreen  = new HomeScreen();
 		home.setContent(homeScreen);

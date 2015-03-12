@@ -96,6 +96,14 @@ public class CalendarGUI extends Component{
 		}
 		
 	}
+	public void updateCalendars(Calendar... calendars){
+		month.setNewCalendarList(calendars);
+		month.generateCalendars();
+		month.redrawCalendar();
+		week.setNewCalendarList(calendars);
+		week.generateCalendars();
+		week.redrawCalendar();
+	}
 	public void addListener(CalendarGUIListener hei){
 		this.listeners.add(hei);
 	}
