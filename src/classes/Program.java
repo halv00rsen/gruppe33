@@ -83,8 +83,12 @@ public class Program {
 	
 	
 	private void updateCalendarListeners(){
+		Calendar[] c = new Calendar[activeCalendars.size()];
+		for (int a = 0; a < c.length; a++){
+			c[a] = activeCalendars.get(a);
+		}
 		for (ProgramListener l: listeners)
-			l.updateCalendar(new ArrayList<Calendar>(activeCalendars));
+			l.updateCalendar(c);
 	}
 	
 	

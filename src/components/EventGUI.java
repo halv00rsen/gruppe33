@@ -32,9 +32,9 @@ import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 
-public class EventGUI extends Component {
+public class EventGUI extends Component{
 	
-//	private final TimeField 
+	private final TimeField start, end;
 	
 	Label repeatTo = new Label();
     Label every = new Label();
@@ -51,8 +51,8 @@ public class EventGUI extends Component {
 	TextArea infoText = new TextArea();
 	DatePicker datePicker = new DatePicker();
 	DatePicker datePicker2 = new DatePicker();
-	TextField fromClockText = new TextField();
-	TextField toClockText = new TextField();
+//	TextField fromClockText = new TextField();
+//	TextField toClockText = new TextField();
 	ComboBox<String> split = new ComboBox<String>();
 	int freq = 0;
 	
@@ -63,6 +63,10 @@ public class EventGUI extends Component {
 	
 	public EventGUI(Pane parent) {
 		super(parent);
+		start = new TimeField(true);
+		end = new TimeField(false);
+		start.setOtherTime(end);
+		end.setOtherTime(start);
 		addElements();
         addAction();
         this.getChildren().add(pane);
@@ -79,8 +83,8 @@ public class EventGUI extends Component {
     	cancel.setOnAction(e -> close(e));
     	trash.setOnAction(e -> trash(e));
     	save.setOnAction(e -> save(e));
-    	fromClockText.setOnAction(e -> clockValidate(e));
-    	toClockText.setOnAction(e -> clockValidate(e));
+//    	fromClockText.setOnAction(e -> clockValidate(e));
+//    	toClockText.setOnAction(e -> clockValidate(e));
     	freqText.setOnAction(e -> numberValidate(e));
     	
 		
@@ -132,14 +136,18 @@ public class EventGUI extends Component {
     		return;
     	}
 	}
+	
+	private int hour, minutes;
+	
 	private void save(ActionEvent e) {
     	System.out.println(purposeText.getText());
     	System.out.println(romText.getText());
     	System.out.println(datePicker.getValue());
-    	System.out.println(fromClockText.getText());
-    	System.out.println(toClockText.getText());
+    	System.out.println("SHour: " + start.getHour() + ", SMinutes: " + start.getMinutes());
+    	System.out.println("EHour: " + end.getHour() + ", EMinutes: " + end.getMinutes());
     	System.out.println(datePicker2.getValue());
     	System.out.println("freq " + freq);
+    	System.out.println("Start: " + start.isFirst + ", end: " + end.isFirst);
     	LocalDate start = datePicker.getValue();
     	
     	classes.Event event = new classes.Event();
@@ -161,8 +169,8 @@ public class EventGUI extends Component {
     	romText.clear();
     	datePicker.setValue(null);
     	datePicker2.setValue(null);
-    	fromClockText.clear();
-    	toClockText.clear();
+    	start.clear();
+    	end.clear();
     	split.getSelectionModel().selectFirst();
     	for (Person p : listPeople){
     		comboPeople.add(p);
@@ -248,11 +256,11 @@ public class EventGUI extends Component {
         til.setText("til");
         HBox klokkeBox = new HBox(20);
         klokkeBox.getChildren().add(fra_klokken);
-        klokkeBox.getChildren().add(fromClockText);
+        klokkeBox.getChildren().add(start);
         klokkeBox.getChildren().add(til);
-        klokkeBox.getChildren().add(toClockText);
-        fromClockText.setPrefWidth(60);
-        toClockText.setPrefWidth(60);
+        klokkeBox.getChildren().add(end);
+        start.setPrefWidth(60);
+        end.setPrefWidth(60);
         
         //repeteres
         Label repeteres = new Label();
@@ -427,6 +435,4 @@ public class EventGUI extends Component {
     	a.setLayoutY(y);
     	
     }
-
-   
 }

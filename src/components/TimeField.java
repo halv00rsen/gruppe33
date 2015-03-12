@@ -8,9 +8,10 @@ import javafx.scene.control.TextField;
 
 public class TimeField extends TextField implements TimeFieldMain{
 
+	public final boolean isFirst;
+
 	private final List<FieldListener> listeners;
 	private TimeFieldMain otherTime;
-	private final boolean isFirst;
 	
 	public TimeField(boolean isFirst){
 		super();
@@ -95,6 +96,26 @@ public class TimeField extends TextField implements TimeFieldMain{
 	}
 	
 	private boolean isCorrect;
+	
+	public int getHour(){
+		if (!isFirst){
+			otherTime.requestTime();
+		}
+		if (isCorrectInput() && (isCorrect || isFirst)){
+			return Integer.parseInt(getText().split(":")[0]);
+		}
+		return -1;
+	}
+	
+	public int getMinutes(){
+		if (!isFirst){
+			otherTime.requestTime();
+		}
+		if (isCorrectInput() && (isCorrect || isFirst)){
+			return Integer.parseInt(getText().split(":")[1]);
+		}
+		return -1;
+	}
 	
 	public void sendCurrentTime(int hour, int minutes) {
 		if (isCorrectInput()){
