@@ -23,13 +23,14 @@ public class SchedulingGUI extends Component{
     VBox calendarAndInfo;
     HBox mainBox;
     
+
 	private Button settings;
 	public SchedulingGUI(Window parent, Person p, Calendar... calendars ) {
+
 		super(parent);
-		mainBox = new HBox(0);
-		calendarAndInfo = new VBox(30);
-		
-		settings = new Button("Brukerinnstillinger");
+		mainBox = new HBox(30);
+		calendarAndInfo = new VBox(0);
+	
 //		settings.setOnAction(e -> main.requestSettingsWindow());
 		
 		calendars[0].addEvent(DebugMain.getEvents());
