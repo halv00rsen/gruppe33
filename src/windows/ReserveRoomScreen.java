@@ -78,7 +78,6 @@ public class ReserveRoomScreen extends Window{
 		gridPane.setVgap(10);
 		gridPane.setHgap(10);
 		
-		reserveRoomButton.setOnAction(e -> reserveRoomMethod(e));
 		
 		seeAvailableToggle = new ToggleButton("Se tilgjengelige rom");
 		seeAvailableToggle.setOnAction(new EventHandler<ActionEvent>() {
@@ -107,6 +106,7 @@ public class ReserveRoomScreen extends Window{
 						        	gridPane.getChildren().remove(reserveRoomButton);
 						        }
 						        reserveRoomButton = new Button("Reserver " + availableRooms.getSelectionModel().getSelectedItem());
+						        reserveRoomButton.setOnAction(e -> reserveRoomMethod(e));
 						        gridPane.add(reserveRoomButton, 1, 4);
 						    }
 						});

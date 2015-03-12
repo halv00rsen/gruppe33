@@ -117,14 +117,15 @@ public class CalendarGUI extends Component{
 		currentCalendarBase.highlightEvent(event);
 	}
 	public void highlightEventUpstream(Event event) {
-		for (CalendarGUIListener i : listeners) {
-			i.eventIsHighligthed( event);
-		}
+		System.out.println("HEHEHEHHEIHEIHEIHEIHEIHH");
+		
 		ArrayList<Event> events = new ArrayList<Event>();
 		for (int i = 0; i < calendars.length; i++) {
 			events.addAll(calendars[i].getEventsByDay(event.getStartDate()));
 		}
 		setHighlighted(event.getStartDate(), events);
-		
+		for (CalendarGUIListener i : listeners) {
+			i.eventIsHighligthed( event);
+		}
 	}
 }

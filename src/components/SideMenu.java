@@ -205,9 +205,9 @@ public class SideMenu extends Component implements CalendarGUIListener{
 	@Override
 	public void eventIsHighligthed(Event event) {
 		//Viser nå bare det ene elementet i listen
-		ArrayList<Event> events = new ArrayList<Event>();
+		/*ArrayList<Event> events = new ArrayList<Event>();
 		events.add(event);
-		changeDate(events);
+		changeDate(events); */
 		list.getSelectionModel().select(event.getEventName());
 		changeEvent(event, event.getEventName());
 		System.out.println(event.getEventName() + "is highlighted");

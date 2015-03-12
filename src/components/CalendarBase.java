@@ -332,7 +332,7 @@ public abstract class CalendarBase extends Pane{
 		
 	}
 	public void highlightEventUpstream(Event event) {
-		gui.highlightEvent(event);
+		gui.highlightEventUpstream(event);
 		
 	}
 	
