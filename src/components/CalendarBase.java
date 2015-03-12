@@ -331,5 +331,9 @@ public abstract class CalendarBase extends Pane{
 		mainCalendar.highlightedEvent(event);
 		
 	}
+	public void highlightEventUpstream(Event event) {
+		gui.highlightEvent(event);
+		
+	}
 	
 }

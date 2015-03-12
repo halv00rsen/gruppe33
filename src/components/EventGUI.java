@@ -67,6 +67,7 @@ public class EventGUI extends Component {
 	ListView invited = new ListView();
 	
 	private Priority priority;
+	private ComboBox searchPeople;
 	
 	public EventGUI(Pane parent) {
 		super(parent);
@@ -259,11 +260,10 @@ public class EventGUI extends Component {
         split.setPrefWidth(100);
         repeteresBox.getChildren().add(repeteres);
         repeteresBox.getChildren().add(split);
-        split.getItems().addAll("Aldri","Aldrg","Ukentlig","Månedlig","Egendefinert");
+        split.getItems().addAll("Aldri","Ukentlig","Månedlig","Egendefinert");
         split.getSelectionModel().selectFirst(); 
-        FxUtil.autoCompleteComboBox(split, FxUtil.AutoCompleteMode.CONTAINING);    
+   
 //        split.show();
-//        AutoCompleteComboBoxListener<String> hei = new AutoCompleteComboBoxListener<String>(split);
   
         
         
@@ -300,10 +300,15 @@ public class EventGUI extends Component {
         buttons.getChildren().add(cancel);
         buttons.getChildren().add(save);
         
+
+        searchPeople = new ComboBox();
+        searchPeople.setPrefWidth(200);
+        FxUtil.autoCompleteComboBox(searchPeople, FxUtil.AutoCompleteMode.CONTAINING); 
         //ListView
         Pane blueBox = new Pane();
         BorderPane.setMargin(blueBox,new Insets(20));
         VBox listBox = new VBox(20);
+        listBox.getChildren().add(searchPeople);
         listBox.getChildren().add(invited);
         listBox.setPadding(new Insets(30));
         blueBox.setStyle("-fx-background-color: #AAF");

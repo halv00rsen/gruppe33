@@ -41,9 +41,10 @@ public class EventBox extends Pane{
 	LocalDateTime endTime;
 	int overlapCount = 1;
 	int overlap = 1;
-	CalendarWeekBase calGui;
+	CalendarBase calGui;
 	private Label name;
-	public EventBox(Event event){
+	public EventBox(Event event,CalendarBase calGui){
+		this.calGui = calGui;
 		this.priority = event.getPriority();
 		startTime = event.getStartTime();
 		endTime = event.getEndTime();
@@ -120,8 +121,20 @@ public class EventBox extends Pane{
 		
 	}	
 
+	public void setHighlightedUpstream(boolean isHighLighted) {
+		this.isHighLighted = isHighLighted;
+		if(isHighLighted){
+			calGui.highlightEventUpstream(this.event);
+			backupStyle = highLightStyle;
+			this.setStyle(highLightStyle);
+		}else{
+			backupStyle = defaultStyle;
+			this.setStyle(defaultStyle);
+		}
+		
+	}	
 	private void onAction(MouseEvent e) {
-		setHighlighted(true);
+		setHighlightedUpstream(true);
 	}
 	private LocalDate getLocalDate() {
 		return this.date;
