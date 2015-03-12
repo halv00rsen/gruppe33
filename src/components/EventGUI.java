@@ -1,10 +1,16 @@
 package components;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.util.ArrayList;
+import java.util.List;
 
 import gui.Component;
 import gui.DebugMain;
 import gui.FxUtil;
+import gui.Main.AddNewEvent;
+import classes.Appliance;
+import classes.EventAppliance;
 import classes.Person;
 import classes.Priority;
 import javafx.application.Platform;
@@ -35,6 +41,8 @@ import javafx.scene.text.Font;
 public class EventGUI extends Component{
 	
 	private final TimeField start, end;
+	private final NumberField freqText;
+	private final AddNewEvent eventCall;
 	
 	Label repeatTo = new Label();
     Label every = new Label();
@@ -46,14 +54,14 @@ public class EventGUI extends Component{
 	Button trash = new Button();
 	TextField purposeText = new TextField();
 	TextField romText = new TextField();
-	TextField freqText = new TextField();
+//	TextField freqText = new TextField();
 	BorderPane pane = new BorderPane();
 	TextArea infoText = new TextArea();
-	DatePicker datePicker = new DatePicker();
-	DatePicker datePicker2 = new DatePicker();
+	DatePicker startDate = new DatePicker(), endDate = new DatePicker(),
+			repDate = new DatePicker();
 //	TextField fromClockText = new TextField();
 //	TextField toClockText = new TextField();
-	ComboBox<String> split = new ComboBox<String>();
+	ComboBox<Picker> split = new ComboBox<Picker>();
 	int freq = 0;
 	
 	private Priority priority;
@@ -61,10 +69,36 @@ public class EventGUI extends Component{
 	private ObservableList<Person> comboPeople, listPeople;
 	private ListView<Person> invited = new ListView<Person>();
 	
-	public EventGUI(Pane parent) {
+	public EventGUI(Pane parent, AddNewEvent eventCall) {
 		super(parent);
+		this.eventCall = eventCall;
 		start = new TimeField(true);
 		end = new TimeField(false);
+		freqText = new NumberField();
+		startDate.setOnAction(new EventHandler<ActionEvent>(){
+			
+			public void handle(ActionEvent event){
+				if (startDate.getValue() == null)
+					return;
+				if (startDate.getValue().isBefore(LocalDate.now()))
+					startDate.setValue(LocalDate.now());
+				if (endDate.getValue() != null){
+					if (startDate.getValue().isAfter(endDate.getValue())){
+						endDate.setValue(startDate.getValue());
+					}
+				}else
+					endDate.setValue(startDate.getValue());
+			}
+		});
+		endDate.setOnAction(new EventHandler<ActionEvent>(){
+			
+			public void handle(ActionEvent e){
+				if (startDate.getValue() == null || endDate.getValue() == null)
+					return;
+				if (startDate.getValue().isAfter(endDate.getValue()))
+					endDate.setValue(startDate.getValue());
+			}
+		});
 		start.setOtherTime(end);
 		end.setOtherTime(start);
 		addElements();
@@ -81,77 +115,44 @@ public class EventGUI extends Component{
     	      }
     	    });
     	cancel.setOnAction(e -> close(e));
-    	trash.setOnAction(e -> trash(e));
+    	trash.setOnAction(e -> trash());
     	save.setOnAction(e -> save(e));
-//    	fromClockText.setOnAction(e -> clockValidate(e));
-//    	toClockText.setOnAction(e -> clockValidate(e));
-    	freqText.setOnAction(e -> numberValidate(e));
-    	
-		
 	}
-    private void numberValidate(ActionEvent e) {
-    	String t = ((TextField) e.getSource()).getText();
-    	try{
-        	int a = Integer.parseInt(t);
-        	freq = a;
-    	}catch(NumberFormatException error){
-    		((TextField) e.getSource()).clear();
-    	}
-	}
-	private void clockValidate(ActionEvent e) {
-		System.out.println("Validated");
-    	String t = ((TextField) e.getSource()).getText();
-    	if (t.length() >5){
-    		((TextField) e.getSource()).clear();
-    	}
-    	try{
-    		int a = Integer.parseInt(t.substring(0,2));
-    		int b = Integer.parseInt(t.substring(3,5));
-    		System.out.println(a + "" + b);
-    		if(a>=24 || a<=-1){
-    			((TextField) e.getSource()).clear();
-    			return;
-    		}
-    		if(b>=60 || b<=-1){
-    			((TextField) e.getSource()).clear();
-    			return;
-    		}
-    		
-    	}catch(java.lang.StringIndexOutOfBoundsException error){
-    		if(t.length() == 2){
-    			int a = Integer.parseInt(t.substring(0,2));
-    			if(!(a>=24 || a<=-1)){
-    				((TextField) e.getSource()).clear();
-    				((TextField) e.getSource()).setText(a+"-"+"00");
-    			}else{
-    				((TextField) e.getSource()).clear();
-        			return;
-    			}
-    		}else{
-    			((TextField) e.getSource()).clear();
-    			return;
-    		}
-    	}catch(NumberFormatException error1){
-    		((TextField) e.getSource()).clear();
-    		return;
-    	}
-	}
-	
-	private int hour, minutes;
-	
+    
+    
 	private void save(ActionEvent e) {
-    	System.out.println(purposeText.getText());
-    	System.out.println(romText.getText());
-    	System.out.println(datePicker.getValue());
-    	System.out.println("SHour: " + start.getHour() + ", SMinutes: " + start.getMinutes());
-    	System.out.println("EHour: " + end.getHour() + ", EMinutes: " + end.getMinutes());
-    	System.out.println(datePicker2.getValue());
-    	System.out.println("freq " + freq);
-    	System.out.println("Start: " + start.isFirst + ", end: " + end.isFirst);
-    	LocalDate start = datePicker.getValue();
+		if (!start.isCorrectInput() || !end.isValid())
+    		return;
+    	LocalDate start = startDate.getValue(), end = endDate.getValue();
+    	if (start == null || end == null)
+    		return;
+    	else if (end.isBefore(start))
+    		return;
+    	LocalDateTime t1 = LocalDateTime.of(start, LocalTime.of(this.start.getHour(), this.start.getMinutes())),
+    			t2 = LocalDateTime.of(end, LocalTime.of(this.end.getHour(), this.end.getMinutes()));
+    	classes.Event event = new classes.Event(t1, t2, null);
+    	event.setEventName(purposeText.getText());
+    	Picker splitStuff = split.getValue();
+    	if (splitStuff == Picker.Daglig || splitStuff == Picker.Ukentlig)
+    		event.setFreq(splitStuff.freq, false);
+    	else if (splitStuff == Picker.Aldri)
+    		event.setFreq(0, false);
+    	else if (splitStuff == Picker.Egendefinert){
+    		int ting = freqText.getNumDays();
+    		if (ting == -1)
+    			return;
+    		event.setFreq(ting, false);
+    	}else
+    		event.setFreq(0, true);
+    	List<EventAppliance> persons = new ArrayList<EventAppliance>();
     	
-    	classes.Event event = new classes.Event();
+    	for (Person p : listPeople){
+    		persons.add(new EventAppliance(p, Appliance.Not_Answered));
+    	}
+    	event.setAppliance(persons);
     	
+    	eventCall.addEvent(event);
+    	trash();
 //    	PrintWriter writer;
     	
 //		try {
@@ -164,11 +165,12 @@ public class EventGUI extends Component{
 //		}
     	
 	}
-	private void trash(ActionEvent e) {
+	private void trash() {
     	purposeText.clear();
     	romText.clear();
-    	datePicker.setValue(null);
-    	datePicker2.setValue(null);
+    	startDate.setValue(null);
+    	endDate.setValue(null);
+    	repDate.setValue(null);
     	start.clear();
     	end.clear();
     	split.getSelectionModel().selectFirst();
@@ -179,18 +181,20 @@ public class EventGUI extends Component{
     	infoText.clear();
     	freqText.clear();
 	}
+	
 	private void close(ActionEvent e) {
-    	Platform.setImplicitExit(true);
-    	Platform.exit();
+//    	Platform.setImplicitExit(true);
+//    	Platform.exit();
 	}
+	
 	public void repeteresOn(Object object){
     	if(! object.equals("Aldri")){
     		freq = 0;
-    		datePicker2.setDisable(false);
+    		repDate.setDisable(false);
     		repeatTo.setTextFill(Color.web("#000000"));
     		
     	}else{
-    		datePicker2.setDisable(true);
+    		repDate.setDisable(true);
     		repeatTo.setTextFill(Color.web("#AAAAAA"));
     	}
     	if( object.equals("Månedlig")){
@@ -208,6 +212,7 @@ public class EventGUI extends Component{
     		freqText.setDisable(true);
     	}
     }
+	
 	public void addElements(){
     	pane.setStyle("-fx-background-color: #FFF");
 
@@ -244,8 +249,10 @@ public class EventGUI extends Component{
         date.setText("Dato\t\t\t");
         HBox dateBox = new HBox(20);
         dateBox.getChildren().add(date);
-        dateBox.getChildren().add(datePicker);
-        datePicker.setPrefWidth(225);
+        HBox heisann = new HBox(5);
+        heisann.getChildren().addAll(startDate, endDate);
+        dateBox.getChildren().add(heisann);
+//        datePicker.setPrefWidth(225);
 //        setPos(dateBox,60,200);
 //        root.getChildren().add(dateBox);
         
@@ -271,7 +278,7 @@ public class EventGUI extends Component{
         split.setPrefWidth(100);
         repeteresBox.getChildren().add(repeteres);
         repeteresBox.getChildren().add(split);
-        split.getItems().addAll("Aldri","Ukentlig","Månedlig","Egendefinert");
+        split.getItems().addAll(Picker.Aldri, Picker.Daglig, Picker.Ukentlig, Picker.Månedlig, Picker.Egendefinert);
         split.getSelectionModel().selectFirst(); 
    
 //        split.show();
@@ -283,10 +290,10 @@ public class EventGUI extends Component{
 		repeatTo.setTextFill(Color.web("#AAAAAA"));
         HBox repeteresTilBox = new HBox(20);
         repeteresTilBox.getChildren().add(repeatTo);
-        repeteresTilBox.getChildren().add(datePicker2);
+        repeteresTilBox.getChildren().add(repDate);
 
-		datePicker2.setDisable(true);
-        datePicker2.setPrefWidth(225);
+		repDate.setDisable(true);
+        repDate.setPrefWidth(225);
         
         //hver
 
@@ -294,7 +301,7 @@ public class EventGUI extends Component{
         day.setText("dag");
 		every.setTextFill(Color.web("#AAAAAA"));
 		day.setTextFill(Color.web("#AAAAAA"));
-		freqText.setPrefWidth(30);
+		freqText.setPrefWidth(50);
         repeteresBox.getChildren().add(every);
         repeteresBox.getChildren().add(freqText);
         repeteresBox.getChildren().add(day);
@@ -417,6 +424,16 @@ public class EventGUI extends Component{
         
         
     }
+	
+	private enum Picker{
+		Ukentlig(7), Daglig(1), Månedlig(-1), Aldri(0), Egendefinert(-1);
+		
+		private final int freq;
+		
+		Picker(int freq){
+			this.freq = freq;
+		}
+	}
     
     public void addTextToScene(Label... args ){
     	for(Label i : args){

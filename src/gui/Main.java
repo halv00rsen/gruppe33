@@ -66,6 +66,13 @@ public class Main extends Application implements ProgramListener{
 		}
 	}
 	
+	public class AddNewEvent{
+		
+		public void addEvent(Event event){
+			program.createEvent(event);
+		}
+	}
+	
 	public class GoToEvent{
 		
 		public void goToEvent(int eventKey){
@@ -149,7 +156,7 @@ public class Main extends Application implements ProgramListener{
 		tabPane.setPrefHeight(1000);
 		
 		newEvent = new Tab("Ny event");
-		eventScreen = new EventScreen();
+		eventScreen = new EventScreen(new AddNewEvent());
 		newEvent.setContent(eventScreen);
 		
 		room = new Tab("Reserver Rom");

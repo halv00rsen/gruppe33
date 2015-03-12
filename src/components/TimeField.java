@@ -45,7 +45,7 @@ public class TimeField extends TextField implements TimeFieldMain{
 	
 	
 	
-	private boolean isCorrectInput(){
+	public boolean isCorrectInput(){
 		final String input = getText();
 		if (input.contains(":")){
 			final String[] time = input.split(":");

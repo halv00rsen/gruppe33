@@ -28,9 +28,12 @@ public class Program {
 	
 	public void createEvent(Event event, Calendar... cal){
 		//add events to server
-		for (Calendar cals: cal)
-			cals.addEvent(event);
-		callMessage(Message.EventAdded);
+//		for (Calendar cals: cal)
+//			cals.addEvent(event);
+//		callMessage(Message.EventAdded);
+		currentPerson.getPersonalCalendar().addEvent(event);
+		event.setMadeBy(currentPerson);
+		updateCalendarListeners();
 	}
 	
 	public void deleteEvent(Event event, Calendar...cals){
@@ -153,6 +156,7 @@ public class Program {
 		activeCalendars.add(currentPerson.getPersonalCalendar());
 		for (ProgramListener l : listeners)
 			l.loginSuccess(username, name);
+		updateCalendarListeners();
 	}
 	
 	public void changePasswordUser(String oldPassword, String newPassword){

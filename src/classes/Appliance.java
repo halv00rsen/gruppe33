@@ -4,5 +4,6 @@ public enum Appliance {
 	Attending,
 	Not_Attending,
 	Maybe,
-	Late;
+	Late,
+	Not_Answered;
 }

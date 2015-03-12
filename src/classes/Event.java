@@ -6,6 +6,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 
 import javafx.scene.Cursor;
 import javafx.scene.input.MouseEvent;
@@ -14,7 +15,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 
 public class Event {
-	private final Person madeBy;
+	private Person madeBy;
 	public  final int id;
 	private String eventName;
 	private String location;
@@ -24,7 +25,7 @@ public class Event {
 	private LocalDateTime startTime;
 	private LocalDateTime endTime;
 	private Integer freq;
-	private Collection<EventAppliance> appliance;
+	private List<EventAppliance> appliance;
 	private Priority priority;
 	private String info;
 	private LocalDateTime freqEnd;
@@ -38,12 +39,14 @@ public class Event {
 		id = (int)Math.random()*100000000;
 		this.startDate = startTime.toLocalDate();
 		this.endDate = endTime.toLocalDate();
+		this.startTime = startTime;
+		this.endTime = endTime;
 		this.madeBy = person;
-		
+		priority = Priority.NOT_IMPORTANT;
 	}
 	public Event(String eventName, String location, Room room, LocalDateTime startTime,
 			LocalDateTime endTime, Integer freq, Person madeBy,
-			Collection<EventAppliance> appliance, Priority priority, String info) {
+			List<EventAppliance> appliance, Priority priority, String info) {
 		id = (int)Math.random()*100000000;
 		this.eventName = eventName;
 		this.location = location;
@@ -57,6 +60,10 @@ public class Event {
 		this.appliance = appliance;
 		this.priority = priority;
 		this.info = info;
+	}
+	
+	public void setMadeBy(Person p){
+		madeBy = p;
 	}
 
 	public Collection<Person> getApplicants() {
@@ -130,11 +137,11 @@ public class Event {
 	public void setFreqEndTime(LocalDateTime endTime) {
 		this.freqEnd = endTime;
 	}
-	public Collection<EventAppliance> getAppliance() {
+	public List<EventAppliance> getAppliance() {
 		return appliance;
 	}
 
-	public void setAppliance(Collection<EventAppliance> appliance) {
+	public void setAppliance(List<EventAppliance> appliance) {
 		this.appliance = appliance;
 	}
 
