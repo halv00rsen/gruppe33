@@ -9,11 +9,11 @@ import gui.Component;
 import gui.DebugMain;
 import gui.FxUtil;
 import gui.Main.AddNewEvent;
+import gui.Main.ChangeTab;
 import classes.Appliance;
 import classes.EventAppliance;
 import classes.Person;
 import classes.Priority;
-import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
@@ -43,6 +43,7 @@ public class EventGUI extends Component{
 	private final TimeField start, end;
 	private final NumberField freqText;
 	private final AddNewEvent eventCall;
+	private final ChangeTab changeTab;
 	
 	Label repeatTo = new Label();
     Label every = new Label();
@@ -69,9 +70,12 @@ public class EventGUI extends Component{
 	private ObservableList<Person> comboPeople, listPeople;
 	private ListView<Person> invited = new ListView<Person>();
 	
-	public EventGUI(Pane parent, AddNewEvent eventCall) {
+	private boolean state = false;
+	
+	public EventGUI(Pane parent, AddNewEvent eventCall, ChangeTab changeTab) {
 		super(parent);
 		this.eventCall = eventCall;
+		this.changeTab = changeTab;
 		start = new TimeField(true);
 		end = new TimeField(false);
 		freqText = new NumberField();
@@ -121,38 +125,49 @@ public class EventGUI extends Component{
     
     
 	private void save(ActionEvent e) {
-		if (!start.isCorrectInput() || !end.isValid())
+		if (!start.isCorrectInput() || !end.isCorrectInput())
     		return;
     	LocalDate start = startDate.getValue(), end = endDate.getValue();
     	if (start == null || end == null)
     		return;
     	else if (end.isBefore(start))
     		return;
-    	LocalDateTime t1 = LocalDateTime.of(start, LocalTime.of(this.start.getHour(), this.start.getMinutes())),
-    			t2 = LocalDateTime.of(end, LocalTime.of(this.end.getHour(), this.end.getMinutes()));
+    	
+    	int sh = this.start.getHour(), sm = this.start.getMinutes(),
+    			eh = this.end.getHour(), em = this.end.getMinutes();
+    	if (sh == -1 || sm == -1 || eh == -1 || em == -1)
+    		return;
+    	
+    	LocalDateTime t1 = LocalDateTime.of(start, LocalTime.of(sh, sm)),
+    			t2 = LocalDateTime.of(end, LocalTime.of(eh, em));
     	classes.Event event = new classes.Event(t1, t2, null);
     	event.setEventName(purposeText.getText());
     	Picker splitStuff = split.getValue();
+    	LocalDate freqEnd = repDate.getValue();
+    	if (freqEnd == null)
+    		return;
     	if (splitStuff == Picker.Daglig || splitStuff == Picker.Ukentlig)
-    		event.setFreq(splitStuff.freq, false);
+    		event.setFreq(splitStuff.freq, false, freqEnd);
     	else if (splitStuff == Picker.Aldri)
-    		event.setFreq(0, false);
+    		event.setFreq(0, false, freqEnd);
     	else if (splitStuff == Picker.Egendefinert){
     		int ting = freqText.getNumDays();
     		if (ting == -1)
     			return;
-    		event.setFreq(ting, false);
+    		event.setFreq(ting, false, freqEnd);
     	}else
-    		event.setFreq(0, true);
+    		event.setFreq(0, true, freqEnd);
     	List<EventAppliance> persons = new ArrayList<EventAppliance>();
     	
     	for (Person p : listPeople){
     		persons.add(new EventAppliance(p, Appliance.Not_Answered));
     	}
-    	event.setAppliance(persons);
+    	event.addAppliance(persons);
+    	event.setInfo(infoText.getText());
     	
     	eventCall.addEvent(event);
     	trash();
+    	changeTab.goToHomeScreen();
 //    	PrintWriter writer;
     	
 //		try {
@@ -180,6 +195,7 @@ public class EventGUI extends Component{
     	listPeople.clear();
     	infoText.clear();
     	freqText.clear();
+    	state = false;
 	}
 	
 	private void close(ActionEvent e) {
@@ -309,7 +325,7 @@ public class EventGUI extends Component{
         
         //buttons
         cancel.setText("Avbryt");
-        save.setText("Lagre endringer");
+        save.setText("Lag event");
         trash.setText("Forkast");
         cancel.setCancelButton(true);
         buttonStyle(cancel,save,trash);
@@ -393,10 +409,14 @@ public class EventGUI extends Component{
 			public void handle(Event event) {
 				for (Priority p : pList){
 					if (p.getVisualization() == event.getSource()){
-						if (p.isActive())
+						if (p.isActive()){
 							p.turnOff();
-						else
+							priority = null;
+						}
+						else{
 							p.turnOn();
+							priority = p;
+						}
 					}else
 						p.turnOff();
 				}
@@ -452,4 +472,40 @@ public class EventGUI extends Component{
     	a.setLayoutY(y);
     	
     }
+
+	public void showEvent(classes.Event event) {
+		trash();
+		start.setTime(event.getStartTime().getHour(), event.getStartTime().getMinute());
+		end.setTime(event.getStartTime().getHour(), event.getStartTime().getMinute());
+		Integer freq = event.getFreq();
+		if (freq == null)
+			split.getSelectionModel().select(Picker.Månedlig);
+		else if (freq == 7)
+			split.getSelectionModel().select(Picker.Ukentlig);
+		else if (freq == 1)
+			split.getSelectionModel().select(Picker.Daglig);
+		else if (freq == 0)
+			split.getSelectionModel().select(Picker.Aldri);
+		else{
+			split.getSelectionModel().select(Picker.Egendefinert);
+			freqText.setText("" + freq);
+		}
+		purposeText.setText(event.getEventName());
+		if (event.getRoom() != null)
+			romText.setText(event.getRoom().getRoomName());
+		infoText.setText(event.getInfo());
+		startDate.setValue(event.getStartDate());
+		endDate.setValue(event.getEndDate());
+		if (event.getFreqDate() != null)
+			repDate.setValue(event.getFreqDate());
+		priority = event.getPriority();
+		for (EventAppliance e : event.getAppliance()){
+			Person p = e.person;
+			int index = comboPeople.indexOf(p);
+			if (index != -1){
+				comboPeople.remove(index);
+				listPeople.add(p);
+			}
+		}
+	}
 }

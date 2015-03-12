@@ -20,6 +20,13 @@ public class TimeField extends TextField implements TimeFieldMain{
 		this.isFirst = isFirst;
 	}
 	
+	public void setTime(int hours, int minutes){
+		if (hours < 0 || minutes < 0 || hours > 99 || minutes > 99)
+			return;
+		setText((hours < 10 ? "0": "") + hours + ":" + (minutes < 10 ? "0": "") +  minutes);
+		
+	}
+	
 
 	public void setOtherTime(TimeFieldMain otherTime){
 		this.otherTime = otherTime;

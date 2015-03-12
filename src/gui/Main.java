@@ -59,6 +59,18 @@ public class Main extends Application implements ProgramListener{
 		openNewWindow(loginScreen);
 	}
 	
+	public class ChangeTab{
+		
+		public void goToHomeScreen(){
+			tabPane.getSelectionModel().select(home);
+		}
+		
+		public void showEvent(Event event){
+			tabPane.getSelectionModel().select(newEvent);
+			eventScreen.showEvent(event);
+		}
+	}
+	
 	public class LoginCall{
 		
 		public void requestLogin(String username, String password){
@@ -71,6 +83,7 @@ public class Main extends Application implements ProgramListener{
 		public void addEvent(Event event){
 			program.createEvent(event);
 		}
+		
 	}
 	
 	public class GoToEvent{
@@ -151,12 +164,12 @@ public class Main extends Application implements ProgramListener{
 		tabPane = new TabPane();
 		tabPane.setPrefHeight(1000);
 		home = new Tab("Hjem");
-		homeScreen  = new HomeScreen();
+		homeScreen  = new HomeScreen(new ChangeTab());
 		home.setContent(homeScreen);
 		tabPane.setPrefHeight(1000);
 		
 		newEvent = new Tab("Ny event");
-		eventScreen = new EventScreen(new AddNewEvent());
+		eventScreen = new EventScreen(new AddNewEvent(), new ChangeTab());
 		newEvent.setContent(eventScreen);
 		
 		room = new Tab("Reserver Rom");
@@ -168,7 +181,7 @@ public class Main extends Application implements ProgramListener{
 		
 		
 		persons = new Tab("Personer");
-		otherPersonScreen = new OtherPersonScreen(DebugMain.getPeople());
+		otherPersonScreen = new OtherPersonScreen(DebugMain.getPeople(), new ChangeTab());
 		persons.setContent(otherPersonScreen);
 		
 		

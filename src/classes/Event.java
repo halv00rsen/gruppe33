@@ -1,20 +1,13 @@
 package classes;
 
-import gui.Main;
-
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 
-import javafx.scene.Cursor;
-import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.Pane;
-import javafx.scene.paint.Color;
-import javafx.scene.shape.Circle;
-
 public class Event {
+	private final List<EventAppliance> appliance;
+	
 	private Person madeBy;
 	public  final int id;
 	private String eventName;
@@ -25,18 +18,29 @@ public class Event {
 	private LocalDateTime startTime;
 	private LocalDateTime endTime;
 	private Integer freq;
-	private List<EventAppliance> appliance;
 	private Priority priority;
 	private String info;
-	private LocalDateTime freqEnd;
+	private LocalDate freqEnd;
 
 	public Event(){
 		id = (int)Math.random()*100000000;
 		this.madeBy = null;
+		eventName = "";
+		location = "";
+		room = null;
+		startDate = null;
+		endDate = null;
+		startTime = null;
+		endTime = null;
+		freq = null;
+		appliance = new ArrayList<EventAppliance>();
+		priority = Priority.NOT_IMPORTANT;
+		info = "";
+		freqEnd = null;
 		
 	}
 	public Event(LocalDateTime startTime,LocalDateTime endTime,Person person){
-		id = (int)Math.random()*100000000;
+		this();
 		this.startDate = startTime.toLocalDate();
 		this.endDate = endTime.toLocalDate();
 		this.startTime = startTime;
@@ -62,13 +66,12 @@ public class Event {
 		this.info = info;
 	}
 	
+	public LocalDate getFreqDate(){
+		return freqEnd;
+	}
+	
 	public void setMadeBy(Person p){
 		madeBy = p;
-	}
-
-	public Collection<Person> getApplicants() {
-		// Skal returnere de som kan (tror jeg)
-		return new ArrayList<Person>();
 	}
 
 	public String getEventName() {
@@ -109,7 +112,10 @@ public class Event {
 
 	public void setStartTime(LocalDateTime startTime) {
 		this.startTime = startTime;
-		this.startDate = startTime.toLocalDate();
+		if (startTime == null)
+			startDate = null;
+		else
+			this.startDate = startTime.toLocalDate();
 	}
 
 	public LocalDateTime getEndTime() {
@@ -118,14 +124,17 @@ public class Event {
 
 	public void setEndTime(LocalDateTime endTime) {
 		this.endTime = endTime;
-		this.endDate = endTime.toLocalDate();
+		if (endTime == null)
+			endDate = null;
+		else
+			this.endDate = endTime.toLocalDate();
 	}
 
 	public Integer getFreq() {
 		return freq;
 	}
 
-	public void setFreq(Integer freq,boolean monthlyRepeat) {
+	public void setFreq(Integer freq,boolean monthlyRepeat, LocalDate freqEnd) {
 		if(! monthlyRepeat){
 			monthlyRepeat = false;
 			this.freq = freq;
@@ -133,16 +142,16 @@ public class Event {
 			monthlyRepeat = true;
 			this.freq = null;
 		}
-	}
-	public void setFreqEndTime(LocalDateTime endTime) {
-		this.freqEnd = endTime;
+		this.freqEnd = freqEnd;
+		
 	}
 	public List<EventAppliance> getAppliance() {
 		return appliance;
 	}
 
-	public void setAppliance(List<EventAppliance> appliance) {
-		this.appliance = appliance;
+	public void addAppliance(List<EventAppliance> appliance) {
+		for (EventAppliance c : appliance)
+			this.appliance.add(c);
 	}
 
 	public Priority getPriority() {
