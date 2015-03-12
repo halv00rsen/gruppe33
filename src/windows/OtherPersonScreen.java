@@ -46,7 +46,7 @@ public class OtherPersonScreen extends Window{
 		
 		Person examplePerson = (DebugMain.getPerson());
 		cal = new PersonCalendar(examplePerson);
-		schedulingGUI = new SchedulingGUI(this, cal, examplePerson);
+		schedulingGUI = new SchedulingGUI(this, examplePerson,cal);
 		
 	
 		peopleComboBox.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<String>() {
