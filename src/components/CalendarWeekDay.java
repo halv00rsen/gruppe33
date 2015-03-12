@@ -34,7 +34,7 @@ public class CalendarWeekDay extends CalendarDay{
 		
 		for (int i = 0; i < events.size()-1; i++) {
 			Event thisEvent = events.get(i);
-			EventBox eventBox = new EventBox(thisEvent);
+			EventBox eventBox = new EventBox(thisEvent, calGui);
 			eventsHash.put(thisEvent.getID(), eventBox);
 			if(mente > 0){
 
@@ -55,7 +55,7 @@ public class CalendarWeekDay extends CalendarDay{
 
 			Event thisEvent = events.get(events.size()-1);
 			
-			EventBox eventBox = new EventBox(thisEvent);
+			EventBox eventBox = new EventBox(thisEvent, calGui);
 
 			eventsHash.put(thisEvent.getID(), eventBox);
 			if(mente > 0){

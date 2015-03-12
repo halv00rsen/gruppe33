@@ -7,7 +7,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 
 public enum Priority{
-	NOT_IMPORTANT(Color.BEIGE), IMPORTANT(Color.ORANGE), VERY_IMPORTANT(Color.RED);
+	NOT_IMPORTANT(Color.LIGHTYELLOW), IMPORTANT(Color.ORANGE), VERY_IMPORTANT(Color.RED);
 	private Pane pane = new Pane();
 	private Circle circle = new Circle();
 	private Color c;
@@ -15,7 +15,7 @@ public enum Priority{
 	
 	Priority(Color color){
 		this.c = color;
-		circle.setRadius(20.0f);
+		circle.setRadius(15.0f);
 		circle.setFill(color);
 		circle.setOnMouseEntered(e -> hoverOn(e));
 		circle.setOnMouseExited(e -> hoverOff(e));
@@ -46,7 +46,13 @@ public enum Priority{
 		circle.setFill(c);
 	}
 	private void hoverOn(MouseEvent e) {
-		circle.setFill(Color.valueOf("#FFFFAA"));
+		if(c.equals(Color.RED)){
+			circle.setFill(Color.valueOf("#CC0000"));
+		}else if(c.equals(Color.ORANGE)){
+			circle.setFill(Color.valueOf("#DD8800"));
+		}else if (c.equals(Color.LIGHTYELLOW)){
+			circle.setFill(Color.valueOf("#EEEE88"));
+		}
 		circle.setCursor(Cursor.HAND);
 	}
 	public Color getColor() {

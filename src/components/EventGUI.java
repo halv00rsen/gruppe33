@@ -1,45 +1,41 @@
 package components;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+
 import gui.Component;
-
-import java.io.FileNotFoundException;
-import java.io.PrintWriter;
-import java.io.UnsupportedEncodingException;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
+import gui.DebugMain;
+import gui.FxUtil;
+import classes.Person;
 import classes.Priority;
-import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
-import javafx.scene.Scene;
 import javafx.scene.control.Button;
-import javafx.scene.control.ChoiceBox;
+import javafx.scene.control.ComboBox;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
-import javafx.scene.control.MenuItem;
-import javafx.scene.control.SplitMenuButton;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
-import javafx.scene.input.ContextMenuEvent;
-import javafx.scene.input.InputMethodEvent;
-import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
-import javafx.stage.Stage;
-public class EventGUI extends Component {
+
+public class EventGUI extends Component{
+	
+	private final TimeField start, end;
+	
 	Label repeatTo = new Label();
     Label every = new Label();
     Label day = new Label();
@@ -55,16 +51,22 @@ public class EventGUI extends Component {
 	TextArea infoText = new TextArea();
 	DatePicker datePicker = new DatePicker();
 	DatePicker datePicker2 = new DatePicker();
-	TextField fromClockText = new TextField();
-	TextField toClockText = new TextField();
-	ChoiceBox<String> split = new ChoiceBox<String>();
+//	TextField fromClockText = new TextField();
+//	TextField toClockText = new TextField();
+	ComboBox<String> split = new ComboBox<String>();
 	int freq = 0;
-	ListView invited = new ListView();
 	
 	private Priority priority;
+	private ComboBox<Person> searchPeople;
+	private ObservableList<Person> comboPeople, listPeople;
+	private ListView<Person> invited = new ListView<Person>();
 	
 	public EventGUI(Pane parent) {
 		super(parent);
+		start = new TimeField(true);
+		end = new TimeField(false);
+		start.setOtherTime(end);
+		end.setOtherTime(start);
 		addElements();
         addAction();
         this.getChildren().add(pane);
@@ -81,8 +83,8 @@ public class EventGUI extends Component {
     	cancel.setOnAction(e -> close(e));
     	trash.setOnAction(e -> trash(e));
     	save.setOnAction(e -> save(e));
-    	fromClockText.setOnAction(e -> clockValidate(e));
-    	toClockText.setOnAction(e -> clockValidate(e));
+//    	fromClockText.setOnAction(e -> clockValidate(e));
+//    	toClockText.setOnAction(e -> clockValidate(e));
     	freqText.setOnAction(e -> numberValidate(e));
     	
 		
@@ -97,6 +99,7 @@ public class EventGUI extends Component {
     	}
 	}
 	private void clockValidate(ActionEvent e) {
+		System.out.println("Validated");
     	String t = ((TextField) e.getSource()).getText();
     	if (t.length() >5){
     		((TextField) e.getSource()).clear();
@@ -133,14 +136,22 @@ public class EventGUI extends Component {
     		return;
     	}
 	}
+	
+	private int hour, minutes;
+	
 	private void save(ActionEvent e) {
     	System.out.println(purposeText.getText());
     	System.out.println(romText.getText());
     	System.out.println(datePicker.getValue());
-    	System.out.println(fromClockText.getText());
-    	System.out.println(toClockText.getText());
+    	System.out.println("SHour: " + start.getHour() + ", SMinutes: " + start.getMinutes());
+    	System.out.println("EHour: " + end.getHour() + ", EMinutes: " + end.getMinutes());
     	System.out.println(datePicker2.getValue());
     	System.out.println("freq " + freq);
+    	System.out.println("Start: " + start.isFirst + ", end: " + end.isFirst);
+    	LocalDate start = datePicker.getValue();
+    	
+    	classes.Event event = new classes.Event();
+    	
 //    	PrintWriter writer;
     	
 //		try {
@@ -158,9 +169,15 @@ public class EventGUI extends Component {
     	romText.clear();
     	datePicker.setValue(null);
     	datePicker2.setValue(null);
-    	fromClockText.clear();
-    	toClockText.clear();
-    	split.getSelectionModel().selectFirst();  
+    	start.clear();
+    	end.clear();
+    	split.getSelectionModel().selectFirst();
+    	for (Person p : listPeople){
+    		comboPeople.add(p);
+    	}
+    	listPeople.clear();
+    	infoText.clear();
+    	freqText.clear();
 	}
 	private void close(ActionEvent e) {
     	Platform.setImplicitExit(true);
@@ -239,23 +256,29 @@ public class EventGUI extends Component {
         til.setText("til");
         HBox klokkeBox = new HBox(20);
         klokkeBox.getChildren().add(fra_klokken);
-        klokkeBox.getChildren().add(fromClockText);
+        klokkeBox.getChildren().add(start);
         klokkeBox.getChildren().add(til);
-        klokkeBox.getChildren().add(toClockText);
-        fromClockText.setPrefWidth(60);
-        toClockText.setPrefWidth(60);
+        klokkeBox.getChildren().add(end);
+        start.setPrefWidth(60);
+        end.setPrefWidth(60);
         
         //repeteres
         Label repeteres = new Label();
         repeteres.setText("Repeteres\t");
         HBox repeteresBox = new HBox(20);
+       
+//        split.setEditable(true);
         split.setPrefWidth(100);
         repeteresBox.getChildren().add(repeteres);
         repeteresBox.getChildren().add(split);
         split.getItems().addAll("Aldri","Ukentlig","Månedlig","Egendefinert");
-        split.getSelectionModel().selectFirst();        
+        split.getSelectionModel().selectFirst(); 
+   
+//        split.show();
+  
         
-      //repeteresTil
+        
+        //repeteresTil
         repeatTo.setText("Repeteres til\t");
 		repeatTo.setTextFill(Color.web("#AAAAAA"));
         HBox repeteresTilBox = new HBox(20);
@@ -288,11 +311,51 @@ public class EventGUI extends Component {
         buttons.getChildren().add(cancel);
         buttons.getChildren().add(save);
         
+
+        searchPeople = new ComboBox<Person>();
+        searchPeople.setPrefWidth(200);
+        FxUtil.autoCompleteComboBox(searchPeople, FxUtil.AutoCompleteMode.CONTAINING); 
         //ListView
+        comboPeople = searchPeople.getItems();
+        listPeople = FXCollections.observableArrayList();
+        invited.setItems(listPeople);
+        Button addPerson = new Button("Legg til"), removeButton = new Button("Fjern");
+        for (Person p : DebugMain.getPeople())
+        	comboPeople.add(p);
+        addPerson.setOnAction(new EventHandler<ActionEvent>(){
+        	
+        	public void handle(ActionEvent e){
+        		int val = searchPeople.getSelectionModel().getSelectedIndex();
+				if (val == -1)
+					return;
+				Person selected = comboPeople.remove(val);
+				if (selected == null)
+					return;
+				listPeople.add(selected);
+				searchPeople.getSelectionModel().clearSelection();
+        	}
+        });
+        
+        removeButton.setOnAction(new EventHandler<ActionEvent>(){
+        	
+        	public void handle(ActionEvent e){
+        		Person selected = invited.getSelectionModel().getSelectedItem();
+				if (selected == null)
+					return;
+//				choices.add(selected);
+				comboPeople.add(selected);
+				listPeople.remove(selected);
+        	}
+        });
+        
+        HBox buttonsBox = new HBox(5);
+        buttonsBox.getChildren().addAll(searchPeople, addPerson);
+        
         Pane blueBox = new Pane();
         BorderPane.setMargin(blueBox,new Insets(20));
         VBox listBox = new VBox(20);
-        listBox.getChildren().add(invited);
+        listBox.getChildren().add(buttonsBox);
+        listBox.getChildren().addAll(invited, removeButton);
         listBox.setPadding(new Insets(30));
         blueBox.setStyle("-fx-background-color: #AAF");
         blueBox.setPrefHeight(500);
@@ -300,16 +363,21 @@ public class EventGUI extends Component {
         blueBox.getChildren().add(listBox);
         
       //Priority
-        
+        Label prio = new Label();
+        prio.setText("Prioritet:\t");
         HBox priorityList = new HBox(5);
         priority = null;
         Priority[] pList = new Priority[3];
         pList[0] = Priority.NOT_IMPORTANT;
+        pList[0].turnOn();
         pList[1] = Priority.IMPORTANT;
         pList[2] = Priority.VERY_IMPORTANT;
+
+        priorityList.getChildren().add(prio);
         priorityList.getChildren().add(pList[0].getVisualization());
         priorityList.getChildren().add(pList[1].getVisualization());
         priorityList.getChildren().add(pList[2].getVisualization());
+        priorityList.setAlignment(Pos.BASELINE_CENTER);
         listBox.getChildren().add(priorityList);
         
         EventHandler<Event> event = new EventHandler<Event>(){
@@ -367,6 +435,4 @@ public class EventGUI extends Component {
     	a.setLayoutY(y);
     	
     }
-
-   
 }

@@ -62,4 +62,8 @@ public class Group {
 		subGroups.remove(g);
 	}
 	
+	public String toString(){
+		return name;
+	}
+	
 }

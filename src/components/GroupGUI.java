@@ -3,8 +3,12 @@ package components;
 import java.util.ArrayList;
 import java.util.List;
 
+import components.GroupList.Fancy;
+
 import classes.Group;
 import classes.Person;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -15,6 +19,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.scene.control.SelectionMode;
 import javafx.scene.control.TextField;
+import javafx.scene.control.ToggleButton;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
@@ -22,34 +27,117 @@ import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
 import gui.Component;
 import gui.DebugMain;
+import gui.Main;
 
 public class GroupGUI extends Component{
 
-	private final TextField nameField;
-	private final ListView<Group> groups;
-	private final ListView<String> persons;
-	private final ObservableList<String> personItems;
+//	private final TextField nameField;
+//	private final ListView<Group> groups;
+//	private final ListView<Person> persons;
+//	private final ObservableList<Person> personItems;
+//	private final ObservableList<Group> groupItems;
+	private final GroupList<Group> subGroups;
+	private final GroupList<Person> persons;
+	
+	private final ListView<Group> groupList;
 	private final ObservableList<Group> groupItems;
+	
+	private Group selectedGroup;
 	
 	public GroupGUI(Pane parent) {
 		super(parent);
 		
-		groups = new ListView<Group>();
-		persons = new ListView<String>();
-		personItems = FXCollections.observableArrayList();
+		selectedGroup = null;
+		
+		subGroups = new GroupList<Group>("Undergrupper", Fancy.Group, new FieldListener());
+		persons = new GroupList<Person>("Medlemmer", Fancy.Person, new FieldListener());
+		persons.addChoices(DebugMain.getPeople());
+		
+		VBox vBox = new VBox(10);
+		groupList = new ListView<Group>();
 		groupItems = FXCollections.observableArrayList();
-		groups.setItems(groupItems);
-		persons.setItems(personItems);
+		groupList.setItems(groupItems);
+		groupList.setPrefWidth(GroupList.width);
+		groupList.setPrefHeight(GroupList.height);
+		Label header = new Label("Grupper");
+		header.setFont(Main.header1);
+		Button delete = new Button("Slett");
+		delete.setOnAction(e -> {
+			Group group = groupList.getSelectionModel().getSelectedItem();
+			groupItems.remove(group);
+			changeStatus();
+		});
+		ToggleButton addToggle = new ToggleButton("Legg til ...");
+		delete.setPrefWidth(GroupList.width / 2 - 5);
+		addToggle.setPrefWidth(GroupList.width / 2 - 5);
+		HBox one = new HBox(10);
+		one.getChildren().addAll(addToggle, delete);
+		HBox two = new HBox(10);
+		TextField groupName = new TextField();
+		groupName.setPrefWidth(GroupList.width * 2 / 3);
+		groupName.setPromptText("Gruppenavn");
 		
-		nameField = new TextField();
-		nameField.setPrefWidth(150);
+		Label name = new Label("Navn:");
 		
-		this.groups.setMaxWidth(150);
-		this.groups.setPrefHeight(200);
-		this.persons.setMaxHeight(150);
-		this.persons.setPrefHeight(200);
-		addGroups(getDebugGroups());
-		addPersons(getPersonNames());
+		two.getChildren().addAll(name, groupName);
+		
+		Button createGroup = new Button("Opprett");
+		createGroup.setPrefWidth(GroupList.width);
+		
+		vBox.setMaxWidth(GroupList.width);
+		vBox.getChildren().addAll(header, groupList, one, two, createGroup);
+		
+		EventHandler<ActionEvent> actionEvent = new EventHandler<ActionEvent>(){
+			
+			public void handle(ActionEvent event){
+				final boolean selected = addToggle.isSelected();
+				createGroup.setVisible(selected);
+				name.setVisible(selected);
+				groupName.setVisible(selected);
+				groupName.setText("");
+				
+			}
+		}; 
+		
+		actionEvent.handle(null);
+		
+		addToggle.setOnAction(actionEvent);
+		
+		createGroup.setOnAction(new EventHandler<ActionEvent>(){
+			
+			public void handle(ActionEvent event){
+				String name = groupName.getText();
+				if (!"".equals(name)){
+					Group g = new Group(name, 1);
+					groupItems.add(g);
+					groupList.getSelectionModel().select(g);
+					groupList.requestFocus();
+					
+				}
+				addToggle.setSelected(false);
+				actionEvent.handle(null);
+			}
+		});
+		
+		groupList.focusedProperty().addListener(obs -> {
+			changeStatus();
+		});
+		
+		groupList.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<Group>() {
+
+		    @Override
+		    public void changed(ObservableValue<? extends Group> observable, Group oldValue, Group newValue) {
+		        // Your action here
+		    	changeStatus();
+		    	selectedGroup = newValue;
+		    	updateFields();
+		    }
+		});
+		
+		
+		HBox box = new HBox(10);
+		box.getChildren().addAll(vBox, persons, subGroups);
+		getChildren().add(box);
 		
 		
 //		HBox master = new HBox(20);
@@ -133,37 +221,50 @@ public class GroupGUI extends Component{
 //		
 	}
 	
+	private void updateFields(){
+		if (selectedGroup == null)
+			return;
+		persons.setValues(selectedGroup.getMembers());
+		subGroups.setValues(selectedGroup.getSubGroups());
+		
+	}
 	
-	private void addPersons(List<String> persons){
-		for (String p : persons){
-			personItems.add(p);
+	class FieldListener{
+		
+		public void addMember(Person p){
+			if (selectedGroup != null){
+				selectedGroup.addMembers(p);
+			}
 		}
-		this.persons.setItems(personItems);
-		this.persons.setMaxWidth(150);
-		this.persons.setPrefHeight(75);
-	}
-	
-	private void addGroups(List<Group> groups) {
-		for (Group group : groups) {
-			groupItems.add(group);
+		
+		public void removeMember(Person p){
+			if (selectedGroup != null)
+				selectedGroup.removePerson(p);
+		}
+		
+		public void addGroup(Group g){
+			if (selectedGroup != null)
+				selectedGroup.addSubGroups(g);
+		}
+		
+		public void removeGroup(Group g){
+			if (selectedGroup != null)
+				selectedGroup.removeSubGroup(g);
 		}
 	}
 	
-	private void removeGroup(Group group){
-		groupItems.remove(group.getName());
+	private void changeStatus(){
+		if (groupList.getSelectionModel().isEmpty()){
+			persons.setDisable(true);
+			subGroups.setDisable(true);
+			selectedGroup = null;
+		}else{
+			persons.setDisable(false);
+			subGroups.setDisable(false);
+			selectedGroup = groupList.getSelectionModel().getSelectedItem();
+		}
 	}
 	
-	private void addGroup(Group group){
-		groupItems.add(group);
-	}
-	
-	public static List<String> getPersonNames(){
-		List<String> n = new ArrayList<String>();
-		n.add("Jørgen Halvorsen");
-		n.add("Ola Gunndersen");
-		n.add("kul kulersen");
-		return n;
-	}
 	
 	public static List<Group> getDebugGroups(){
 		List<Group> groups = new ArrayList<Group>();

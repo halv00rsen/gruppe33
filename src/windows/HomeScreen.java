@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
+import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 import javafx.scene.control.ToggleButton;
@@ -20,11 +21,10 @@ public class HomeScreen extends Window{
     
 
     
-    SchedulingGUI schedulingGUI;
+    public SchedulingGUI schedulingGUI;
     Person p;
     PersonCalendar cal;
     
-	private Button settings;
 	public HomeScreen() {
 		p = DebugMain.getPerson();
 		cal = new PersonCalendar(p);
@@ -35,7 +35,7 @@ public class HomeScreen extends Window{
 
 	@Override
 	public void init() {
-		schedulingGUI = new SchedulingGUI(this, cal, p);
+		schedulingGUI = new SchedulingGUI(this,p,cal);
 		this.getChildren().add(schedulingGUI);
 
 

@@ -14,6 +14,7 @@ public class Person {
 	private final List<Group> groups;
 	
 	private String password;
+	private boolean toStringName;
 	
 	public Person(String username, String password, String name, boolean admin){
 		calendar = new PersonCalendar(this);
@@ -22,6 +23,7 @@ public class Person {
 		this.password = password;
 		this.name = name;
 		this.admin = admin;
+		toStringName = true;
 	}
 	
 	public boolean isCorrectPassword(String password){
@@ -81,6 +83,16 @@ public class Person {
 
 	public List<Group> getGroups() {
 		return groups;
+	}
+	
+	public void changeToString(){
+		toStringName = !toStringName;
+	}
+	
+	public String toString(){
+		if (toStringName)
+			return name;
+		return username;
 	}
 	
 }

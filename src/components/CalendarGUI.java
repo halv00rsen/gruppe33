@@ -28,6 +28,7 @@ public class CalendarGUI extends Component{
 	HBox buttons;
 	LocalDate date;
 	ArrayList<Event> allEvents;
+	Calendar[] calendars;
 	public CalendarGUI(Pane parent, LocalDate date, Calendar... args) {
 		super(parent);
 //		allEvents = new ArrayList<Event>();
@@ -38,6 +39,7 @@ public class CalendarGUI extends Component{
 //				allEvents.addAll(k.getEvents());
 //			}
 //		}
+		calendars = args;
 		this.date = date;
 		month = new CalendarMonthBase(parent, date, args, this);
 		week = new CalendarWeekBase(parent, date, args, this);
@@ -94,6 +96,14 @@ public class CalendarGUI extends Component{
 		}
 		
 	}
+	public void updateCalendars(Calendar... calendars){
+		month.setNewCalendarList(calendars);
+		month.generateCalendars();
+		month.redrawCalendar();
+		week.setNewCalendarList(calendars);
+		week.generateCalendars();
+		week.redrawCalendar();
+	}
 	public void addListener(CalendarGUIListener hei){
 		this.listeners.add(hei);
 	}
@@ -106,7 +116,24 @@ public class CalendarGUI extends Component{
 		for (CalendarGUIListener i : listeners) {
 			i.eventIsHighligthed( event);
 		}
+		ArrayList<Event> events = new ArrayList<Event>();
+		for (int i = 0; i < calendars.length; i++) {
+			events.addAll(calendars[i].getEventsByDay(event.getStartDate()));
+		}
+		setHighlighted(event.getStartDate(), events);
 		
 		currentCalendarBase.highlightEvent(event);
+	}
+	public void highlightEventUpstream(Event event) {
+		System.out.println("HEHEHEHHEIHEIHEIHEIHEIHH");
+		
+		ArrayList<Event> events = new ArrayList<Event>();
+		for (int i = 0; i < calendars.length; i++) {
+			events.addAll(calendars[i].getEventsByDay(event.getStartDate()));
+		}
+		setHighlighted(event.getStartDate(), events);
+		for (CalendarGUIListener i : listeners) {
+			i.eventIsHighligthed( event);
+		}
 	}
 }
