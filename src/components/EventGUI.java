@@ -1,21 +1,12 @@
 package components;
-import gui.AutoCompleteComboBoxListener;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+
 import gui.Component;
 import gui.DebugMain;
 import gui.FxUtil;
-
-import java.io.FileNotFoundException;
-import java.io.PrintWriter;
-import java.io.UnsupportedEncodingException;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
-import components.GroupList.Fancy;
-
-import classes.Group;
 import classes.Person;
 import classes.Priority;
-import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
@@ -27,29 +18,24 @@ import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
-import javafx.scene.Scene;
 import javafx.scene.control.Button;
-import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
-import javafx.scene.control.MenuItem;
-import javafx.scene.control.SplitMenuButton;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
-import javafx.scene.input.ContextMenuEvent;
-import javafx.scene.input.InputMethodEvent;
-import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
-import javafx.stage.Stage;
+
 public class EventGUI extends Component {
+	
+//	private final TimeField 
+	
 	Label repeatTo = new Label();
     Label every = new Label();
     Label day = new Label();
@@ -109,6 +95,7 @@ public class EventGUI extends Component {
     	}
 	}
 	private void clockValidate(ActionEvent e) {
+		System.out.println("Validated");
     	String t = ((TextField) e.getSource()).getText();
     	if (t.length() >5){
     		((TextField) e.getSource()).clear();
@@ -153,6 +140,10 @@ public class EventGUI extends Component {
     	System.out.println(toClockText.getText());
     	System.out.println(datePicker2.getValue());
     	System.out.println("freq " + freq);
+    	LocalDate start = datePicker.getValue();
+    	
+    	classes.Event event = new classes.Event();
+    	
 //    	PrintWriter writer;
     	
 //		try {
