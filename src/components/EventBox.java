@@ -112,7 +112,6 @@ public class EventBox extends Pane{
 	public void setHighlighted(boolean isHighLighted) {
 		this.isHighLighted = isHighLighted;
 		if(isHighLighted){
-			calGui.highlightEventUpstream(this.event);
 			backupStyle = highLightStyle;
 			this.setStyle(highLightStyle);
 		}else{
@@ -122,8 +121,20 @@ public class EventBox extends Pane{
 		
 	}	
 
+	public void setHighlightedUpstream(boolean isHighLighted) {
+		this.isHighLighted = isHighLighted;
+		if(isHighLighted){
+			calGui.highlightEventUpstream(this.event);
+			backupStyle = highLightStyle;
+			this.setStyle(highLightStyle);
+		}else{
+			backupStyle = defaultStyle;
+			this.setStyle(defaultStyle);
+		}
+		
+	}	
 	private void onAction(MouseEvent e) {
-		setHighlighted(true);
+		setHighlightedUpstream(true);
 	}
 	private LocalDate getLocalDate() {
 		return this.date;
