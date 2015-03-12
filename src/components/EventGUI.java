@@ -1,6 +1,7 @@
 package components;
 import gui.AutoCompleteComboBoxListener;
 import gui.Component;
+import gui.DebugMain;
 import gui.FxUtil;
 
 import java.io.FileNotFoundException;
@@ -9,6 +10,10 @@ import java.io.UnsupportedEncodingException;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import components.GroupList.Fancy;
+
+import classes.Group;
+import classes.Person;
 import classes.Priority;
 import javafx.application.Application;
 import javafx.application.Platform;
@@ -64,10 +69,11 @@ public class EventGUI extends Component {
 	TextField toClockText = new TextField();
 	ComboBox<String> split = new ComboBox<String>();
 	int freq = 0;
-	ListView invited = new ListView();
 	
 	private Priority priority;
-	private ComboBox searchPeople;
+	private ComboBox<Person> searchPeople;
+	private ObservableList<Person> comboPeople, listPeople;
+	private ListView<Person> invited = new ListView<Person>();
 	
 	public EventGUI(Pane parent) {
 		super(parent);
@@ -166,7 +172,13 @@ public class EventGUI extends Component {
     	datePicker2.setValue(null);
     	fromClockText.clear();
     	toClockText.clear();
-    	split.getSelectionModel().selectFirst();  
+    	split.getSelectionModel().selectFirst();
+    	for (Person p : listPeople){
+    		comboPeople.add(p);
+    	}
+    	listPeople.clear();
+    	infoText.clear();
+    	freqText.clear();
 	}
 	private void close(ActionEvent e) {
     	Platform.setImplicitExit(true);
@@ -301,15 +313,50 @@ public class EventGUI extends Component {
         buttons.getChildren().add(save);
         
 
-        searchPeople = new ComboBox();
+        searchPeople = new ComboBox<Person>();
         searchPeople.setPrefWidth(200);
         FxUtil.autoCompleteComboBox(searchPeople, FxUtil.AutoCompleteMode.CONTAINING); 
         //ListView
+        comboPeople = searchPeople.getItems();
+        listPeople = FXCollections.observableArrayList();
+        invited.setItems(listPeople);
+        Button addPerson = new Button("Legg til"), removeButton = new Button("Fjern");
+        for (Person p : DebugMain.getPeople())
+        	comboPeople.add(p);
+        addPerson.setOnAction(new EventHandler<ActionEvent>(){
+        	
+        	public void handle(ActionEvent e){
+        		int val = searchPeople.getSelectionModel().getSelectedIndex();
+				if (val == -1)
+					return;
+				Person selected = comboPeople.remove(val);
+				if (selected == null)
+					return;
+				listPeople.add(selected);
+				searchPeople.getSelectionModel().clearSelection();
+        	}
+        });
+        
+        removeButton.setOnAction(new EventHandler<ActionEvent>(){
+        	
+        	public void handle(ActionEvent e){
+        		Person selected = invited.getSelectionModel().getSelectedItem();
+				if (selected == null)
+					return;
+//				choices.add(selected);
+				comboPeople.add(selected);
+				listPeople.remove(selected);
+        	}
+        });
+        
+        HBox buttonsBox = new HBox(5);
+        buttonsBox.getChildren().addAll(searchPeople, addPerson);
+        
         Pane blueBox = new Pane();
         BorderPane.setMargin(blueBox,new Insets(20));
         VBox listBox = new VBox(20);
-        listBox.getChildren().add(searchPeople);
-        listBox.getChildren().add(invited);
+        listBox.getChildren().add(buttonsBox);
+        listBox.getChildren().addAll(invited, removeButton);
         listBox.setPadding(new Insets(30));
         blueBox.setStyle("-fx-background-color: #AAF");
         blueBox.setPrefHeight(500);

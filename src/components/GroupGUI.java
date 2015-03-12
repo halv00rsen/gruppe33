@@ -226,6 +226,7 @@ public class GroupGUI extends Component{
 			return;
 		persons.setValues(selectedGroup.getMembers());
 		subGroups.setValues(selectedGroup.getSubGroups());
+		
 	}
 	
 	class FieldListener{
