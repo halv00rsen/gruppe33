@@ -23,18 +23,23 @@ public class SchedulingGUI extends Component{
     VBox calendarAndInfo;
     HBox mainBox;
     
+
 	private Button settings;
-	public SchedulingGUI(Window parent, Calendar cal, Person p) {
+	public SchedulingGUI(Window parent, Person p, Calendar... calendars ) {
+
 		super(parent);
-		mainBox = new HBox(0);
-		calendarAndInfo = new VBox(30);
-		
-		settings = new Button("Brukerinnstillinger");
+		mainBox = new HBox(30);
+		calendarAndInfo = new VBox(0);
+	
 //		settings.setOnAction(e -> main.requestSettingsWindow());
 		
-		cal.addEvent(DebugMain.getEvents());
-		calendargui = new CalendarGUI(this, LocalDate.now(), cal);
-		menu = new SideMenu(this, cal.getEventsByDay(LocalDate.now()));
+		calendars[0].addEvent(DebugMain.getEvents());
+		calendargui = new CalendarGUI(this, LocalDate.now(), calendars);
+		ArrayList<Event> dagens = new ArrayList<Event>();
+		for (int i = 0; i < calendars.length; i++) {
+			dagens.addAll(calendars[i].getEventsByDay(LocalDate.now()));
+		}
+		menu = new SideMenu(this, dagens);
 		calendargui.addListener(menu);
 		userInfo = new UserInfoGUI(this, p);
 		
@@ -45,6 +50,10 @@ public class SchedulingGUI extends Component{
 	}
 	public void highlightEvent(Event event) {
 		calendargui.highlightEvent(event);
+		
+	}
+	public void updateCalendars(Calendar... calendars){
+		calendargui.updateCalendars(calendars);
 		
 	}
 }

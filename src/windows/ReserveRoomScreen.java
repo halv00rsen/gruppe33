@@ -46,6 +46,11 @@ public class ReserveRoomScreen extends Window{
 	
 	ArrayList<Room> rooms;
 	
+	int fromHour;
+	int fromMinute;;
+
+	int toHour;
+	int toMinute;
 	
 	public ReserveRoomScreen(ArrayList<Room> rooms) {
 		init();
@@ -89,14 +94,8 @@ public class ReserveRoomScreen extends Window{
 						if(gridPane.getChildren().contains(wrongFormatLabel)) {
 							gridPane.getChildren().remove(wrongFormatLabel);
 						}
-						
-						int fromHour = Integer.parseInt(fromTimeField.getText(0, 2));
-						int fromMinute = Integer.parseInt(fromTimeField.getText(3, fromTimeField.getText().length()));
-				
-						int toHour = Integer.parseInt(toTimeField.getText(0, 2));
-						int toMinute = Integer.parseInt(toTimeField.getText(3, toTimeField.getText().length()));
-				
-						availableRooms = showAvailableRooms(LocalDateTime.of(datePicker.getValue(), LocalTime.of(fromHour, fromMinute)), LocalDateTime.of(datePicker.getValue(), LocalTime.of(toHour, toMinute)));
+		
+						availableRooms = showAvailableRooms(LocalDateTime.of(datePicker.getValue(), getLocalTime(fromTimeField)), LocalDateTime.of(datePicker.getValue(), getLocalTime(fromTimeField)));
 						gridPane.add(availableRooms, 1, 3);
 						
 						availableRooms.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<String>() {
@@ -154,11 +153,22 @@ public class ReserveRoomScreen extends Window{
 		for (Room room : rooms) {
 			if (room.getRoomName().equals(roomName)) {
 				Event event = new Event();
-				room.getCalendar().addEvent(new Event());
+				event.setEventName("Reservert møterom");
+				event.setStartTime(LocalDateTime.of(datePicker.getValue(), getLocalTime(fromTimeField)));
+				event.setEndTime(LocalDateTime.of(datePicker.getValue(), getLocalTime(toTimeField)));
+				room.getCalendar().addEvent(event);
+				System.out.println("Rom reservert!");
 			}
 		}
 	}
-
+	
+	private LocalTime getLocalTime(TextField timeField) {
+		int hour = Integer.parseInt(timeField.getText(0, 2));
+		int minute = Integer.parseInt(timeField.getText(3, timeField.getText().length()));
+		
+		LocalTime time = LocalTime.of(hour, minute);
+		return time;
+	}
 
 	private ListView<String> showAvailableRooms(LocalDateTime fromTime, LocalDateTime toTime) {
 		ListView<String> availableRooms = new ListView<String>();

@@ -241,10 +241,12 @@ public abstract class CalendarBase extends Pane{
 		redrawCalendar();
 	}
 	abstract void updateGridLast();
-
+	public void setNewCalendarList(Calendar... calendars){
+		this.calendars = calendars;
+	}
 	abstract void updateGridThis();
 	abstract void updateGridNext();
-	private void redrawCalendar() {
+	public void redrawCalendar() {
 		mainCalendar.setVisible(false);
 		lastCalendar.setVisible(false);
 		nextCalendar.setVisible(false);

@@ -6,6 +6,7 @@ import classes.Group;
 import classes.Person;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.geometry.Insets;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.scene.layout.GridPane;
@@ -18,7 +19,7 @@ import gui.Main;
 public class UserInfoGUI extends Component{
 	
 	GridPane pane;
-	Label header;
+	Label title;
 	Label navnLabel;
 	Label brukernavnLabel;
 	Label grupperLabel;
@@ -35,8 +36,9 @@ public class UserInfoGUI extends Component{
 	}
 
 	private void init(Person person) {
-		header = new Label("Brukerinformasjon:");
-		header.setFont(Main.header1);
+		title = new Label("Brukerinformasjon:");
+		title.setFont(Main.header1);
+		title.setPadding(new Insets(10, 0, 0, 0));
 		
 		pane = new GridPane();
 		pane.setHgap(30);
@@ -59,7 +61,7 @@ public class UserInfoGUI extends Component{
 		pane.add(grupper, 1, 2);
 		
 		VBox mainBox = new VBox(5);
-		mainBox.getChildren().addAll(header, pane);
+		mainBox.getChildren().addAll(title, pane);
 		this.getChildren().add(mainBox);
 		
 	}

@@ -8,13 +8,13 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 
 import components.CalendarGUI.CalendarGUIListener;
-
 import classes.Event;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
+import javafx.geometry.Insets;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
@@ -29,7 +29,7 @@ public class SideMenu extends Component implements CalendarGUIListener{
 
 	Button createEvent;
 	Button editEvent;
-	Label daysEvents;
+	Label title;
 	Label fromTime;
 	Label toTime;
 	Label location;
@@ -57,8 +57,9 @@ public class SideMenu extends Component implements CalendarGUIListener{
 	private void init(ArrayList<Event> events) {
 		
 		// Viser dagens events
-		daysEvents = new Label("Dagens arrangementer");
-		daysEvents.setFont(Main.header1);
+		title = new Label("Dagens arrangementer");
+		title.setFont(Main.header1);
+		title.setPadding(new Insets(10, 0, 0, 0));
 		
 		list = new ListView<String>();
 
@@ -68,11 +69,11 @@ public class SideMenu extends Component implements CalendarGUIListener{
 		
 		addListElements(events);
 		
-		createEvent = new Button("Opprett nytt arrangement");
-		createEvent.setOnAction(e -> createEventMethod(e));
+		createEvent = new Button("Endre dette arrangementet");
+		createEvent.setOnAction(e -> editEventMethod(e));
 		
-		editEvent = new Button("Endre eksisterende arrangement");
-		editEvent.setOnAction(e -> editEventMethod(e));
+		editEvent = new Button("Slett dette arrangementet");
+		editEvent.setOnAction(e -> deleteEventMethod(e));
 		
 		
 		
@@ -109,13 +110,12 @@ public class SideMenu extends Component implements CalendarGUIListener{
 		list.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<String>() {
 		    @Override
 		    public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
-		        System.out.println("ListView selection changed from oldValue = " 
-		                + oldValue + " to newValue = " + newValue);
-		        	 for (Event event : events) {
+		    	for (Event event : events) {
 					if(event.getEventName().equals(newValue)) {
 						changeEvent(event, newValue);
 					}
 		        }
+		    	
 		       
 				
 		        /*
@@ -137,20 +137,30 @@ public class SideMenu extends Component implements CalendarGUIListener{
 		
 		
 		vbox = new VBox();
-		vbox.getChildren().addAll(daysEvents, listAndInformation, eventButtons);
+		vbox.getChildren().addAll(title, listAndInformation, eventButtons);
 		this.getChildren().add(vbox);
 	}
 
 	
-	private Object editEventMethod(ActionEvent e) {
-		// Her skal det åpnes vinduet hvor man oppretter arrangement
-		return null;
+	private void deleteEventMethod(ActionEvent e) {
+		if(list.getSelectionModel().getSelectedIndex() == -1) {
+			
+		}
+		else {
+			//Slett eventet
+		}
 	}
 
-	private Object createEventMethod(ActionEvent e) {
-		// Her skal det åpnes vinduet hvor man oppretter arrangement
-		return null;
+	private void editEventMethod(ActionEvent e) {
+		
+		if(list.getSelectionModel().getSelectedIndex() == -1) {
+			
+		}
+		else {
+			// Her skal det åpnes vinduet hvor man oppretter arrangement med utfylt info
+		}
 	}
+
 
 	private void addListElements(ArrayList<Event> events) {
 			for (Event event : events) {
@@ -204,10 +214,6 @@ public class SideMenu extends Component implements CalendarGUIListener{
 
 	@Override
 	public void eventIsHighligthed(Event event) {
-		//Viser nå bare det ene elementet i listen
-		/*ArrayList<Event> events = new ArrayList<Event>();
-		events.add(event);
-		changeDate(events); */
 		list.getSelectionModel().select(event.getEventName());
 		changeEvent(event, event.getEventName());
 		System.out.println(event.getEventName() + "is highlighted");
