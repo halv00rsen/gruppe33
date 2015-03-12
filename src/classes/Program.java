@@ -113,7 +113,7 @@ public class Program {
 		}
 		Map<String, String> info = PersonInformation.getPersonInformation(username, Person.hashPassword(password));
 
-		// Map<String, String> infoFromDatabase = ConnectionMySQL.getUserInfo(username, Person.hashPassword(password));
+		// Map<String, String> infoFromDatabase = ConnectionMySQL.getUserInfo(username);
 		String stringId = info.get("personid");
 		// String infoUsername = infoFromDatabase.get("username") + ", " + infoFromDatabase.get("password");
 		System.out.println(stringId);
