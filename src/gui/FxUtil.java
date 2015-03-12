@@ -10,7 +10,6 @@ import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 
 public class FxUtil {
-
     public enum AutoCompleteMode {
         STARTS_WITH,CONTAINING,;
     }
@@ -27,9 +26,12 @@ public class FxUtil {
             comboBox.show();
         });
         comboBox.addEventHandler(KeyEvent.KEY_PRESSED, t -> comboBox.hide());
+        comboBox.focusedProperty().addListener(observable -> {
+            	if(comboBox.isFocused() == false){
+            		
+            	}
         
-        
-       
+       });
         comboBox.addEventHandler(KeyEvent.KEY_RELEASED, new EventHandler<KeyEvent>() {
         
             private boolean moveCaretToPos = false;
@@ -61,7 +63,7 @@ public class FxUtil {
                     return;
                 }
 
-                ObservableList<T> list = FXCollections.observableArrayList();
+                list = FXCollections.observableArrayList();
                 for (T aData : data) {
                     if (mode.equals(AutoCompleteMode.STARTS_WITH) && aData.toString().toLowerCase().startsWith(comboBox.getEditor().getText().toLowerCase())) {
                         list.add(aData);
