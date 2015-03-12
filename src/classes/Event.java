@@ -177,7 +177,9 @@ public class Event {
 		return madeBy;
 	}
 	
-	
+	public String toString(){
+		return eventName;
+	}
 	
 	
 }

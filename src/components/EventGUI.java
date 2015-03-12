@@ -101,6 +101,18 @@ public class EventGUI extends Component{
 					return;
 				if (startDate.getValue().isAfter(endDate.getValue()))
 					endDate.setValue(startDate.getValue());
+				if (repDate.getValue() != null  && repDate.getValue().isBefore(endDate.getValue())){
+					repDate.setValue(endDate.getValue().plusDays(1));
+				}
+			}
+		});
+		repDate.setOnAction(new EventHandler<ActionEvent>(){
+			
+			public void handle(ActionEvent e){
+				if (endDate.getValue() != null){
+					if (endDate.getValue().isAfter(repDate.getValue()))
+						repDate.setValue(endDate.getValue().plusDays(1));
+				}
 			}
 		});
 		start.setOtherTime(end);
@@ -204,7 +216,7 @@ public class EventGUI extends Component{
 	}
 	
 	public void repeteresOn(Object object){
-    	if(! object.equals("Aldri")){
+    	if(! object.equals(Picker.Aldri)){
     		freq = 0;
     		repDate.setDisable(false);
     		repeatTo.setTextFill(Color.web("#000000"));
@@ -213,12 +225,14 @@ public class EventGUI extends Component{
     		repDate.setDisable(true);
     		repeatTo.setTextFill(Color.web("#AAAAAA"));
     	}
-    	if( object.equals("Månedlig")){
+    	if( object.equals(Picker.Månedlig)){
     		freq = 30;
-    	}else if( object.equals("Ukentlig")){
+    	}else if( object.equals(Picker.Ukentlig)){
     		freq = 7;
+    	}else if (object.equals(Picker.Daglig)){
+    		freq = 1;
     	}
-    	if( object.equals("Egendefinert")){
+    	if( object.equals(Picker.Egendefinert)){
     		every.setTextFill(Color.web("#000000"));
     		day.setTextFill(Color.web("#000000"));
     		freqText.setDisable(false);
