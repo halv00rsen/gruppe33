@@ -10,28 +10,35 @@ import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 
 public class FxUtil {
+	
     public enum AutoCompleteMode {
         STARTS_WITH,CONTAINING,;
     }
     public static<T> void autoCompleteComboBox(ComboBox<T> comboBox, AutoCompleteMode mode) {
-    	
     	ObservableList<T> data = comboBox.getItems();
         comboBox.setEditable(true);
         comboBox.getEditor().focusedProperty().addListener(observable -> {
             if (comboBox.getSelectionModel().getSelectedIndex() < 0) {
-                comboBox.getEditor().setText(null);
+                comboBox.getEditor().setText("");
             }
         });
         comboBox.focusedProperty().addListener(observable -> {
             comboBox.show();
         });
-        comboBox.addEventHandler(KeyEvent.KEY_PRESSED, t -> comboBox.hide());
         comboBox.focusedProperty().addListener(observable -> {
-            	if(comboBox.isFocused() == false){
-            		
-            	}
+            if (!comboBox.isFocused()) {
+            	comboBox.setItems(data);
+			}
+        });
+        comboBox.addEventHandler(KeyEvent.KEY_PRESSED, new EventHandler<KeyEvent>(){
+
+			@Override
+			public void handle(KeyEvent event) {
+				comboBox.hide();
+			}
+        	
+        });
         
-       });
         comboBox.addEventHandler(KeyEvent.KEY_RELEASED, new EventHandler<KeyEvent>() {
         
             private boolean moveCaretToPos = false;
@@ -62,8 +69,7 @@ public class FxUtil {
                         || event.getCode() == KeyCode.END || event.getCode() == KeyCode.TAB) {
                     return;
                 }
-
-                list = FXCollections.observableArrayList();
+                ObservableList<T> list = FXCollections.observableArrayList();
                 for (T aData : data) {
                     if (mode.equals(AutoCompleteMode.STARTS_WITH) && aData.toString().toLowerCase().startsWith(comboBox.getEditor().getText().toLowerCase())) {
                         list.add(aData);
@@ -72,7 +78,7 @@ public class FxUtil {
                     }
                 }
                 String t = comboBox.getEditor().getText();
-
+                
                 comboBox.setItems(list);
                 comboBox.getEditor().setText(t);
                 if (!moveCaretToPos) {
