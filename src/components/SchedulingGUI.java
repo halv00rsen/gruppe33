@@ -2,7 +2,6 @@ package components;
 
 import gui.Component;
 import gui.DebugMain;
-import gui.SideMenu;
 import gui.Window;
 
 import java.time.LocalDate;
