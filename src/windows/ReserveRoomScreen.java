@@ -153,8 +153,8 @@ public class ReserveRoomScreen extends Window{
 		String roomName = availableRooms.getSelectionModel().getSelectedItem();
 		for (Room room : rooms) {
 			if (room.getRoomName().equals(roomName)) {
+				Event event = new Event();
 				room.getCalendar().addEvent(new Event());
-				
 			}
 		}
 	}
@@ -172,7 +172,6 @@ public class ReserveRoomScreen extends Window{
 		availableRooms.setItems(items);
 		availableRooms.setMaxWidth(150);
 		availableRooms.setPrefHeight(75);
-		
 		return availableRooms;
 	}
 	
