@@ -247,8 +247,8 @@ public class Main extends Application implements ProgramListener{
 	}
 
 	@Override
-	public void updateCalendar(List<Calendar> cal) {
-		// TODO Auto-generated method stub
+	public void updateCalendar(Calendar[] cal) {
+		homeScreen.schedulingGUI.updateCalendars(cal);
 		
 	}
 

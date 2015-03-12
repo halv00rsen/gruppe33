@@ -21,7 +21,7 @@ public class HomeScreen extends Window{
     
 
     
-    SchedulingGUI schedulingGUI;
+    public SchedulingGUI schedulingGUI;
     Person p;
     PersonCalendar cal;
     

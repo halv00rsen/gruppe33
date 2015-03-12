@@ -55,7 +55,7 @@ public class OtherPersonScreen extends Window{
 		        mainBox.getChildren().remove(schedulingGUI);
 		        Person person = findPerson(newValue);
 		        cal = new PersonCalendar(person);
-		        schedulingGUI = new SchedulingGUI(getThis(), cal, person);
+		        schedulingGUI = new SchedulingGUI(getThis(), person,cal);
 		        mainBox.getChildren().add(schedulingGUI);
 			}
 		});
