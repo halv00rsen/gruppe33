@@ -28,16 +28,21 @@ public class Program {
 	
 	public void createEvent(Event event, Calendar... cal){
 		//add events to server
-		for (Calendar cals: cal)
-			cals.addEvent(event);
-		callMessage(Message.EventAdded);
+//		for (Calendar cals: cal)
+//			cals.addEvent(event);
+//		callMessage(Message.EventAdded);
+		currentPerson.getPersonalCalendar().addEvent(event);
+		event.setMadeBy(currentPerson);
+		updateCalendarListeners();
 	}
 	
 	public void deleteEvent(Event event, Calendar...cals){
 		//remove event from database/server
-		for (Calendar cal: cals)
-			cal.removeEvent(event);
-		callMessage(Message.EventDeleted);
+		currentPerson.getPersonalCalendar().removeEvent(event);
+		updateCalendarListeners();
+//		for (Calendar cal: cals)
+//			cal.removeEvent(event);
+//		callMessage(Message.EventDeleted);
 	}
 	
 	public void requestEvent(int eventId){
@@ -83,8 +88,12 @@ public class Program {
 	
 	
 	private void updateCalendarListeners(){
+		Calendar[] c = new Calendar[activeCalendars.size()];
+		for (int a = 0; a < c.length; a++){
+			c[a] = activeCalendars.get(a);
+		}
 		for (ProgramListener l: listeners)
-			l.updateCalendar(new ArrayList<Calendar>(activeCalendars));
+			l.updateCalendar(c);
 	}
 	
 	
@@ -113,7 +122,7 @@ public class Program {
 		}
 		Map<String, String> info = PersonInformation.getPersonInformation(username, Person.hashPassword(password));
 
-		// Map<String, String> infoFromDatabase = ConnectionMySQL.getUserInfo(username, Person.hashPassword(password));
+		// Map<String, String> infoFromDatabase = ConnectionMySQL.getUserInfo(username);
 		String stringId = info.get("personid");
 		// String infoUsername = infoFromDatabase.get("username") + ", " + infoFromDatabase.get("password");
 		System.out.println(stringId);
@@ -149,6 +158,7 @@ public class Program {
 		activeCalendars.add(currentPerson.getPersonalCalendar());
 		for (ProgramListener l : listeners)
 			l.loginSuccess(username, name);
+		updateCalendarListeners();
 	}
 	
 	public void changePasswordUser(String oldPassword, String newPassword){

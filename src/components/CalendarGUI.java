@@ -104,9 +104,9 @@ public class CalendarGUI extends Component{
 	}
 	public void highlightEvent(Event event) {
 		if(highlightedEvent != null){
-			if(highlightedEvent.id == event.id){
+			if(highlightedEvent.getID() == event.getID()){
 
-				System.out.println("highlightedEvent.id" + highlightedEvent.getID() + " event.id" + event.getID());
+//				System.out.println("highlightedEvent.id" + highlightedEvent.getID() + " event.id" + event.getID());
 				
 
 				week.removeHighlightEvent();

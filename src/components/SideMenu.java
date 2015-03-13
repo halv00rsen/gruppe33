@@ -2,10 +2,12 @@ package components;
 
 import gui.Component;
 import gui.Main;
+import gui.Main.ChangeTab;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.List;
 
 import components.CalendarGUI.CalendarGUIListener;
 import classes.Event;
@@ -27,8 +29,10 @@ import javafx.scene.text.Text;
 
 public class SideMenu extends Component implements CalendarGUIListener{
 
-	Button createEvent;
+	private final ChangeTab changeTab;
+	
 	Button editEvent;
+	Button deleteEvent;
 	Label title;
 	Label fromTime;
 	Label toTime;
@@ -40,28 +44,30 @@ public class SideMenu extends Component implements CalendarGUIListener{
 	Text toTimeData;
 	Text locationData;
 	Text infoData;
+	Text priorityData;
 	
 	
-	ListView<String> list;
-	ObservableList<String> items;
+	ListView<Event> list;
+	ObservableList<Event> items;
 	
 	
 	GridPane eventInformation;
 	VBox vbox;
 
-	public SideMenu(Pane parent, ArrayList<Event> events) {
+	public SideMenu(Pane parent, List<Event> events, ChangeTab changeTab) {
 		super(parent);
+		this.changeTab = changeTab;
 		init(events);
 	}
 	
-	private void init(ArrayList<Event> events) {
+	private void init(List<Event> events) {
 		
 		// Viser dagens events
 		title = new Label("Dagens arrangementer");
 		title.setFont(Main.header1);
 		title.setPadding(new Insets(10, 0, 0, 0));
 		
-		list = new ListView<String>();
+		list = new ListView<Event>();
 
 		list.setMaxWidth(150);
 		list.setPrefHeight(150);
@@ -69,17 +75,17 @@ public class SideMenu extends Component implements CalendarGUIListener{
 		
 		addListElements(events);
 		
-		createEvent = new Button("Endre dette arrangementet");
-		createEvent.setOnAction(e -> editEventMethod(e));
+		editEvent = new Button("Endre dette arrangementet");
+		editEvent.setOnAction(e -> editEventMethod());
 		
-		editEvent = new Button("Slett dette arrangementet");
-		editEvent.setOnAction(e -> deleteEventMethod(e));
+		deleteEvent = new Button("Slett dette arrangementet");
+		deleteEvent.setOnAction(e -> deleteEventMethod());
 		
 		
 		
 		fromTime = new Label("Fra:");
 		toTime = new Label("Til:");
-		location = new Label("Sted:");
+		location = new Label("Rom");
 		info = new Label("Informasjon");
 		priority = new Label("Priority:");
 		
@@ -87,6 +93,7 @@ public class SideMenu extends Component implements CalendarGUIListener{
 		toTimeData = new Text("");
 		locationData = new Text("");
 		infoData = new Text("");
+		priorityData = new Text("");
 		
 		
 		
@@ -104,16 +111,20 @@ public class SideMenu extends Component implements CalendarGUIListener{
 		eventInformation.add(toTimeData, 1, 1);
 		eventInformation.add(locationData, 1, 2);
 		eventInformation.add(infoData, 1, 3);
+		eventInformation.add(priorityData, 1, 4);
 		
 		
 		//Endrer tabellen når man klikker på listen
-		list.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<String>() {
+		list.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<Event>() {
 		    @Override
-		    public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
+		    public void changed(ObservableValue<? extends Event> observable, Event oldValue, Event newValue) {
 		    	for (Event event : events) {
-					if(event.getEventName().equals(newValue)) {
-						changeEvent(event, newValue);
-					}
+		    		if (event == newValue){
+		    			changeEvent(event);
+		    			
+		    		}
+//					if(event.getEventName().equals(newValue)) {
+//					}
 		        }
 		    	
 		       
@@ -131,7 +142,7 @@ public class SideMenu extends Component implements CalendarGUIListener{
 		
 		
 		HBox eventButtons = new HBox(5);
-		eventButtons.getChildren().addAll(createEvent, editEvent);
+		eventButtons.getChildren().addAll(editEvent, deleteEvent);
 		
 		
 		
@@ -142,54 +153,49 @@ public class SideMenu extends Component implements CalendarGUIListener{
 	}
 
 	
-	private void deleteEventMethod(ActionEvent e) {
-		if(list.getSelectionModel().getSelectedIndex() == -1) {
-			
-		}
-		else {
-			//Slett eventet
-		}
+	private void deleteEventMethod() {
+		Event event = list.getSelectionModel().getSelectedItem();
+		if (event == null)
+			return;
+		changeTab.deleteEvent(event);
+		items.remove(event);
+//		if(list.getSelectionModel().getSelectedIndex() == -1) {
+//			
+//		}
+//		else {
+//			//Slett eventet
+//		}
 	}
 
-	private void editEventMethod(ActionEvent e) {
-		
-		if(list.getSelectionModel().getSelectedIndex() == -1) {
-			
-		}
-		else {
-			// Her skal det åpnes vinduet hvor man oppretter arrangement med utfylt info
-		}
+	private void editEventMethod() {
+		Event event = list.getSelectionModel().getSelectedItem();
+		if (event == null)
+			return;
+		changeTab.showEvent(event);
 	}
 
 
-	private void addListElements(ArrayList<Event> events) {
+	private void addListElements(List<Event> events) {
 			for (Event event : events) {
-				try { items.add(event.getEventName()); }
+				try { items.add(event); }
 				catch (NullPointerException e) {}
 			}
 			if (items != null) {
 				list.setItems(items);
 			}
-			else {
-				items.add(" ");
-				list.setItems(items);
-			}
-			
-			
-		
 	}
 	
-	public void changeDate(ArrayList<Event> events) {
+	public void changeDate(List<Event> events) {
 		vbox.getChildren().clear();
 		init(events);
 	}
 	
-	private void changeEvent(Event event, String newValue) {
+	private void changeEvent(Event event) {
 		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
 		String formattedStartTime = event.getStartTime().format(formatter);
 		String formattedEndTime = event.getEndTime().format(formatter);
 		
-		eventInformation.getChildren().removeAll(fromTime, toTime, location, info, priority, fromTimeData, toTimeData, locationData, infoData);
+		eventInformation.getChildren().removeAll(fromTime, toTime, location, info, priority, fromTimeData, toTimeData, locationData, infoData, priorityData);
 		eventInformation.add(fromTime, 0, 0);
 		eventInformation.add(toTime, 0, 1);
 		eventInformation.add(location, 0, 2);
@@ -198,13 +204,21 @@ public class SideMenu extends Component implements CalendarGUIListener{
 		
 		fromTimeData.setText(formattedStartTime);
 		toTimeData.setText(formattedEndTime);
-		locationData.setText(event.getLocation());
+		try {
+			locationData.setText(event.getRoom().getRoomName());
+		}
+		catch(Exception e) {
+			locationData.setText("Rom ikke valgt");
+		}
+		
 		infoData.setText(event.getInfo());
+		priorityData.setText("" + event.getPriority());
 
 		eventInformation.add(fromTimeData, 1, 0);
 		eventInformation.add(toTimeData, 1, 1);
 		eventInformation.add(locationData, 1, 2);
 		eventInformation.add(infoData, 1, 3);
+		eventInformation.add(priorityData, 1, 4);
 	}
 	
 	@Override
@@ -214,9 +228,8 @@ public class SideMenu extends Component implements CalendarGUIListener{
 
 	@Override
 	public void eventIsHighligthed(Event event) {
-		list.getSelectionModel().select(event.getEventName());
-		changeEvent(event, event.getEventName());
-		//System.out.println(event.getEventName() + "is highlighted");
+		list.getSelectionModel().select(event);
+		changeEvent(event);
 	}
 	
 }
