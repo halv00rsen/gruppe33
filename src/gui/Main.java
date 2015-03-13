@@ -69,6 +69,10 @@ public class Main extends Application implements ProgramListener{
 			tabPane.getSelectionModel().select(newEvent);
 			eventScreen.showEvent(event);
 		}
+		
+		public void deleteEvent(Event event){
+			program.deleteEvent(event);
+		}
 	}
 	
 	public class LoginCall{

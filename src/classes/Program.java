@@ -38,9 +38,11 @@ public class Program {
 	
 	public void deleteEvent(Event event, Calendar...cals){
 		//remove event from database/server
-		for (Calendar cal: cals)
-			cal.removeEvent(event);
-		callMessage(Message.EventDeleted);
+		currentPerson.getPersonalCalendar().removeEvent(event);
+		updateCalendarListeners();
+//		for (Calendar cal: cals)
+//			cal.removeEvent(event);
+//		callMessage(Message.EventDeleted);
 	}
 	
 	public void requestEvent(int eventId){

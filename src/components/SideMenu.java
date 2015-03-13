@@ -151,12 +151,17 @@ public class SideMenu extends Component implements CalendarGUIListener{
 
 	
 	private void deleteEventMethod() {
-		if(list.getSelectionModel().getSelectedIndex() == -1) {
-			
-		}
-		else {
-			//Slett eventet
-		}
+		Event event = list.getSelectionModel().getSelectedItem();
+		if (event == null)
+			return;
+		changeTab.deleteEvent(event);
+		items.remove(event);
+//		if(list.getSelectionModel().getSelectedIndex() == -1) {
+//			
+//		}
+//		else {
+//			//Slett eventet
+//		}
 	}
 
 	private void editEventMethod() {
