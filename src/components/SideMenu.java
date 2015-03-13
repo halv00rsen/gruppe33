@@ -85,7 +85,7 @@ public class SideMenu extends Component implements CalendarGUIListener{
 		
 		fromTime = new Label("Fra:");
 		toTime = new Label("Til:");
-		location = new Label("Sted:");
+		location = new Label("Rom");
 		info = new Label("Informasjon");
 		priority = new Label("Priority:");
 		
@@ -199,7 +199,13 @@ public class SideMenu extends Component implements CalendarGUIListener{
 		
 		fromTimeData.setText(formattedStartTime);
 		toTimeData.setText(formattedEndTime);
-		locationData.setText(event.getLocation());
+		try {
+			locationData.setText(event.getRoom().getRoomName());
+		}
+		catch(Exception e) {
+			locationData.setText("Rom ikke valgt");
+		}
+		
 		infoData.setText(event.getInfo());
 		priorityData.setText("" + event.getPriority());
 
