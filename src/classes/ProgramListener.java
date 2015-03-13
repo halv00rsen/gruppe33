@@ -14,4 +14,5 @@ public interface ProgramListener {
 	public void updateRoomNames(Room... rooms);
 	public void sendNotification(String notif);
 	public void updateCalendar(Calendar[] cal);
+	public void setAllPersons(List<Person> persons);
 }

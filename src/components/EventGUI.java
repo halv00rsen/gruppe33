@@ -6,9 +6,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 import gui.Component;
-import gui.DebugMain;
 import gui.FxUtil;
+import gui.GetPersonListener;
 import gui.Main.AddNewEvent;
+import gui.Main.AddPersonListener;
 import gui.Main.ChangeTab;
 import classes.Appliance;
 import classes.EventAppliance;
@@ -38,7 +39,7 @@ import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 
-public class EventGUI extends Component{
+public class EventGUI extends Component implements GetPersonListener{
 	
 	private final TimeField start, end;
 	private final NumberField freqText;
@@ -72,10 +73,11 @@ public class EventGUI extends Component{
 	
 	private boolean state = false;
 	
-	public EventGUI(Pane parent, AddNewEvent eventCall, ChangeTab changeTab) {
+	public EventGUI(Pane parent, AddNewEvent eventCall, ChangeTab changeTab, AddPersonListener l) {
 		super(parent);
 		this.eventCall = eventCall;
 		this.changeTab = changeTab;
+		l.addListener(this);
 		start = new TimeField(true);
 		end = new TimeField(false);
 		freqText = new NumberField();
@@ -358,8 +360,6 @@ public class EventGUI extends Component{
         listPeople = FXCollections.observableArrayList();
         invited.setItems(listPeople);
         Button addPerson = new Button("Legg til"), removeButton = new Button("Fjern");
-        for (Person p : DebugMain.getPeople())
-        	comboPeople.add(p);
         addPerson.setOnAction(new EventHandler<ActionEvent>(){
         	
         	public void handle(ActionEvent e){
@@ -522,5 +522,12 @@ public class EventGUI extends Component{
 				listPeople.add(p);
 			}
 		}
+	}
+
+	@Override
+	public void updatePersons(List<Person> persons) {
+		// TODO Auto-generated method stub
+		for (Person p : persons)
+        	comboPeople.add(p);
 	}
 }

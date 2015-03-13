@@ -1,8 +1,7 @@
 package classes;
 
-import gui.DebugMain;
-
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
@@ -31,7 +30,6 @@ public class Program {
 //		for (Calendar cals: cal)
 //			cals.addEvent(event);
 //		callMessage(Message.EventAdded);
-		System.out.println(activeCalendars);
 		currentPerson.getPersonalCalendar().addEvent(event);
 		event.setMadeBy(currentPerson);
 		updateCalendarListeners();
@@ -50,11 +48,9 @@ public class Program {
 	
 	public void requestEvent(int eventId){
 		System.out.println("Event " + eventId + " was requested");
-		for (ProgramListener l : listeners){
-			l.showEvent(DebugMain.getEvents().get(3));
-
-			
-		}
+//		for (ProgramListener l : listeners){
+//			l.showEvent(DebugMain.getEvents().get(3));
+//		}
 	}
 	
 	public void addCalendar(Object id, TypeOfCalendar type){
@@ -97,6 +93,12 @@ public class Program {
 		}
 		for (ProgramListener l: listeners)
 			l.updateCalendar(c);
+	}
+	
+	private void sendOutPersons(List<Person> list){
+		for (ProgramListener l : listeners){
+			l.setAllPersons(list);
+		}
 	}
 	
 	
@@ -170,6 +172,7 @@ public class Program {
 		for (ProgramListener l : listeners)
 			l.loginSuccess(currentPerson);
 		updateCalendarListeners();
+		sendOutPersons(PersonInformation.getPeople());
 	}
 	
 	public void changePasswordUser(String oldPassword, String newPassword){
@@ -227,5 +230,15 @@ public class Program {
 	
 	public boolean isAdminLogIn(){
 		return isLoggedIn() && currentPerson.admin;
+	}
+	
+	public static ArrayList<Room> getRooms() {
+		Room r1 = new Room(0, "Det gule");
+		Room r2 = new Room(1, "Det andre");
+		
+		ArrayList<Room> list = new ArrayList<Room>(); 
+		list.addAll(Arrays.asList(r1, r2));
+		return list;
+		
 	}
 }

@@ -18,6 +18,8 @@ public class PersonCalendar extends Calendar{
 	}
 	
 	public boolean isOwner(Object username, TypeOfCalendar type){
+		if (ownerPerson.username == null)
+			return false;
 		return ownerPerson.username.equals(username) && type == super.type;
 	}
 

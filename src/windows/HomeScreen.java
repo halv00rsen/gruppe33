@@ -22,11 +22,11 @@ public class HomeScreen extends Window{
 	private final ChangeTab tab;
     
     public SchedulingGUI schedulingGUI;
-    Person p;
-    PersonCalendar cal;
+    private Person p;
+    private PersonCalendar cal;
     
-	public HomeScreen(ChangeTab tab) {
-		p = DebugMain.getPerson();
+	public HomeScreen(ChangeTab tab, Person person) {
+		this.p = person;
 		this.tab = tab;
 		cal = new PersonCalendar(p);
 //		this.setStyle("-fx-color-background: #ff0044");

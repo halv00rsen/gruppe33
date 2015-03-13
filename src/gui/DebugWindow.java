@@ -12,8 +12,8 @@ public class DebugWindow extends Application{
 	public void start(Stage stage){
 		try{
 			Pane pane = new Pane();
-			GroupGUI g = new GroupGUI(pane);
-			pane.getChildren().add(g);
+//			GroupGUI g = new GroupGUI(pane);
+//			pane.getChildren().add(g);
 			Scene scene = new Scene(pane, 1000, 500);
 			stage.setScene(scene);
 			stage.show();

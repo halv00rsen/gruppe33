@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import components.GroupList.Fancy;
-
 import classes.Group;
 import classes.Person;
 import javafx.beans.value.ChangeListener;
@@ -26,10 +25,11 @@ import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
 import gui.Component;
-import gui.DebugMain;
+import gui.GetPersonListener;
 import gui.Main;
+import gui.Main.AddPersonListener;
 
-public class GroupGUI extends Component{
+public class GroupGUI extends Component implements GetPersonListener{
 
 //	private final TextField nameField;
 //	private final ListView<Group> groups;
@@ -44,14 +44,14 @@ public class GroupGUI extends Component{
 	
 	private Group selectedGroup;
 	
-	public GroupGUI(Pane parent) {
+	public GroupGUI(Pane parent, AddPersonListener apl) {
 		super(parent);
-		
+		apl.addListener(this);
 		selectedGroup = null;
 		
 		subGroups = new GroupList<Group>("Undergrupper", Fancy.Group, new FieldListener());
 		persons = new GroupList<Person>("Medlemmer", Fancy.Person, new FieldListener());
-		persons.addChoices(DebugMain.getPeople());
+//		persons.addChoices(DebugMain.getPeople());
 		
 		VBox vBox = new VBox(10);
 		groupList = new ListView<Group>();
@@ -274,6 +274,13 @@ public class GroupGUI extends Component{
 		groups.add(new Group("Vannsklie", 4));
 		groups.add(new Group("Monster", 5));
 		return groups;
+	}
+
+	@Override
+	public void updatePersons(List<Person> persons) {
+		// TODO Auto-generated method stub
+		this.persons.addChoices(persons);
+		
 	}
 	
 }

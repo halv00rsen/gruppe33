@@ -99,6 +99,12 @@ public class ProgramTest implements ProgramListener{
 		// TODO Auto-generated method stub
 		
 	}
+
+	@Override
+	public void setAllPersons(List<Person> persons) {
+		// TODO Auto-generated method stub
+		
+	}
 	
 	
 }

@@ -15,6 +15,7 @@ public class MessageScreen extends Group{
 	private final Text message;
 	
 	private boolean showing;
+	private EventInfo info = EventInfo.None;
 	
 	public MessageScreen(){
 		rec = new Rectangle(width, height);
@@ -34,9 +35,14 @@ public class MessageScreen extends Group{
 		showing = false;
 	}
 	
-	public void show(String message){
+	public EventInfo getEventInfo(){
+		return info;
+	}
+	
+	public void show(String message, EventInfo info){
 		if (showing)
 			return;
+		this.info = info;
 		TranslateTransition tt = new TranslateTransition(Duration.seconds(1), this);
 		this.message.setText(message);
 		tt.setFromY(- 1 * height);
@@ -55,5 +61,9 @@ public class MessageScreen extends Group{
 		tt.setCycleCount(1);
 		tt.play();
 		showing = false;
+	}
+	
+	enum EventInfo{
+		FromInbox, None;
 	}
 }

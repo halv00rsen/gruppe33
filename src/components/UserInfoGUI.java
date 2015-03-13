@@ -48,17 +48,20 @@ public class UserInfoGUI extends Component{
 		brukernavnLabel = new Label("Brukernavn:");
 		grupperLabel = new Label("Medlem av grupper:");
 		
-		navn = new Text(person.getName());
-		brukernavn = new Text(person.getUsername());
-		addListElements(person.getGroups());
+		if (person != null){
+			navn = new Text(person.getName());
+			brukernavn = new Text(person.getUsername());
+			addListElements(person.getGroups());
+			pane.add(navn, 1, 0);
+			pane.add(brukernavn, 1, 1);
+			pane.add(grupper, 1, 2);
+			
+		}
 		
 		pane.add(navnLabel, 0, 0);
 		pane.add(brukernavnLabel, 0, 1);
 		pane.add(grupperLabel, 0, 2);
 		
-		pane.add(navn, 1, 0);
-		pane.add(brukernavn, 1, 1);
-		pane.add(grupper, 1, 2);
 		
 		VBox mainBox = new VBox(5);
 		mainBox.getChildren().addAll(title, pane);

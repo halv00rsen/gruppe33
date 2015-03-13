@@ -1,7 +1,6 @@
 package components;
 
 import gui.Component;
-import gui.DebugMain;
 import gui.Main.ChangeTab;
 import gui.Window;
 
@@ -34,7 +33,7 @@ public class SchedulingGUI extends Component{
 	
 //		settings.setOnAction(e -> main.requestSettingsWindow());
 		
-		calendars[0].addEvent(DebugMain.getEvents());
+//		calendars[0].addEvent(DebugMain.getEvents());
 		calendargui = new CalendarGUI(this, LocalDate.now(), calendars);
 		ArrayList<Event> dagens = new ArrayList<Event>();
 		for (int i = 0; i < calendars.length; i++) {
