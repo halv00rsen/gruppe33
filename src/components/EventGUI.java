@@ -54,7 +54,7 @@ public class EventGUI extends Component{
 	Button cancel = new Button();
 	Button trash = new Button();
 	TextField purposeText = new TextField();
-	TextField romText = new TextField();
+	ComboBox romChoice = new ComboBox();
 //	TextField freqText = new TextField();
 	BorderPane pane = new BorderPane();
 	TextArea infoText = new TextArea();
@@ -195,7 +195,7 @@ public class EventGUI extends Component{
 	}
 	private void trash() {
     	purposeText.clear();
-    	romText.clear();
+    	romChoice.selectionModelProperty().set(null);
     	startDate.setValue(null);
     	endDate.setValue(null);
     	repDate.setValue(null);
@@ -268,11 +268,12 @@ public class EventGUI extends Component{
         Label rom = new Label();
         avaibleRoomsBtn.setText("Se ledige rom");
         rom.setText("Rom\t\t\t");
+        FxUtil.autoCompleteComboBox(romChoice, FxUtil.AutoCompleteMode.CONTAINING);
         HBox romBox = new HBox(20);
         romBox.getChildren().add(rom);
-        romBox.getChildren().add(romText);
+        romBox.getChildren().add(romChoice);
         romBox.getChildren().add(avaibleRoomsBtn);
-        romText.setPrefWidth(225);
+        romChoice.setPrefWidth(225);
        
         
         //dato
@@ -351,13 +352,17 @@ public class EventGUI extends Component{
         
 
         searchPeople = new ComboBox<Person>();
-        searchPeople.setPrefWidth(200);
+        searchPeople.setPrefWidth(180);
+        
         FxUtil.autoCompleteComboBox(searchPeople, FxUtil.AutoCompleteMode.CONTAINING); 
         //ListView
         comboPeople = searchPeople.getItems();
+        invited.setMaxHeight(300);
         listPeople = FXCollections.observableArrayList();
         invited.setItems(listPeople);
-        Button addPerson = new Button("Legg til"), removeButton = new Button("Fjern");
+        VBox listButtons = new VBox(3);
+        Button addPerson = new Button("Legg til"), removeButton = new Button("  Fjern  ");
+        listButtons.getChildren().addAll(addPerson,removeButton);
         for (Person p : DebugMain.getPeople())
         	comboPeople.add(p);
         addPerson.setOnAction(new EventHandler<ActionEvent>(){
@@ -386,14 +391,18 @@ public class EventGUI extends Component{
         	}
         });
         
-        HBox buttonsBox = new HBox(5);
-        buttonsBox.getChildren().addAll(searchPeople, addPerson);
+        BorderPane buttonsBox = new BorderPane();
+        
+        buttonsBox.setLeft(searchPeople);
+        BorderPane.setAlignment(searchPeople, Pos.CENTER_LEFT);
+        buttonsBox.setRight(listButtons);
+        BorderPane.setAlignment(listButtons, Pos.CENTER_RIGHT);
         
         Pane blueBox = new Pane();
         BorderPane.setMargin(blueBox,new Insets(20));
         VBox listBox = new VBox(20);
         listBox.getChildren().add(buttonsBox);
-        listBox.getChildren().addAll(invited, removeButton);
+        listBox.getChildren().addAll(invited);
         listBox.setPadding(new Insets(30));
         blueBox.setStyle("-fx-background-color: #AAF");
         blueBox.setPrefHeight(500);
@@ -401,9 +410,16 @@ public class EventGUI extends Component{
         blueBox.getChildren().add(listBox);
         
       //Priority
+        BorderPane prioThings = new BorderPane();
         Label prio = new Label();
         prio.setText("Prioritet:\t");
         HBox priorityList = new HBox(5);
+
+//        priorityList.setStyle("-fx-background-color: #FFFFFF;");
+        prioThings.setLeft(prio);
+        BorderPane.setAlignment(prio, Pos.CENTER);
+        prioThings.setCenter(priorityList);
+        BorderPane.setAlignment(priorityList, Pos.CENTER);
         priority = null;
         Priority[] pList = new Priority[3];
         pList[0] = Priority.NOT_IMPORTANT;
@@ -411,12 +427,10 @@ public class EventGUI extends Component{
         pList[1] = Priority.IMPORTANT;
         pList[2] = Priority.VERY_IMPORTANT;
 
-        priorityList.getChildren().add(prio);
         priorityList.getChildren().add(pList[0].getVisualization());
         priorityList.getChildren().add(pList[1].getVisualization());
         priorityList.getChildren().add(pList[2].getVisualization());
-        priorityList.setAlignment(Pos.BASELINE_CENTER);
-        listBox.getChildren().add(priorityList);
+        listBox.getChildren().add(prioThings);
         
         EventHandler<Event> event = new EventHandler<Event>(){
 
@@ -446,11 +460,11 @@ public class EventGUI extends Component{
         BorderPane.setMargin(rootBox,new Insets(20));
         rootBox.getChildren().add(formalBox);
         rootBox.getChildren().add(infoBox);
-        rootBox.getChildren().add(romBox);
         rootBox.getChildren().add(dateBox);
         rootBox.getChildren().add(klokkeBox);
         rootBox.getChildren().add(repeteresBox);
         rootBox.getChildren().add(repeteresTilBox);
+        rootBox.getChildren().add(romBox);
         setPos(rootBox,50,30);
         pane.setLeft(rootBox);
         pane.setRight(blueBox);
@@ -507,7 +521,8 @@ public class EventGUI extends Component{
 		}
 		purposeText.setText(event.getEventName());
 		if (event.getRoom() != null)
-			romText.setText(event.getRoom().getRoomName());
+			//////Må fikses på
+			////romChoice.set(event.getRoom().getRoomName());
 		infoText.setText(event.getInfo());
 		startDate.setValue(event.getStartDate());
 		endDate.setValue(event.getEndDate());

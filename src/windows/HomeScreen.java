@@ -37,7 +37,7 @@ public class HomeScreen extends Window{
 	@Override
 	public void init() {
 		schedulingGUI = new SchedulingGUI(this,p, tab,cal);
-		this.getChildren().add(schedulingGUI);
+		borderPane.setCenter(schedulingGUI);
 	}
 
 	public void highlightEvent(Event event) {

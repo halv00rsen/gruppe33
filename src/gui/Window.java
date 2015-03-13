@@ -1,13 +1,16 @@
 package gui;
+import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Pane;
 
 public abstract class Window extends Pane{
 	
-	
+	protected BorderPane borderPane = new BorderPane();
 	public Window(){
 //		main.root.getChildren().add(main.root);
-		this.setPrefHeight(Main.SCREENHEIGHT- 100);
-		this.setPrefWidth(Main.SCREENWIDTH- 100);
+		this.setPrefHeight(Main.SCREENHEIGHT);
+		this.setPrefWidth(Main.SCREENWIDTH);
+		this.getChildren().add(borderPane);
+		borderPane.translateXProperty().bind(Main.root.widthProperty().subtract(borderPane.widthProperty()).divide(2));
 //		init();
 
 //		this.setStyle("-fx-color-background: #FF0000");

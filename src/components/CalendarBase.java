@@ -230,6 +230,7 @@ public abstract class CalendarBase extends Pane{
 		redrawCalendar();
 	}
 	public void generateCalendars(){
+		
 		updateGridLast();
 		updateGridThis();
 		updateGridNext();

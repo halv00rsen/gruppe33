@@ -13,7 +13,8 @@ public class SettingsScreen extends Window{
 	@Override
 	public void init() {
 		SettingsGUI sg = new SettingsGUI(this);
-		getChildren().add(sg);
+		
+		borderPane.setCenter(sg);
 	}
 
 }

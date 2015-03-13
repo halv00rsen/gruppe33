@@ -1,5 +1,6 @@
 package windows;
 
+import javafx.geometry.Insets;
 import components.Inbox;
 import gui.Main.GoToEvent;
 import gui.Window;
@@ -16,7 +17,8 @@ public class InboxScreen extends Window{
 	@Override
 	public void init() {
 		Inbox inbox = new Inbox(this, goToEvent);
-		getChildren().add(inbox);
+		borderPane.setMargin(inbox, new Insets(20));
+		borderPane.setCenter(inbox);
 	}
 
 }

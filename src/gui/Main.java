@@ -11,6 +11,7 @@ import classes.Program;
 import classes.ProgramListener;
 import classes.Room;
 import javafx.application.Application;
+import javafx.beans.value.ObservableNumberValue;
 import javafx.event.EventHandler;
 import javafx.stage.Stage;
 import javafx.scene.Node;
@@ -21,6 +22,7 @@ import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
+import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
@@ -37,10 +39,9 @@ public class Main extends Application implements ProgramListener{
 	private final Program program;
 	private final LoginScreen loginScreen;
 	
-	private static Stage stage;
+	public static Stage stage;
 	private Window currentWindow;
 	private TabPane tabPane;
-	
 	private HomeScreen homeScreen;
 	private NewUserWindow newUserScreen;
 	private SettingsScreen settingsScreen;
@@ -52,6 +53,7 @@ public class Main extends Application implements ProgramListener{
 	private MessageScreen messageScreen;
 	
 	public Main(){
+
 		program = new Program();
 
 		program.addListener(this);
@@ -174,6 +176,7 @@ public class Main extends Application implements ProgramListener{
 		
 		newEvent = new Tab("Ny event");
 		eventScreen = new EventScreen(new AddNewEvent(), new ChangeTab());
+		
 		newEvent.setContent(eventScreen);
 		
 		room = new Tab("Reserver Rom");
@@ -318,6 +321,7 @@ public class Main extends Application implements ProgramListener{
 	public static final double getWidth(){
 		if (stage == null)
 			return SCREENWIDTH;
+		
 		return stage.getWidth();
 	}
 	public static String colorToHex(Color color){

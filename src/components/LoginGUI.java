@@ -60,7 +60,7 @@ public class LoginGUI extends Component{
 
 	private void init(){
 		this.setTranslateX(0);
-		this.setPrefWidth(100);
+		this.setPrefWidth(280);
 		this.setPrefHeight(500);
 		
 //		Hyperlink l = new Hyperlink("Ny bruker?");

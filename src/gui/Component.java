@@ -5,6 +5,7 @@ public abstract class Component extends Pane{
 	public Pane parent;
 
 	public Component(Pane parent){
+		
 		this.parent = parent;
 		
 	}

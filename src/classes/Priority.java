@@ -12,13 +12,15 @@ public enum Priority{
 	private Circle circle = new Circle();
 	private Color c;
 	private boolean active;
-	
+	private int radius = 15;
 	Priority(Color color){
 		this.c = color;
-		circle.setRadius(15.0f);
+		circle.setRadius(radius);
 		circle.setFill(color);
 		circle.setOnMouseEntered(e -> hoverOn(e));
 		circle.setOnMouseExited(e -> hoverOff(e));
+		circle.setTranslateX(radius);
+		circle.setTranslateY(radius);
 		this.pane.getChildren().add(circle);
 		circle.setStroke(color);
 		active = false;

@@ -67,7 +67,7 @@ public class NewUserWindow extends Window{
 
 	@Override
 	public void init() {
-		this.setTranslateX(0);
+//		this.setTranslateX(0);
 		this.setPrefWidth(100);
 		this.setPrefHeight(500);
 		

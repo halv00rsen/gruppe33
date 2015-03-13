@@ -6,6 +6,7 @@ import classes.Person;
 import classes.PersonCalendar;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
+import javafx.geometry.Insets;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.layout.GridPane;
@@ -70,7 +71,8 @@ public class OtherPersonScreen extends Window{
 		
 		mainBox.getChildren().addAll(pane, schedulingGUI);
 		
-		this.getChildren().add(mainBox);
+//		borderPane.setMargin(inbox, new Insets(20));
+		borderPane.setCenter(mainBox);
 	}
 
 	private void addPeople() {
