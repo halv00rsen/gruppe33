@@ -1,5 +1,8 @@
 package gui;
+import gui.MessageScreen.EventInfo;
+
 import java.awt.Insets;
+import java.util.ArrayList;
 import java.util.List;
 
 import windows.*;
@@ -7,6 +10,7 @@ import classes.Calendar;
 import classes.Event;
 import classes.Group;
 import classes.Message;
+import classes.Person;
 import classes.Program;
 import classes.ProgramListener;
 import classes.Room;
@@ -38,6 +42,7 @@ public class Main extends Application implements ProgramListener{
 
 	private final Program program;
 	private final LoginScreen loginScreen;
+	private final List<GetPersonListener> personListeners;
 	
 	public static Stage stage;
 	private Window currentWindow;
@@ -55,7 +60,7 @@ public class Main extends Application implements ProgramListener{
 	public Main(){
 
 		program = new Program();
-
+		personListeners = new ArrayList<GetPersonListener>();
 		program.addListener(this);
 		loginScreen = new LoginScreen(new LoginCall());
 		openNewWindow(loginScreen);
@@ -74,6 +79,14 @@ public class Main extends Application implements ProgramListener{
 		
 		public void deleteEvent(Event event){
 			program.deleteEvent(event);
+		}
+	}
+	
+	
+	public class AddPersonListener{
+		
+		public void addListener(GetPersonListener l){
+			personListeners.add(l);
 		}
 	}
 	
@@ -150,6 +163,10 @@ public class Main extends Application implements ProgramListener{
 	
 	@Override
 	public void showEvent(Event event){
+		if (event == null){
+			System.out.println("showEvent(Event) kalt i main");
+			return;
+		}
 		SingleSelectionModel<Tab> selectionModel = tabPane.getSelectionModel();
 		selectionModel.select(home);
 		
@@ -159,7 +176,7 @@ public class Main extends Application implements ProgramListener{
 	private Tab home, newEvent, room, persons, inbox, settings, groups;
 	
 	@Override
-	public void loginSuccess(String username, String name) {
+	public void loginSuccess(Person person) {
 		root.getChildren().remove(loginScreen);
 		Button logout = new Button("Logg ut");
 		
@@ -170,25 +187,24 @@ public class Main extends Application implements ProgramListener{
 		tabPane = new TabPane();
 		tabPane.setPrefHeight(1000);
 		home = new Tab("Hjem");
-		homeScreen  = new HomeScreen(new ChangeTab());
+		homeScreen  = new HomeScreen(new ChangeTab(), person);
 		home.setContent(homeScreen);
 		tabPane.setPrefHeight(1000);
 		
 		newEvent = new Tab("Ny event");
-		eventScreen = new EventScreen(new AddNewEvent(), new ChangeTab());
-		
+		eventScreen = new EventScreen(new AddNewEvent(), new ChangeTab(), new AddPersonListener());
 		newEvent.setContent(eventScreen);
 		
 		room = new Tab("Reserver Rom");
-		reserveRoomScreen = new ReserveRoomScreen(DebugMain.getRooms());
+		reserveRoomScreen = new ReserveRoomScreen(Program.getRooms());
 		room.setContent(reserveRoomScreen);
 		
 		groups = new Tab("Grupper");
-		groups.setContent(new GroupScreen());
+		groups.setContent(new GroupScreen(new AddPersonListener()));
 		
 		
 		persons = new Tab("Personer");
-		otherPersonScreen = new OtherPersonScreen(DebugMain.getPeople(), new ChangeTab());
+		otherPersonScreen = new OtherPersonScreen(new AddPersonListener(), new ChangeTab());
 		persons.setContent(otherPersonScreen);
 		
 		
@@ -223,7 +239,7 @@ public class Main extends Application implements ProgramListener{
 		Button slideAway = new Button("Fjern melding");
 		slideAway.setOnAction(e -> messageScreen.hide());
 		vBox.getChildren().addAll(logout, slideButton, slideAway);
-		slideButton.setOnAction(e -> messageScreen.show("heisann"));
+		slideButton.setOnAction(e -> messageScreen.show("heisann", EventInfo.FromInbox));
 		root.getChildren().addAll(tabPane, messageScreen, vBox);
 //		logout.setLayoutX(1020);
 //		logout.setLayoutY(2);
@@ -233,10 +249,11 @@ public class Main extends Application implements ProgramListener{
 			
 			public void handle(MouseEvent event){
 				messageScreen.hide();
-				tabPane.getSelectionModel().select(inbox);
+				if (messageScreen.getEventInfo() == EventInfo.FromInbox)
+					tabPane.getSelectionModel().select(inbox);
 			}
 		});
-		stage.setTitle("xKal (" + username + ")");
+		stage.setTitle("xKal (" + person.getUsername() + ")");
 	}
 
 	@Override
@@ -264,7 +281,7 @@ public class Main extends Application implements ProgramListener{
 	@Override
 	public void sendMessage(Message msg) {
 		// TODO Auto-generated method stub
-		
+		messageScreen.show(msg.info, EventInfo.None);
 	}
 
 	@Override
@@ -329,6 +346,14 @@ public class Main extends Application implements ProgramListener{
 	            (int)( color.getRed() * 255 ),
 	            (int)( color.getGreen() * 255 ),
 	            (int)( color.getBlue() * 255 ) );
+	}
+
+
+
+	@Override
+	public void setAllPersons(List<Person> persons) {
+		for (GetPersonListener l : personListeners)
+			l.updatePersons(persons);
 	}
 	
 }

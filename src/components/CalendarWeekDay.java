@@ -79,5 +79,4 @@ public class CalendarWeekDay extends CalendarDay{
 		calHeight = CalendarBase.defaultCalHeight;
 		
 	}
-
 }

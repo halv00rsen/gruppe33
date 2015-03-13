@@ -3,6 +3,7 @@ import classes.Event;
 import components.*;
 import gui.*;
 import gui.Main.AddNewEvent;
+import gui.Main.AddPersonListener;
 import gui.Main.ChangeTab;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableIntegerValue;
@@ -17,9 +18,12 @@ public class EventScreen extends Window{
 	private final AddNewEvent event;
 	private final ChangeTab tab;
 	
+	private AddPersonListener l;
+	
 	private EventGUI eg;
 	
-	public EventScreen(AddNewEvent event, ChangeTab tab) {
+	public EventScreen(AddNewEvent event, ChangeTab tab, AddPersonListener l) {
+		this.l = l;
 		this.event = event;
 		this.tab = tab;
 		// TODO Auto-generated constructor stub
@@ -28,7 +32,7 @@ public class EventScreen extends Window{
 
 	@Override
 	public void init() {
-		eg = new EventGUI(this, event, tab);
+		eg = new EventGUI(this, event, tab, l);
 		
 		borderPane.setCenter(eg);
 		

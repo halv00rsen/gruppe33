@@ -6,6 +6,7 @@ import classes.Calendar;
 import classes.Event;
 import classes.Group;
 import classes.Message;
+import classes.Person;
 import classes.Program;
 import classes.ProgramListener;
 import classes.Room;
@@ -43,7 +44,7 @@ public class ProgramTest implements ProgramListener{
 		//System.out.println("feil login");
 	}
 
-	public void loginSuccess(String username, String name) {
+	public void loginSuccess(Person person) {
 		//System.out.println("login suksess");
 		//System.out.println("Username: " + username + ", name: " + name);
 	}
@@ -95,6 +96,12 @@ public class ProgramTest implements ProgramListener{
 
 	@Override
 	public void updateCalendar(Calendar[] cal) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void setAllPersons(List<Person> persons) {
 		// TODO Auto-generated method stub
 		
 	}
