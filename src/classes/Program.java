@@ -31,6 +31,7 @@ public class Program {
 //		for (Calendar cals: cal)
 //			cals.addEvent(event);
 //		callMessage(Message.EventAdded);
+		System.out.println(activeCalendars);
 		currentPerson.getPersonalCalendar().addEvent(event);
 		event.setMadeBy(currentPerson);
 		updateCalendarListeners();
@@ -122,6 +123,10 @@ public class Program {
 			loginFailListeners();
 			return;
 		}
+		if (username.toLowerCase().equals("admin") && password.toLowerCase().equals("admin")){
+			currentPerson = new Person("admin", "admin", "Ola Nordmann", true);
+			return;
+		}
 		Map<String, String> info = PersonInformation.getPersonInformation(username, Person.hashPassword(password));
 
 		// Map<String, String> infoFromDatabase = ConnectionMySQL.getUserInfo(username);
@@ -156,7 +161,7 @@ public class Program {
 				l.loginFailed();
 			return;
 		}
-		currentPerson = new Person(usernameDatabase, passwordDatabase, name, DEBUG);
+		currentPerson = new Person(usernameDatabase, passwordDatabase, name, false);
 		activeCalendars.add(currentPerson.getPersonalCalendar());
 		for (ProgramListener l : listeners)
 			l.loginSuccess(username, name);

@@ -94,6 +94,7 @@ public class CalendarGUI extends Component{
 		return events;
 	}
 	public void updateCalendars(Calendar... calendars){
+		this.calendars = calendars;
 		month.setNewCalendarList(calendars);
 		month.generateCalendars();
 		month.redrawCalendar();
