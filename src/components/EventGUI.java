@@ -116,7 +116,7 @@ public class EventGUI extends Component {
     	try{
     		int a = Integer.parseInt(t.substring(0,2));
     		int b = Integer.parseInt(t.substring(3,5));
-    		System.out.println(a + "" + b);
+    		//System.out.println(a + "" + b);
     		if(a>=24 || a<=-1){
     			((TextField) e.getSource()).clear();
     			return;
@@ -146,13 +146,13 @@ public class EventGUI extends Component {
     	}
 	}
 	private void save(ActionEvent e) {
-    	System.out.println(purposeText.getText());
-    	System.out.println(romText.getText());
-    	System.out.println(datePicker.getValue());
-    	System.out.println(fromClockText.getText());
-    	System.out.println(toClockText.getText());
-    	System.out.println(datePicker2.getValue());
-    	System.out.println("freq " + freq);
+    	//System.out.println(purposeText.getText());
+    	//System.out.println(romText.getText());
+    	//System.out.println(datePicker.getValue());
+    	//System.out.println(fromClockText.getText());
+    	//System.out.println(toClockText.getText());
+    	//System.out.println(datePicker2.getValue());
+    	//System.out.println("freq " + freq);
 //    	PrintWriter writer;
     	
 //		try {

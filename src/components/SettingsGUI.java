@@ -262,7 +262,7 @@ public class SettingsGUI extends Component{
 			@Override
 			public void changed(ObservableValue<? extends String> observable,
 					String oldValue, String newValue) {
-				System.out.println("ok");
+				//System.out.println("ok");
 				if(!(newValue.matches("[0-9]*")) || (phoneTextField.getText().length()) == 9){
 					phoneTextField.setText(oldValue);
 				}
@@ -277,7 +277,8 @@ public class SettingsGUI extends Component{
 			@Override
 			public void handle(ActionEvent arg0) {
 				
-				if(validateTextFields()) System.out.println("Lag bruker");
+				if(validateTextFields()){} 
+					//System.out.println("Lag bruker");
 				
 			}
 		});
@@ -287,7 +288,7 @@ public class SettingsGUI extends Component{
 			@Override
 			public void handle(ActionEvent arg0) {
 				
-				System.out.println("Avbryt");
+				//System.out.println("Avbryt");
 				
 			}
 	});

@@ -1,9 +1,9 @@
 package components;
-
 import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import classes.Event;
 import javafx.geometry.Insets;
@@ -30,7 +30,7 @@ public abstract class CalendarDay extends Pane{
 	
 	String highLightStyle = "-fx-background-color: #DDDDFF";
 	boolean isHighLighted = false;
-
+	HashMap<Integer, EventBox> eventsHash;
 	boolean isUpperDisabled = false;
 	boolean isLowerDisabled = false;
 	BorderPane base;
@@ -38,8 +38,8 @@ public abstract class CalendarDay extends Pane{
 	ArrayList<Event> events;
 	int calHeight;
 	public int calWidth = CalendarBase.defaultCalWidth/7;
-	CalendarBase calGui;
-	public CalendarDay(CalendarBase gui, LocalDate date,ArrayList<Event> events, boolean isUpperDisabled, boolean isLowerDisabled){
+	CalendarGUI calGui;
+	public CalendarDay(CalendarGUI gui, LocalDate date,ArrayList<Event> events, boolean isUpperDisabled, boolean isLowerDisabled){
 		setCalHeight();
 		this.calGui = gui;
 		this.events = events;
@@ -142,26 +142,26 @@ public abstract class CalendarDay extends Pane{
 		return isHighLighted;
 	}
 
-	public void setHighlighted(boolean isHighLighted) {
-		this.isHighLighted = isHighLighted;
-		if(isHighLighted){
-			backupStyle = highLightStyle;
-			this.setStyle(highLightStyle);
-		}else{
-			backupStyle = defaultStyle;
-			this.setStyle(defaultStyle);
-		}
-		
-	}	
+	
 	public LocalDate getDate(){
 		return this.date;
 	}
-	private LocalDate onAction(MouseEvent e) {
-		if(e.getClickCount() == 2){
+	public LocalDate onAction(MouseEvent e) {
+		if(e.getSource() instanceof EventBox){
+			if(e.getClickCount() == 2){
 
-			calGui.dayDoubleClicked(date);
+				calGui.highlightEvent(((EventBox)e.getSource()).event);
+			}else{
+				calGui.highlightEvent(((EventBox)e.getSource()).event);
+			}
+		}
+		if(e.getClickCount() == 2){
+			if(calGui.currentCalendarBase instanceof CalendarMonthBase){
+				calGui.changeToWeek(date);
+			}
+			calGui.highlightDate(date);
 		}else{
-			calGui.dayClicked(date);
+			calGui.highlightDate(date);
 		}
 		
 		
@@ -180,11 +180,31 @@ public abstract class CalendarDay extends Pane{
 	public ArrayList<Event> getDayEvents(){
 		return events;
 	}
-
+	EventBox highlightedEvent;
 	public void highlightEvent(Event event) {
-		continueHighlightEvent(event);
+
+		EventBox requestedEvent = eventsHash.get(event.getID());
+		if(highlightedEvent != null){
+			highlightedEvent.setHighlighted(false);
+		}
+		highlightedEvent = requestedEvent;
+		highlightedEvent.setHighlighted(true);
+	}
+	public void setHighlighted(boolean isHighLighted) {
+		this.isHighLighted = isHighLighted;
+		if(isHighLighted){
+			backupStyle = highLightStyle;
+			this.setStyle(highLightStyle);
+		}else{
+			backupStyle = defaultStyle;
+			this.setStyle(defaultStyle);
+		}
 		
 	}
 
-	abstract void continueHighlightEvent(Event event);
+	public void removeHighlightEvent() {
+		highlightedEvent.setHighlighted(false);
+		highlightedEvent = null;
+		
+	}	
 }

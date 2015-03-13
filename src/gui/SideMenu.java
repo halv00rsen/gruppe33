@@ -101,8 +101,8 @@ public class SideMenu extends Component implements CalendarGUIListener{
 		list.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<String>() {
 		    @Override
 		    public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
-		        System.out.println("ListView selection changed from oldValue = " 
-		                + oldValue + " to newValue = " + newValue);
+		        //System.out.println("ListView selection changed from oldValue = " 
+//		                + oldValue + " to newValue = " + newValue);
 		        	 for (Event event : events) {
 					if(event.getEventName().equals(newValue)) {
 						DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");

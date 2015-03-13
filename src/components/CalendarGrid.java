@@ -30,14 +30,16 @@ public abstract class CalendarGrid extends Pane{
 	Label l;
 	VBox box;
 	Pane dayBox;
-	CalendarBase gui;
+	CalendarGUI gui;
+	CalendarDay highlightedDay;
+	CalendarDay dayWithHighlightedEvent;
 	Calendar[] calendars;
 	public int calHeight = CalendarBase.defaultCalHeight;
 	public int calWidth = CalendarBase.defaultCalWidth;
-
+	
 	public ArrayList<Label> dayTitles = new ArrayList<Label>();
 	ArrayList<Event> events;
-	public CalendarGrid(CalendarBase gui, LocalDate date,Calendar... calendars) {
+	public CalendarGrid(CalendarGUI gui, LocalDate date,Calendar... calendars) {
 		this.calendars = calendars;
 		date = date.minusDays(0);
 		this.events = events;
@@ -109,18 +111,32 @@ public abstract class CalendarGrid extends Pane{
 	public CalendarDay getDateBox(LocalDate date){
 		return datesHash.get(date);
 	}
-	public ArrayList<Event> getEventsByDay(LocalDate date){
-		ArrayList<Event> events = new ArrayList<Event>();
-		for (Calendar calendar : calendars) {
-			events.addAll(calendar.getEventsByDay(date));
-			
-		}
-		return events;
-	}
-	public void highlightedEvent(Event event) {
-		datesHash.get(event.getStartDate()).highlightEvent(event);
+	
+	
+	public void highlightEvent(Event event) {
+		dayWithHighlightedEvent = datesHash.get(event.getStartDate());
+		dayWithHighlightedEvent.highlightEvent(event);
 		
 	}
-
+	public void highlightDate(LocalDate date) {
+		CalendarDay requestedDay = datesHash.get(date);
+		if(highlightedDay != null){
+			highlightedDay.setHighlighted(false);
+		}
+		highlightedDay = requestedDay;
+		highlightedDay.setHighlighted(true);
+		
+	}
+	public void removeHighlightDate() {
+		highlightedDay.setHighlighted(false);
+		highlightedDay = null;
+		
+		
+	}
+	public void removeHighlightEvent() {
+		System.out.println("REMOVING");
+		dayWithHighlightedEvent.removeHighlightEvent();
+		dayWithHighlightedEvent = null;
+	}
 	
 }

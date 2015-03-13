@@ -9,16 +9,16 @@ public class DateComparisonTest {
 		LocalDateTime eventEndTime = LocalDateTime.of(2015, 2, 27, 12, 00);
 		
 		if(eventStartTime.isAfter(startTime) && eventEndTime.isBefore(endTime)) {
-			System.out.println("overlapp");
+			//System.out.println("overlapp");
 		}
 		else if(eventStartTime.isAfter(startTime) && eventStartTime.isBefore(endTime))  {
-			System.out.println("overlapp");
+			//System.out.println("overlapp");
 		}
 		else if (eventStartTime.isBefore(startTime) && eventEndTime.isAfter(endTime)) {
-			System.out.println("overlapp");
+			//System.out.println("overlapp");
 		}
 		else if (eventEndTime.isAfter(startTime) && eventEndTime.isBefore(endTime)) {	
-			System.out.println("overlapp");
+			//System.out.println("overlapp");
 		}
 		return true;
 	}

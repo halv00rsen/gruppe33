@@ -68,7 +68,7 @@ public class LoginGUI extends Component{
 //
 //			@Override
 //			public void handle(MouseEvent event) {
-//				System.out.println("CLicked");
+//				//System.out.println("CLicked");
 //			}
 //			
 //		});
@@ -146,7 +146,7 @@ public class LoginGUI extends Component{
 //			@Override
 //			public void handle(ActionEvent arg0) {
 //				
-//				System.out.println("Nytt vindu for ny bruker");
+//				//System.out.println("Nytt vindu for ny bruker");
 //				
 //			}
 //		});
@@ -282,7 +282,7 @@ public class LoginGUI extends Component{
 			isEmptyMessage += "Passord ikke oppgitt";
 			errorPasswordLabel.setVisible(true);
 		}
-		System.out.println("Message: " + isEmptyMessage);
+		//System.out.println("Message: " + isEmptyMessage);
 		if(isEmptyMessage == "") return true;
 		
 		return false;

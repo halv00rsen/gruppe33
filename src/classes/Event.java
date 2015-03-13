@@ -30,12 +30,12 @@ public class Event {
 	private LocalDateTime freqEnd;
 
 	public Event(){
-		id = (int)Math.random()*100000000;
+		id = (int)(Math.random()*100000000);
 		this.madeBy = null;
 		
 	}
 	public Event(LocalDateTime startTime,LocalDateTime endTime,Person person){
-		id = (int)Math.random()*100000000;
+		id = (int)(Math.random()*100000000);
 		this.startDate = startTime.toLocalDate();
 		this.endDate = endTime.toLocalDate();
 		this.madeBy = person;
@@ -44,7 +44,7 @@ public class Event {
 	public Event(String eventName, String location, Room room, LocalDateTime startTime,
 			LocalDateTime endTime, Integer freq, Person madeBy,
 			Collection<EventAppliance> appliance, Priority priority, String info) {
-		id = (int)Math.random()*100000000;
+		id = (int)(Math.random()*100000000);
 		this.eventName = eventName;
 		this.location = location;
 		this.room = room;

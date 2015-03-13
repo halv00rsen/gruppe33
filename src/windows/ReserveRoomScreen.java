@@ -157,7 +157,7 @@ public class ReserveRoomScreen extends Window{
 				event.setStartTime(LocalDateTime.of(datePicker.getValue(), getLocalTime(fromTimeField)));
 				event.setEndTime(LocalDateTime.of(datePicker.getValue(), getLocalTime(toTimeField)));
 				room.getCalendar().addEvent(event);
-				System.out.println("Rom reservert!");
+				//System.out.println("Rom reservert!");
 			}
 		}
 	}

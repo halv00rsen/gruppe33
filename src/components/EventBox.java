@@ -8,6 +8,7 @@ import java.time.ZoneOffset;
 import java.time.temporal.ChronoUnit;
 
 import javafx.geometry.Insets;
+import javafx.scene.Cursor;
 import javafx.scene.control.Label;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
@@ -18,97 +19,29 @@ import classes.Event;
 import classes.Priority;
 import classes.TimeMethods;
 
-public class EventBox extends Pane{
-	int dayOfMonth;
-	int[] def = {0,0,0};
-	int month;
-	LocalDate date;
-	Label clock;
+public abstract class EventBox extends Pane{
+	
+
+	Priority priority;
+	Event event;
+	String highLightStyle = "-fx-background-color: #8888FF";
 	String backupStyle;
 	String defaultStyle;
-	Priority priority;
-	String highLightStyle = "-fx-background-color: #8888FF";
+	CalendarDay calday;
 	boolean isHighLighted = false;
-	LocalDateTime startTimeDay;
-	boolean isUpperDisabled = false;
-	boolean isLowerDisabled = false;
-	BorderPane base;
-	VBox body;
-	Event event;
-	public int calHeight = 600;
-	public int calWidth = 100;
-	LocalDateTime startTime;
-	LocalDateTime endTime;
-	int overlapCount = 1;
-	int overlap = 1;
-	CalendarBase calGui;
-	private Label name;
-	public EventBox(Event event,CalendarBase calGui){
+	protected CalendarGUI calGui;
+	public EventBox(Event event,CalendarGUI calGui,CalendarDay calday){
+		this.calday = calday;
+		this.event = event;
 		this.calGui = calGui;
 		this.priority = event.getPriority();
-		startTime = event.getStartTime();
-		endTime = event.getEndTime();
-		this.event = event;
-
-		this.startTimeDay = (startTime.minusHours(startTime.getHour())).minusMinutes(startTime.getMinute());
-//		System.out.println(startTimeDay);
-		base = new BorderPane();
-			base.setPadding(new Insets(5));
-				clock = new Label();
-					base.setRight(clock);
-//					clock.setText("23:15-23:20");
-					clock.setText(startTime.getHour() +":" + startTime.getMinute() + "-" + endTime.getHour() +":" + endTime.getMinute());
-				name = new Label();
-					base.setLeft(name);
-					name.setText(event.getEventName());
-				body = new VBox(1);
-					base.setBottom(body);
-					
 		this.setStyle("-fx-background-color:"+ Main.colorToHex(priority.getColor()));			
-		this.getChildren().add(base);
-		this.setOnMouseClicked(e -> onAction(e));
+		defaultStyle = this.getStyle();
 		this.setOnMouseEntered(e -> hoverOn(e));
 		this.setOnMouseExited(e -> hoverOff(e));
-		double heightUnit = ((double)CalendarBase.defaultCalHeight)/(24.0*60.0);
-		long minuteDiff = ChronoUnit.MINUTES.between(startTime, endTime);
-		double height = minuteDiff*heightUnit;
-		System.out.println(height);
-		long minuteFromStartOfDay = ChronoUnit.MINUTES.between(startTimeDay, startTime);
-		int startPos = (int) (minuteFromStartOfDay*heightUnit);
+		this.setOnMouseClicked(e -> calday.onAction(e));
 		
-		this.setPrefHeight(height);
-		this.setMaxHeight(height);
-		this.setMaxWidth(CalendarBase.defaultCalWidth/(7));
-		this.setTranslateY(startPos);
-		this.toFront();
-		this.setMouseTransparent(false);
 	}
-
-	public void addToOverlapp(int i) {
-		overlap +=i;
-		this.setMaxWidth(CalendarBase.defaultCalWidth/(7*overlap));
-		this.setTranslateX((CalendarBase.defaultCalWidth/(7*overlap))*(overlapCount-1));
-		System.out.println(overlap);
-	}
-
-	private void hoverOff(MouseEvent e) {
-		this.setStyle(backupStyle);
-	}
-	
-	
-	private void hoverOn(MouseEvent e) {
-		backupStyle = this.getStyle();
-//		System.out.println(backupStyle);
-		int[] a = {0,0,0};
-		Main.applyContrast(this, 0.90,a);
-	}
-
-
-	
-	public boolean isHighLighted() {
-		return isHighLighted;
-	}
-
 	public void setHighlighted(boolean isHighLighted) {
 		this.isHighLighted = isHighLighted;
 		if(isHighLighted){
@@ -119,32 +52,17 @@ public class EventBox extends Pane{
 			this.setStyle(defaultStyle);
 		}
 		
-	}	
-
-	public void setHighlightedUpstream(boolean isHighLighted) {
-		this.isHighLighted = isHighLighted;
-		if(isHighLighted){
-			calGui.highlightEventUpstream(this.event);
-			backupStyle = highLightStyle;
-			this.setStyle(highLightStyle);
-		}else{
-			backupStyle = defaultStyle;
-			this.setStyle(defaultStyle);
-		}
-		
-	}	
-	private void onAction(MouseEvent e) {
-		setHighlightedUpstream(true);
-	}
-	private LocalDate getLocalDate() {
-		return this.date;
-	}
-	public void setSize(int calHeight, int calWidth){
-		this.calHeight = calHeight;
-		this.calWidth = calWidth;
-		this.setPrefWidth(calWidth);
-		this.setPrefHeight(calHeight);
 	}
 
 	
+	
+	protected void hoverOn(MouseEvent e) {
+		backupStyle = this.getStyle();
+		int[] a = {0,0,0};
+		Main.applyContrast(this,0.95,a);
+		setCursor(Cursor.HAND);
+	}
+	protected void hoverOff(MouseEvent e) {
+		this.setStyle(backupStyle);
+	}
 }

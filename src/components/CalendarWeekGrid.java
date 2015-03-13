@@ -16,7 +16,7 @@ import classes.Event;
 
 public class CalendarWeekGrid extends CalendarGrid{
 	
-	public CalendarWeekGrid(CalendarBase gui, LocalDate date,
+	public CalendarWeekGrid(CalendarGUI gui, LocalDate date,
 			Calendar... cal) {
 		super(gui, date, cal);
 
@@ -26,10 +26,10 @@ public class CalendarWeekGrid extends CalendarGrid{
 	void generateGrid(LocalDate date) {
 		grid = new GridPane();
 		LocalDate dayLooper = date.minusDays(date.getDayOfWeek().getValue()-1);
-		System.out.println(dayLooper);
+		//System.out.println(dayLooper);
 		int y = 0;
 		for (int x = 0; x < 7; x++) {
-			CalendarWeekDay thisBox = new CalendarWeekDay(gui,dayLooper,getEventsByDay(dayLooper),false,false);
+			CalendarWeekDay thisBox = new CalendarWeekDay(gui,dayLooper,gui.getEventsByDay(dayLooper),false,false);
 			grid.add(thisBox,x,y);
 
 			datesHash.put(dayLooper, thisBox);

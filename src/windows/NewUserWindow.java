@@ -1,4 +1,4 @@
-package windows;
+	package windows;
 import components.*;
 import gui.*;
 import javafx.beans.value.ChangeListener;
@@ -240,7 +240,7 @@ public class NewUserWindow extends Window{
 			public void handle(ActionEvent arg0) {
 				
 				if(validateTextFields()){
-					System.out.println("lag bruker");
+					//System.out.println("lag bruker");
 //					main.requestCreateUser(usernameTextField.getText(), passwordTextField.getText(), firstNameTextField.getText()
 //							+ " " + lastNameTextField.getText());
 				}
@@ -316,7 +316,7 @@ public class NewUserWindow extends Window{
 	}
 	
 	private void openSvada(ActionEvent e) {
-//		System.out.println("HEI");
+//		.println("HEI");
 		clicked = true;
 		SvadaScreen s = new SvadaScreen();
 	}

@@ -216,7 +216,7 @@ public class SideMenu extends Component implements CalendarGUIListener{
 	public void eventIsHighligthed(Event event) {
 		list.getSelectionModel().select(event.getEventName());
 		changeEvent(event, event.getEventName());
-		System.out.println(event.getEventName() + "is highlighted");
+		//System.out.println(event.getEventName() + "is highlighted");
 	}
 	
 }

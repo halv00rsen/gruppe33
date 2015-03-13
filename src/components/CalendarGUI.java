@@ -29,6 +29,9 @@ public class CalendarGUI extends Component{
 	LocalDate date;
 	ArrayList<Event> allEvents;
 	Calendar[] calendars;
+	Event highlightedEvent;
+
+	LocalDate highlightedDate;
 	public CalendarGUI(Pane parent, LocalDate date, Calendar... args) {
 		super(parent);
 //		allEvents = new ArrayList<Event>();
@@ -60,41 +63,28 @@ public class CalendarGUI extends Component{
 		this.getChildren().add(components);
 	}
 	private void weekButtonMethod(ActionEvent e) {
-		if(month.getHighlighted() != null){
-			week.setNewDate(month.getHighlightedDate());
-			week.dayClicked(month.getHighlightedDate());
-			month.removeHighlighted();
-		}else{
-			week.setNewDate(month.getDate().minusDays(month.getDate().getDayOfMonth()-1));
-		}
 		currentCalendarBase = week;
 		components.getChildren().set(1,currentCalendarBase);
 		
 	}
 	private void monthButtonMethod(ActionEvent e) {
-		if(week.getHighlighted() != null){
-			month.setNewDate(week.getHighlightedDate());
-			month.dayClicked(week.getHighlightedDate());
-			week.removeHighlighted();
-		}else{
-			month.setNewDate(week.getDate());
-		}
 		currentCalendarBase = month;
 		components.getChildren().set(1,currentCalendarBase);
 	}
-	public void setHighlighted(LocalDate date, ArrayList<Event> events) {
-		this.date = date;
-		for (CalendarGUIListener i : listeners) {
-			i.dayIsHighligthed(date, events);
-			
-		}
-		
-	}
-	public void doubleClicked(LocalDate date) {
+
+	public void changeToWeek(LocalDate date) {
 		if(currentCalendarBase instanceof CalendarMonthBase){
 			weekButton.fire();
 		}
 		
+	}
+	public ArrayList<Event> getEventsByDay(LocalDate date){
+		ArrayList<Event> events = new ArrayList<Event>();
+		for (Calendar calendar : calendars) {
+			events.addAll(calendar.getEventsByDay(date));
+			
+		}
+		return events;
 	}
 	public void updateCalendars(Calendar... calendars){
 		month.setNewCalendarList(calendars);
@@ -113,27 +103,54 @@ public class CalendarGUI extends Component{
 
 	}
 	public void highlightEvent(Event event) {
-		for (CalendarGUIListener i : listeners) {
-			i.eventIsHighligthed( event);
+		if(highlightedEvent != null){
+			if(highlightedEvent.id == event.id){
+
+				System.out.println("highlightedEvent.id" + highlightedEvent.getID() + " event.id" + event.getID());
+				
+
+				week.removeHighlightEvent();
+				month.removeHighlightEvent();
+				highlightedEvent = null;
+				return;
+			}else{
+				week.removeHighlightEvent();
+				month.removeHighlightEvent();
+				highlightedEvent = null;
+			}
+			
 		}
-		ArrayList<Event> events = new ArrayList<Event>();
-		for (int i = 0; i < calendars.length; i++) {
-			events.addAll(calendars[i].getEventsByDay(event.getStartDate()));
-		}
-		setHighlighted(event.getStartDate(), events);
 		
-		currentCalendarBase.highlightEvent(event);
+		this.highlightedEvent = event;
+		for (CalendarGUIListener i : listeners) {
+			i.eventIsHighligthed(event);
+		}
+		month.highlightEvent(event);
+		week.highlightEvent(event);
 	}
-	public void highlightEventUpstream(Event event) {
-		System.out.println("HEHEHEHHEIHEIHEIHEIHEIHH");
+	public void highlightDate(LocalDate date) {
+		if(highlightedEvent != null){
+			if(!highlightedEvent.getStartDate().equals(date)){
+				week.removeHighlightEvent();
+				month.removeHighlightEvent();
+				highlightedEvent = null;
+			}
+		}
 		
-		ArrayList<Event> events = new ArrayList<Event>();
-		for (int i = 0; i < calendars.length; i++) {
-			events.addAll(calendars[i].getEventsByDay(event.getStartDate()));
+		if(highlightedDate != null){
+			if(highlightedDate.equals(date)){
+			month.removeHighlightDate();
+			week.removeHighlightDate();
+			highlightedDate = null;
+			return;
+			}
 		}
-		setHighlighted(event.getStartDate(), events);
+		highlightedDate = date;
 		for (CalendarGUIListener i : listeners) {
-			i.eventIsHighligthed( event);
+			i.dayIsHighligthed(date, getEventsByDay(date));
+			
 		}
+		month.highlightDate(date);
+		week.highlightDate(date);
 	}
 }
