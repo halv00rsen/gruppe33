@@ -137,8 +137,8 @@ public class EventGUI extends Component{
     
     
 	private void save(ActionEvent e) {
-		if (!start.isCorrectInput() || !end.isCorrectInput())
-    		return;
+//		if (!start.isCorrectInput() || !end.isCorrectInput())
+//    		return;
     	LocalDate start = startDate.getValue(), end = endDate.getValue();
     	if (start == null || end == null)
     		return;
@@ -147,16 +147,17 @@ public class EventGUI extends Component{
     	
     	int sh = this.start.getHour(), sm = this.start.getMinutes(),
     			eh = this.end.getHour(), em = this.end.getMinutes();
+    	System.out.println(sh + "  " + sm + "  " + eh + "  " + em);
     	if (sh == -1 || sm == -1 || eh == -1 || em == -1)
     		return;
-    	
+    	System.out.println("tull");
     	LocalDateTime t1 = LocalDateTime.of(start, LocalTime.of(sh, sm)),
     			t2 = LocalDateTime.of(end, LocalTime.of(eh, em));
     	classes.Event event = new classes.Event(t1, t2, null);
     	event.setEventName(purposeText.getText());
     	Picker splitStuff = split.getValue();
     	LocalDate freqEnd = repDate.getValue();
-    	if (freqEnd == null)
+    	if (freqEnd == null && splitStuff != Picker.Aldri)
     		return;
     	if (splitStuff == Picker.Daglig || splitStuff == Picker.Ukentlig)
     		event.setFreq(splitStuff.freq, false, freqEnd);
@@ -170,7 +171,7 @@ public class EventGUI extends Component{
     	}else
     		event.setFreq(0, true, freqEnd);
     	List<EventAppliance> persons = new ArrayList<EventAppliance>();
-    	
+    	System.out.println("freq");
     	for (Person p : listPeople){
     		persons.add(new EventAppliance(p, Appliance.Not_Answered));
     	}
