@@ -12,6 +12,7 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.VBox;
 import components.SchedulingGUI;
 import gui.DebugMain;
+import gui.Main.ChangeTab;
 import gui.Window;
 
 public class OtherPersonScreen extends Window{
@@ -25,9 +26,12 @@ public class OtherPersonScreen extends Window{
 	PersonCalendar cal;
 	ArrayList<Person> persons;
 	
+	private final ChangeTab tab;
 	
-	public OtherPersonScreen(ArrayList<Person> persons) {
+	
+	public OtherPersonScreen(ArrayList<Person> persons, ChangeTab tab) {
 		this.persons = persons;
+		this.tab = tab;
 		init();
 	}
 	
@@ -46,7 +50,7 @@ public class OtherPersonScreen extends Window{
 		
 		Person examplePerson = (DebugMain.getPerson());
 		cal = new PersonCalendar(examplePerson);
-		schedulingGUI = new SchedulingGUI(this, cal, examplePerson);
+		schedulingGUI = new SchedulingGUI(this, examplePerson, tab,cal);
 		
 	
 		peopleComboBox.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<String>() {
@@ -55,7 +59,7 @@ public class OtherPersonScreen extends Window{
 		        mainBox.getChildren().remove(schedulingGUI);
 		        Person person = findPerson(newValue);
 		        cal = new PersonCalendar(person);
-		        schedulingGUI = new SchedulingGUI(getThis(), cal, person);
+		        schedulingGUI = new SchedulingGUI(getThis(), person,tab,cal);
 		        mainBox.getChildren().add(schedulingGUI);
 			}
 		});

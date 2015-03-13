@@ -1,5 +1,6 @@
 package windows;
 import components.*;
+import database.ConnectionMySQL;
 import gui.*;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
@@ -241,6 +242,8 @@ public class NewUserWindow extends Window{
 				
 				if(validateTextFields()){
 					System.out.println("lag bruker");
+					ConnectionMySQL.createUser(usernameTextField.getText(), firstNameTextField.getText(), lastNameTextField.getText(), passwordTextField.getText(),
+							emailTextField.getText(), phoneTextField.getText(), false);
 //					main.requestCreateUser(usernameTextField.getText(), passwordTextField.getText(), firstNameTextField.getText()
 //							+ " " + lastNameTextField.getText());
 				}

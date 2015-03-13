@@ -2,6 +2,7 @@ package components;
 
 import gui.Component;
 import gui.DebugMain;
+import gui.Main.ChangeTab;
 import gui.Window;
 
 import java.time.LocalDate;
@@ -23,16 +24,23 @@ public class SchedulingGUI extends Component{
     VBox calendarAndInfo;
     HBox mainBox;
     
-	public SchedulingGUI(Window parent, Calendar cal, Person p) {
+
+	private Button settings;
+	public SchedulingGUI(Window parent, Person p, ChangeTab tab, Calendar... calendars ) {
+
 		super(parent);
 		mainBox = new HBox(30);
 		calendarAndInfo = new VBox(0);
 	
 //		settings.setOnAction(e -> main.requestSettingsWindow());
 		
-		cal.addEvent(DebugMain.getEvents());
-		calendargui = new CalendarGUI(this, LocalDate.now(), cal);
-		menu = new SideMenu(this, cal.getEventsByDay(LocalDate.now()));
+		calendars[0].addEvent(DebugMain.getEvents());
+		calendargui = new CalendarGUI(this, LocalDate.now(), calendars);
+		ArrayList<Event> dagens = new ArrayList<Event>();
+		for (int i = 0; i < calendars.length; i++) {
+			dagens.addAll(calendars[i].getEventsByDay(LocalDate.now()));
+		}
+		menu = new SideMenu(this, dagens, tab);
 		calendargui.addListener(menu);
 		userInfo = new UserInfoGUI(this, p);
 		
@@ -43,6 +51,10 @@ public class SchedulingGUI extends Component{
 	}
 	public void highlightEvent(Event event) {
 		calendargui.highlightEvent(event);
+		
+	}
+	public void updateCalendars(Calendar... calendars){
+		calendargui.updateCalendars(calendars);
 		
 	}
 }

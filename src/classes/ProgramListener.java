@@ -11,7 +11,7 @@ public interface ProgramListener {
 	public void sendMessage(Message msg);
 	public void updateGroups(Group... groups);
 	public void showEvent(Event event);
-	public void updateCalendar(List<Calendar> cal);
 	public void updateRoomNames(Room... rooms);
 	public void sendNotification(String notif);
+	public void updateCalendar(Calendar[] cal);
 }

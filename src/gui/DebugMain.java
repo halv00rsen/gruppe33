@@ -107,12 +107,8 @@ public class DebugMain {
 		event4.setInfo("Dette er masse informasjon om denne eventen");
 		event5.setInfo("Bla bla bla bla");
 		
-		event1.setFreq(7,false);
-		event4.setFreq(8,false);
-		
-		event1.setFreqEndTime(LocalDateTime.of(2015, Month.JULY, 25, 16, 30));
-
-		event4.setFreqEndTime(LocalDateTime.of(2015, Month.JUNE, 25, 16, 30));
+		event1.setFreq(7,false, LocalDateTime.of(2015, Month.JULY, 25, 16, 30).toLocalDate());
+		event4.setFreq(8,false, LocalDateTime.of(2015, Month.JULY, 25, 16, 30).toLocalDate());
 		
 		event1.setPriority(Priority.IMPORTANT);
 		event2.setPriority(Priority.VERY_IMPORTANT);
