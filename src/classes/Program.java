@@ -121,6 +121,10 @@ public class Program {
 	public void personLogin(String username, String password){
 		if (username == null || password == null || isLoggedIn()){
 			loginFailListeners();
+			activeCalendars.add(currentPerson.getPersonalCalendar());
+			for (ProgramListener l : listeners)
+				l.loginSuccess(currentPerson);
+			updateCalendarListeners();
 			return;
 		}
 		if (username.toLowerCase().equals("admin") && password.toLowerCase().equals("admin")){
@@ -164,7 +168,7 @@ public class Program {
 		currentPerson = new Person(usernameDatabase, passwordDatabase, name, false);
 		activeCalendars.add(currentPerson.getPersonalCalendar());
 		for (ProgramListener l : listeners)
-			l.loginSuccess(username, name);
+			l.loginSuccess(currentPerson);
 		updateCalendarListeners();
 	}
 	

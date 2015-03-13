@@ -7,6 +7,7 @@ import classes.Calendar;
 import classes.Event;
 import classes.Group;
 import classes.Message;
+import classes.Person;
 import classes.Program;
 import classes.ProgramListener;
 import classes.Room;
@@ -157,7 +158,7 @@ public class Main extends Application implements ProgramListener{
 	private Tab home, newEvent, room, persons, inbox, settings, groups;
 	
 	@Override
-	public void loginSuccess(String username, String name) {
+	public void loginSuccess(Person person) {
 		root.getChildren().remove(loginScreen);
 		Button logout = new Button("Logg ut");
 		
@@ -233,7 +234,7 @@ public class Main extends Application implements ProgramListener{
 				tabPane.getSelectionModel().select(inbox);
 			}
 		});
-		stage.setTitle("xKal (" + username + ")");
+		stage.setTitle("xKal (" + person.getUsername() + ")");
 	}
 
 	@Override
