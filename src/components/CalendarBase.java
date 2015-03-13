@@ -299,6 +299,8 @@ public abstract class CalendarBase extends Pane{
 
 	public void removeHighlightDate() {
 		mainCalendar.removeHighlightDate();
+		lastCalendar.removeHighlightDate();
+		nextCalendar.removeHighlightDate();
 		
 		
 	}
@@ -306,6 +308,8 @@ public abstract class CalendarBase extends Pane{
 	public void removeHighlightEvent() {
 		
 		mainCalendar.removeHighlightEvent();
+		lastCalendar.removeHighlightEvent();
+		nextCalendar.removeHighlightEvent();
 		
 	}
 

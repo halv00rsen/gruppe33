@@ -128,15 +128,22 @@ public abstract class CalendarGrid extends Pane{
 		
 	}
 	public void removeHighlightDate() {
-		highlightedDay.setHighlighted(false);
-		highlightedDay = null;
+		if(highlightedDay != null){
+
+			highlightedDay.setHighlighted(false);
+			highlightedDay = null;
+		}else{
+//			System.out.println("highlightedDay is null in " + this.date);
+		}
 		
 		
 	}
 	public void removeHighlightEvent() {
-		System.out.println("REMOVING");
-		dayWithHighlightedEvent.removeHighlightEvent();
-		dayWithHighlightedEvent = null;
+		if(dayWithHighlightedEvent != null){
+
+			dayWithHighlightedEvent.removeHighlightEvent();
+			dayWithHighlightedEvent = null;
+		}
 	}
 	
 }

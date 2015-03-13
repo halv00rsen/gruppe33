@@ -30,7 +30,6 @@ public class CalendarGUI extends Component{
 	ArrayList<Event> allEvents;
 	Calendar[] calendars;
 	Event highlightedEvent;
-
 	LocalDate highlightedDate;
 	public CalendarGUI(Pane parent, LocalDate date, Calendar... args) {
 		super(parent);
@@ -63,11 +62,19 @@ public class CalendarGUI extends Component{
 		this.getChildren().add(components);
 	}
 	private void weekButtonMethod(ActionEvent e) {
+		if(highlightedEvent == null && highlightedDate== null){
+
+			week.setNewDate(month.date.minusDays(month.date.getDayOfMonth()-1));
+		}
 		currentCalendarBase = week;
 		components.getChildren().set(1,currentCalendarBase);
 		
 	}
 	private void monthButtonMethod(ActionEvent e) {
+		if(highlightedEvent == null && highlightedDate== null){
+
+			month.setNewDate(week.date);
+		}
 		currentCalendarBase = month;
 		components.getChildren().set(1,currentCalendarBase);
 	}
@@ -129,6 +136,7 @@ public class CalendarGUI extends Component{
 		week.highlightEvent(event);
 	}
 	public void highlightDate(LocalDate date) {
+		System.out.println("highlightedDate" + highlightedDate);
 		if(highlightedEvent != null){
 			if(!highlightedEvent.getStartDate().equals(date)){
 				week.removeHighlightEvent();
@@ -139,10 +147,14 @@ public class CalendarGUI extends Component{
 		
 		if(highlightedDate != null){
 			if(highlightedDate.equals(date)){
-			month.removeHighlightDate();
-			week.removeHighlightDate();
-			highlightedDate = null;
-			return;
+				month.removeHighlightDate();
+				week.removeHighlightDate();
+				highlightedDate = null;
+				return;
+			}else{
+				month.removeHighlightDate();
+				week.removeHighlightDate();
+				highlightedDate = null;
 			}
 		}
 		highlightedDate = date;
