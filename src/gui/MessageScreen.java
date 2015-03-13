@@ -38,6 +38,7 @@ public class MessageScreen extends Group{
 		if (showing)
 			return;
 		TranslateTransition tt = new TranslateTransition(Duration.seconds(1), this);
+		this.message.setText(message);
 		tt.setFromY(- 1 * height);
 		tt.setToY(40 + height);
 	    tt.setCycleCount(1);

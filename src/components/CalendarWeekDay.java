@@ -82,8 +82,11 @@ public class CalendarWeekDay extends CalendarDay{
 
 	@Override
 	void continueHighlightEvent(Event event) {
+		if (event == null)
+			return;
+		EventBox box = eventsHash.get(event.getID());
+		if (box != null)
+			box.setHighlighted(true);
 
-		eventsHash.get(event.getID()).setHighlighted(true);
-		
 	}
 }

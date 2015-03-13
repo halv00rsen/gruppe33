@@ -34,12 +34,14 @@ public class Program {
 		currentPerson.getPersonalCalendar().addEvent(event);
 		event.setMadeBy(currentPerson);
 		updateCalendarListeners();
+		callMessage(Message.EventAdded);
 	}
 	
 	public void deleteEvent(Event event, Calendar...cals){
 		//remove event from database/server
 		currentPerson.getPersonalCalendar().removeEvent(event);
 		updateCalendarListeners();
+		callMessage(Message.EventDeleted);
 //		for (Calendar cal: cals)
 //			cal.removeEvent(event);
 //		callMessage(Message.EventDeleted);

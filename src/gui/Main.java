@@ -261,7 +261,7 @@ public class Main extends Application implements ProgramListener{
 	@Override
 	public void sendMessage(Message msg) {
 		// TODO Auto-generated method stub
-		
+		messageScreen.show(msg.info);
 	}
 
 	@Override
