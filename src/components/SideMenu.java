@@ -44,6 +44,7 @@ public class SideMenu extends Component implements CalendarGUIListener{
 	Text toTimeData;
 	Text locationData;
 	Text infoData;
+	Text priorityData;
 	
 	
 	ListView<Event> list;
@@ -84,7 +85,7 @@ public class SideMenu extends Component implements CalendarGUIListener{
 		
 		fromTime = new Label("Fra:");
 		toTime = new Label("Til:");
-		location = new Label("Sted:");
+		location = new Label("Rom");
 		info = new Label("Informasjon");
 		priority = new Label("Priority:");
 		
@@ -92,6 +93,7 @@ public class SideMenu extends Component implements CalendarGUIListener{
 		toTimeData = new Text("");
 		locationData = new Text("");
 		infoData = new Text("");
+		priorityData = new Text("");
 		
 		
 		
@@ -109,6 +111,7 @@ public class SideMenu extends Component implements CalendarGUIListener{
 		eventInformation.add(toTimeData, 1, 1);
 		eventInformation.add(locationData, 1, 2);
 		eventInformation.add(infoData, 1, 3);
+		eventInformation.add(priorityData, 1, 4);
 		
 		
 		//Endrer tabellen når man klikker på listen
@@ -192,7 +195,7 @@ public class SideMenu extends Component implements CalendarGUIListener{
 		String formattedStartTime = event.getStartTime().format(formatter);
 		String formattedEndTime = event.getEndTime().format(formatter);
 		
-		eventInformation.getChildren().removeAll(fromTime, toTime, location, info, priority, fromTimeData, toTimeData, locationData, infoData);
+		eventInformation.getChildren().removeAll(fromTime, toTime, location, info, priority, fromTimeData, toTimeData, locationData, infoData, priorityData);
 		eventInformation.add(fromTime, 0, 0);
 		eventInformation.add(toTime, 0, 1);
 		eventInformation.add(location, 0, 2);
@@ -201,13 +204,21 @@ public class SideMenu extends Component implements CalendarGUIListener{
 		
 		fromTimeData.setText(formattedStartTime);
 		toTimeData.setText(formattedEndTime);
-		locationData.setText(event.getLocation());
+		try {
+			locationData.setText(event.getRoom().getRoomName());
+		}
+		catch(Exception e) {
+			locationData.setText("Rom ikke valgt");
+		}
+		
 		infoData.setText(event.getInfo());
+		priorityData.setText("" + event.getPriority());
 
 		eventInformation.add(fromTimeData, 1, 0);
 		eventInformation.add(toTimeData, 1, 1);
 		eventInformation.add(locationData, 1, 2);
 		eventInformation.add(infoData, 1, 3);
+		eventInformation.add(priorityData, 1, 4);
 	}
 	
 	@Override
@@ -219,7 +230,6 @@ public class SideMenu extends Component implements CalendarGUIListener{
 	public void eventIsHighligthed(Event event) {
 		list.getSelectionModel().select(event);
 		changeEvent(event);
-		System.out.println(event.getEventName() + "is highlighted");
 	}
 	
 }

@@ -38,8 +38,6 @@ public class HomeScreen extends Window{
 	public void init() {
 		schedulingGUI = new SchedulingGUI(this,p, tab,cal);
 		this.getChildren().add(schedulingGUI);
-
-
 	}
 
 	public void highlightEvent(Event event) {
