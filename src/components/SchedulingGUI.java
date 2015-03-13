@@ -49,12 +49,12 @@ public class SchedulingGUI extends Component{
 		mainBox.getChildren().addAll(calendargui, calendarAndInfo);
 		this.getChildren().add(mainBox);
 	}
-	public void highlightEvent(Event event) {
-		calendargui.highlightEvent(event);
-		
-	}
+
 	public void updateCalendars(Calendar... calendars){
 		calendargui.updateCalendars(calendars);
 		
+	}
+	public void highlightEvent(Event event){
+		calendargui.highlightEvent(event);
 	}
 }

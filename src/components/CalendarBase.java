@@ -1,9 +1,11 @@
 package components;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.Month;
 import java.time.Year;
 import java.util.ArrayList;
+import java.util.Collection;
 
 import classes.Calendar;
 import classes.Event;
@@ -43,7 +45,7 @@ public abstract class CalendarBase extends Pane{
 	VBox innerBox;
 	
 	HBox dayTitles;
-	CalendarDay boxHighlighted;
+	CalendarDay dayHighlighted;
 	StackPane calCnt;
 	Pane dayBox;
 	ArrayList<Event> events;
@@ -128,16 +130,12 @@ public abstract class CalendarBase extends Pane{
 
 		if(e.getSource().equals(sliderRight)){
 			
-			Timeline timeline = slideRightAnimation();
-			timeline.setOnFinished( event -> shiftRight(event));
-			timeline.play();
+			slideRight();
 			
 		}else if (e.getSource().equals(sliderLeft)){
 			
+			slideLeft();
 			
-			Timeline timeline = slideLeftAnimation();
-			timeline.setOnFinished( event -> shiftLeft(event));
-			timeline.play();
 			
 		}
 		
@@ -212,7 +210,10 @@ public abstract class CalendarBase extends Pane{
 		timeline.getKeyFrames().add(kfDwn);
 		return timeline;
 	}
-	private void shiftRight(ActionEvent e) {
+	public LocalDate getDate(){
+		return this.date;
+	}
+	public void shiftRight(ActionEvent e) {
 		lastCalendar = mainCalendar;
 		mainCalendar = nextCalendar;
 		updateDate(mainCalendar.getLocalDate());
@@ -220,7 +221,8 @@ public abstract class CalendarBase extends Pane{
 		
 		redrawCalendar();
 	}
-	private void shiftLeft(ActionEvent e) {
+	public void shiftLeft(ActionEvent e) {
+		//System.out.println("ShiftLeft");
 		nextCalendar = mainCalendar;
 		mainCalendar = lastCalendar;
 		updateDate(mainCalendar.getLocalDate());
@@ -264,78 +266,57 @@ public abstract class CalendarBase extends Pane{
 		l.setText(date.getMonth().toString());
 		
 	}
+	public void slideRight(){
+		Timeline timeline = slideRightAnimation();
+		timeline.setOnFinished( event -> shiftRight(event));
+		timeline.play();
+	}
+	public void slideLeft(){
+		Timeline timeline = slideLeftAnimation();
+		timeline.setOnFinished( e -> shiftLeft(e));
+		timeline.play();
+	}
+	abstract void handleShifting(Object obj);
 	
-	public void dayClicked(LocalDate date){
-		CalendarDay a = mainCalendar.getDateBox(date);
+	public void continueHighlightDate(LocalDate date){
+		mainCalendar.highlightDate(date);
+	}
+	public void continueHighlightEvent(Event event){
 		
-		if(boxHighlighted != null){
-			boxHighlighted.setHighlighted(false);
-			if(date.isEqual(boxHighlighted.date)){
-				this.requestFocus();
-				boxHighlighted = null;
-				return;
-			}
-		}
-		if(a.isUpperDisabled() == true){
-			Timeline timeline = slideRightAnimation();
-			timeline.setOnFinished( event -> shiftRightAndHighlight(event,date));
-			timeline.play();
-		}else if(a.isLowerDisabled() == true){
-			Timeline timeline = slideLeftAnimation();
-			timeline.setOnFinished( event -> shiftLeftAndHighlight(event,date));
-			timeline.play();
-		}else{
-			highlight(date);
-		}
+		mainCalendar.highlightEvent(event);
 	}
-	private void shiftLeftAndHighlight(ActionEvent event,LocalDate date) {
-		shiftLeft(event);
-		highlight(date);
+	public void highlightEvent(Event event){
+		
+		handleShifting(event);
+		
 	}
-	private void shiftRightAndHighlight(ActionEvent event,LocalDate date) {
-		shiftRight(event);
-		highlight(date);
-	}
-	private void highlight(LocalDate date){
-		CalendarDay a = mainCalendar.getDateBox(date);
-		boxHighlighted = a;
-		a.setHighlighted(true);
-		a.requestFocus();
-		gui.setHighlighted(date,boxHighlighted.getDayEvents());
-	}
-	public LocalDate getHighlightedDate(){
-		return boxHighlighted.getDate();
-	}
-	public CalendarDay getHighlighted(){
-		return boxHighlighted;
-	}
-	public void removeHighlighted(){
-
-		boxHighlighted.setHighlighted(false);
-		boxHighlighted = null;
-
-	}
-	public LocalDate getDate(){
-
-		return this.date;
-
-	}
-
-	public void dayDoubleClicked(LocalDate date) {
-		highlight(date);
-		gui.setHighlighted(date,boxHighlighted.getDayEvents());
-		gui.doubleClicked(date);
+	public void highlightDate(LocalDate date){
+		
+		handleShifting(date);
+		
 		
 	}
 
-	public void highlightEvent(Event event) {
-		setNewDate(event.getStartDate());
-		mainCalendar.highlightedEvent(event);
+	public void removeHighlightDate() {
+		mainCalendar.removeHighlightDate();
+		lastCalendar.removeHighlightDate();
+		nextCalendar.removeHighlightDate();
+		
 		
 	}
-	public void highlightEventUpstream(Event event) {
-		gui.highlightEventUpstream(event);
+
+	public void removeHighlightEvent() {
+		
+		mainCalendar.removeHighlightEvent();
+		lastCalendar.removeHighlightEvent();
+		nextCalendar.removeHighlightEvent();
 		
 	}
+
 	
+
+
+
+
+
 }

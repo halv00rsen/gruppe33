@@ -19,9 +19,9 @@ import javafx.scene.shape.Line;
 import classes.Event;
 
 public class CalendarWeekDay extends CalendarDay{
-	HashMap<Integer, EventBox> eventsHash;
+	
 	StackPane innerBody;
-	public CalendarWeekDay(CalendarBase gui, LocalDate date,ArrayList<Event> events, boolean isUpperDisabled,boolean isLowerDisabled) {
+	public CalendarWeekDay(CalendarGUI gui, LocalDate date,ArrayList<Event> events, boolean isUpperDisabled,boolean isLowerDisabled) {
 		super(gui, date, events, isUpperDisabled, isLowerDisabled);
 		this.setPrefHeight(calHeight);
 	}
@@ -34,7 +34,7 @@ public class CalendarWeekDay extends CalendarDay{
 		
 		for (int i = 0; i < events.size()-1; i++) {
 			Event thisEvent = events.get(i);
-			EventBox eventBox = new EventBox(thisEvent, calGui);
+			EventBoxWeek eventBox = new EventBoxWeek(thisEvent, calGui,this);
 			eventsHash.put(thisEvent.getID(), eventBox);
 			if(mente > 0){
 
@@ -55,7 +55,7 @@ public class CalendarWeekDay extends CalendarDay{
 
 			Event thisEvent = events.get(events.size()-1);
 			
-			EventBox eventBox = new EventBox(thisEvent, calGui);
+			EventBoxWeek eventBox = new EventBoxWeek(thisEvent, calGui,this);
 
 			eventsHash.put(thisEvent.getID(), eventBox);
 			if(mente > 0){
@@ -78,15 +78,5 @@ public class CalendarWeekDay extends CalendarDay{
 	void setCalHeight() {
 		calHeight = CalendarBase.defaultCalHeight;
 		
-	}
-
-	@Override
-	void continueHighlightEvent(Event event) {
-		if (event == null)
-			return;
-		EventBox box = eventsHash.get(event.getID());
-		if (box != null)
-			box.setHighlighted(true);
-
 	}
 }

@@ -107,7 +107,7 @@ public class GroupList<Value> extends VBox{
 				items.add(selected);
 //				valueChooser.getItems().clear();
 //				if (valueChooser.getItems().isEmpty()){
-//					System.out.println("slettet!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
+//					//System.out.println("slettet!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
 //				}
 //				valueChooser.getSelectionModel().
 //				valueChooser.getSelectionModel().clearSelection();

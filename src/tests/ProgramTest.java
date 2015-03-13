@@ -24,14 +24,14 @@ public class ProgramTest implements ProgramListener{
 
 	public static void main(String[] args){
 //		ProgramTest t = new ProgramTest();
-		System.out.println("true: " + num(1));
-		System.out.println("false: " + num(2));
-		System.out.println("true: " + string("user"));
-		System.out.println("false: " + string("Uas"));
+		//System.out.println("true: " + num(1));
+		//System.out.println("false: " + num(2));
+		//System.out.println("true: " + string("user"));
+		//System.out.println("false: " + string("Uas"));
 	}
 	
 	public static boolean num(Object nr){
-//		System.out.println(nr.toString());
+//		//System.out.println(nr.toString());
 		return ("" + 1).equals(nr.toString());
 	}
 	
@@ -40,28 +40,28 @@ public class ProgramTest implements ProgramListener{
 	}
 
 	public void loginFailed() {
-		System.out.println("feil login");
+		//System.out.println("feil login");
 	}
 
 	public void loginSuccess(String username, String name) {
-		System.out.println("login suksess");
-		System.out.println("Username: " + username + ", name: " + name);
+		//System.out.println("login suksess");
+		//System.out.println("Username: " + username + ", name: " + name);
 	}
 
 	public void logout() {
-		System.out.println("logget ut");
+		//System.out.println("logget ut");
 	}
 
 	public void userCreated(final boolean isCreated) {
-		System.out.println((isCreated?"Bruker laget": "Bruker ikke laget"));
+		//System.out.println((isCreated?"Bruker laget": "Bruker ikke laget"));
 	}
 
 	public void passwordChange(final boolean isChanged) {
-		System.out.println((isChanged? "Passord byttet":"Passord ikke byttet"));
+		//System.out.println((isChanged? "Passord byttet":"Passord ikke byttet"));
 	}
 	
 	public void setEvents(Event... events){
-		System.out.println("Events er satt");
+		//System.out.println("Events er satt");
 	}
 	
 	@Override

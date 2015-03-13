@@ -43,7 +43,7 @@ public class Slider extends StackPane{
 
 	private void hoverOn(MouseEvent e) {
 		backupStyle = this.getStyle();
-		System.out.println(backupStyle);
+		//System.out.println(backupStyle);
 		int[] a = {0,0,0};
 		Main.applyContrast(this, 0.9,a);
 		setCursor(Cursor.HAND);
