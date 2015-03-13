@@ -5,6 +5,8 @@ import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.ArrayList;
 
+import components.NumberField;
+import components.TimeField;
 import classes.Event;
 import classes.Room;
 import javafx.beans.value.ChangeListener;
@@ -29,9 +31,12 @@ import gui.Window;
 
 public class ReserveRoomScreen extends Window{
 
+	private final TimeField fromTime, toTime;
+
 	Label title, dateLabel, fromTimeLabel, toTimeLabel, wrongFormatLabel;
 	
-	TextField fromTimeField, toTimeField;
+	
+//	TextField fromTimeField, toTimeField;
 	
 	DatePicker datePicker;
 	
@@ -53,6 +58,10 @@ public class ReserveRoomScreen extends Window{
 	int toMinute;
 	
 	public ReserveRoomScreen(ArrayList<Room> rooms) {
+		fromTime = new TimeField(true);
+		toTime = new TimeField(false);
+		fromTime.setOtherTime(toTime);
+		toTime.setOtherTime(fromTime);
 		init();
 		this.rooms = rooms;
 	}
@@ -69,13 +78,8 @@ public class ReserveRoomScreen extends Window{
 		fromTimeLabel = new Label("Fra klokken");
 		toTimeLabel = new Label("til");
 		
-		fromTimeField = new TextField();
-		fromTimeField.setPromptText("hh-mm");
-		fromTimeField.setPrefWidth(55);
-		
-		toTimeField = new TextField();
-		toTimeField.setPromptText("hh-mm");
-		toTimeField.setPrefWidth(55);
+		fromTime.setPrefWidth(55);
+		toTime.setPrefWidth(55);
 		
 		datePicker = new DatePicker(LocalDate.now());
 		
@@ -90,31 +94,32 @@ public class ReserveRoomScreen extends Window{
 			@Override
 			public void handle(ActionEvent event) {
 				if (seeAvailableToggle.isSelected()) {
-					if(fromTimeField.getText().matches("[0-2][0-9]-[0-2][0-9]") && toTimeField.getText().matches("[0-2][0-9]-[0-2][0-9]")) {
+					int sh = fromTime.getHour(), sm = fromTime.getMinutes(),
+							th = toTime.getHour(), tm = toTime.getMinutes();
+					if (sh == -1 || sm == -1 || th == -1 || sm == -1){
+						wrongFormatLabel = new Label("Skriv inn tidspunktet på riktig format: hh:mm");
+						wrongFormatLabel.setTextFill(Color.RED);
+						gridPane.add(wrongFormatLabel, 1, 3);
+					}else{
 						if(gridPane.getChildren().contains(wrongFormatLabel)) {
 							gridPane.getChildren().remove(wrongFormatLabel);
 						}
-		
-						availableRooms = showAvailableRooms(LocalDateTime.of(datePicker.getValue(), getLocalTime(fromTimeField)), LocalDateTime.of(datePicker.getValue(), getLocalTime(fromTimeField)));
+						availableRooms = showAvailableRooms(LocalDateTime.of(datePicker.getValue(), LocalTime.of(sh, sm)), 
+								LocalDateTime.of(datePicker.getValue(), LocalTime.of(th, tm)));
 						gridPane.add(availableRooms, 1, 3);
 						
 						availableRooms.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<String>() {
-						    @Override
-						    public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
-						        if (gridPane.getChildren().contains(reserveRoomButton)) {
-						        	gridPane.getChildren().remove(reserveRoomButton);
-						        }
-						        reserveRoomButton = new Button("Reserver " + availableRooms.getSelectionModel().getSelectedItem());
-						        reserveRoomButton.setOnAction(e -> reserveRoomMethod(e));
-						        gridPane.add(reserveRoomButton, 1, 4);
-						    }
+							@Override
+							public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
+								if (gridPane.getChildren().contains(reserveRoomButton)) {
+									gridPane.getChildren().remove(reserveRoomButton);
+								}
+								reserveRoomButton = new Button("Reserver " + availableRooms.getSelectionModel().getSelectedItem());
+								reserveRoomButton.setOnAction(e -> reserveRoomMethod(e));
+								gridPane.add(reserveRoomButton, 1, 4);
+							}
 						});
 						
-					}
-					else {
-						wrongFormatLabel = new Label("Skriv inn tidspunktet på riktig format: hh-mm");
-						wrongFormatLabel.setTextFill(Color.RED);
-						gridPane.add(wrongFormatLabel, 1, 3);
 					}
 				}
 				
@@ -134,7 +139,7 @@ public class ReserveRoomScreen extends Window{
 		
 		
 		HBox timeBox = new HBox(10);
-		timeBox.getChildren().addAll(fromTimeField, toTimeLabel, toTimeField);
+		timeBox.getChildren().addAll(fromTime, toTimeLabel, toTime);
 		
 		gridPane.add(dateLabel, 0, 0);
 		gridPane.add(datePicker, 1, 0);
@@ -154,20 +159,16 @@ public class ReserveRoomScreen extends Window{
 			if (room.getRoomName().equals(roomName)) {
 				Event event = new Event();
 				event.setEventName("Reservert møterom");
-				event.setStartTime(LocalDateTime.of(datePicker.getValue(), getLocalTime(fromTimeField)));
-				event.setEndTime(LocalDateTime.of(datePicker.getValue(), getLocalTime(toTimeField)));
+				event.setStartTime(LocalDateTime.of(datePicker.getValue(), getLocalTime(fromTime)));
+				event.setEndTime(LocalDateTime.of(datePicker.getValue(), getLocalTime(toTime)));
 				room.getCalendar().addEvent(event);
 				System.out.println("Rom reservert!");
 			}
 		}
 	}
 	
-	private LocalTime getLocalTime(TextField timeField) {
-		int hour = Integer.parseInt(timeField.getText(0, 2));
-		int minute = Integer.parseInt(timeField.getText(3, timeField.getText().length()));
-		
-		LocalTime time = LocalTime.of(hour, minute);
-		return time;
+	private LocalTime getLocalTime(TimeField timeField) {
+		return LocalTime.of(timeField.getHour(), timeField.getMinutes());
 	}
 
 	private ListView<String> showAvailableRooms(LocalDateTime fromTime, LocalDateTime toTime) {
