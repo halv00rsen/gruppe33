@@ -179,6 +179,7 @@ public class EventGUI extends Component implements GetPersonListener{
     	}
     	event.addAppliance(persons);
     	event.setInfo(infoText.getText());
+    	event.setPriority(priority);
     	
     	eventCall.addEvent(event);
     	trash();
@@ -438,14 +439,14 @@ public class EventGUI extends Component implements GetPersonListener{
 			public void handle(Event event) {
 				for (Priority p : pList){
 					if (p.getVisualization() == event.getSource()){
-						if (p.isActive()){
-							p.turnOff();
-							priority = null;
-						}
-						else{
+//						if (p.isActive()){
+//							p.turnOff();
+//							priority = null;
+//						}
+//						else{
 							p.turnOn();
 							priority = p;
-						}
+//						}
 					}else
 						p.turnOff();
 				}
@@ -520,7 +521,9 @@ public class EventGUI extends Component implements GetPersonListener{
 			freqText.setText("" + freq);
 		}
 		purposeText.setText(event.getEventName());
-		if (event.getRoom() != null)
+		if (event.getRoom() != null){
+			
+		}
 			//////Må fikses på
 			////romChoice.set(event.getRoom().getRoomName());
 		infoText.setText(event.getInfo());

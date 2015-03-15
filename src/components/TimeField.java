@@ -87,6 +87,8 @@ public class TimeField extends TextField implements TimeFieldMain{
 			otherTime.requestTime();
 		}else
 			checkInput(isCorrectInput());
+		if (isFirst && super.getText().length() == 5)
+			otherTime.focus();
 		
 	}
 	
@@ -153,6 +155,12 @@ public class TimeField extends TextField implements TimeFieldMain{
 	public interface FieldListener {
 		public void setSuccess();
 		public void setError();
+	}
+	
+	@Override
+	public void focus(){
+		if (!isFirst)
+			super.requestFocus();
 	}
 	
 }
