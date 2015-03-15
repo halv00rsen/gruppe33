@@ -159,8 +159,10 @@ public class TimeField extends TextField implements TimeFieldMain{
 	
 	@Override
 	public void focus(){
-		if (!isFirst)
+		if (!isFirst && this.getText().equals("")){
 			super.requestFocus();
+			
+		}
 	}
 	
 }

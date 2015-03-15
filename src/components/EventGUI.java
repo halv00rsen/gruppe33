@@ -421,7 +421,7 @@ public class EventGUI extends Component implements GetPersonListener{
         BorderPane.setAlignment(prio, Pos.CENTER);
         prioThings.setCenter(priorityList);
         BorderPane.setAlignment(priorityList, Pos.CENTER);
-        priority = null;
+        priority = Priority.NOT_IMPORTANT;
         Priority[] pList = new Priority[3];
         pList[0] = Priority.NOT_IMPORTANT;
         pList[0].turnOn();
