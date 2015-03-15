@@ -267,7 +267,7 @@ public class Main extends Application implements ProgramListener{
 	@Override
 	public void userCreated(boolean isCreated) {
 		if (isCreated){
-			requestLoginWindow();
+//			requestLoginWindow();
 		}
 		
 	}
@@ -316,18 +316,18 @@ public class Main extends Application implements ProgramListener{
 		program.personLogin(userName, password);
 	}
 	
-	public void requestNewUserGUI(){
-		NewUserWindow w = new NewUserWindow();
-		openNewWindow(w);
-	}
-	
+//	public void requestNewUserGUI(){
+//		NewUserWindow w = new NewUserWindow();
+//		openNewWindow(w);
+//	}
+//	
 	private void requestLoginWindow(){
 		openNewWindow(loginScreen);
 	}
-	
-	public void requestSettingsWindow(){
-//		Window w = new 
-	}
+//	
+//	public void requestSettingsWindow(){
+////		Window w = new 
+//	}
 	
 	public static final double getHeight(){
 		if (stage == null)

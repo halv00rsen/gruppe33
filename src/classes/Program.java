@@ -131,43 +131,22 @@ public class Program {
 		}
 		if (username.toLowerCase().equals("admin") && password.toLowerCase().equals("admin")){
 			currentPerson = new Person("admin", "admin", "Ola Nordmann", true);
-			return;
-		}
-		Map<String, String> info = PersonInformation.getPersonInformation(username, Person.hashPassword(password));
-
-		// Map<String, String> infoFromDatabase = ConnectionMySQL.getUserInfo(username);
-		String stringId = info.get("personid");
-		// String infoUsername = infoFromDatabase.get("username") + ", " + infoFromDatabase.get("password");
-		System.out.println(stringId);
-		if (stringId == null){
-			if (DEBUG){
-				System.out.println("Stringid er null");
-			}
-			loginFailListeners();
-			return;
-		}
-		for (char a : stringId.toCharArray()){
-			if ("0123456789".indexOf(a) == -1){
+		}else {
+			Map<String, String> info = PersonInformation.getPersonInformation(username, Person.hashPassword(password));
+			
+			String usernameDatabase = info.get("username");
+			String passwordDatabase = info.get("password");
+			String name = info.get("name");
+			if (!Person.hashPassword(password).equals(passwordDatabase) || username != usernameDatabase){
 				if (DEBUG){
-					System.out.println(stringId + " kan ikke parses");
+					System.out.println("Feil med passord");
 				}
-				loginFailListeners();
+				for (ProgramListener l : listeners)
+					l.loginFailed();
 				return;
 			}
+			currentPerson = new Person(usernameDatabase, passwordDatabase, name, false);
 		}
-
-		String usernameDatabase = info.get("username");
-		String passwordDatabase = info.get("password");
-		String name = info.get("name");
-		if (!Person.hashPassword(password).equals(passwordDatabase) || username != usernameDatabase){
-			if (DEBUG){
-				System.out.println("Feil med passord");
-			}
-			for (ProgramListener l : listeners)
-				l.loginFailed();
-			return;
-		}
-		currentPerson = new Person(usernameDatabase, passwordDatabase, name, false);
 		activeCalendars.add(currentPerson.getPersonalCalendar());
 		for (ProgramListener l : listeners)
 			l.loginSuccess(currentPerson);

@@ -110,7 +110,8 @@ public class LoginGUI extends Component{
 			@Override
 			public void handle(KeyEvent event) {
 				if (event.getCode() == KeyCode.ENTER){
-					loginCall.requestLogin(usernameTextField.getText(), passwordField.getText());
+//					loginCall.requestLogin(usernameTextField.getText(), passwordField.getText());
+					login();
 //					main.requestLogin(usernameTextField.getText(), passwordField.getText());
 				}
 			}
@@ -125,14 +126,18 @@ public class LoginGUI extends Component{
 			@Override
 			public void handle(ActionEvent arg0) {
 				
-				forgottenUserInfoToggle.setSelected(false);
-				sendUserInfoButton.setVisible(false);
-				errorEmailLabel.setVisible(false);
-				emailTextField.setVisible(false);
-				emailTextField.clear();
-				
-				if (validateTextFields()) 
-					loginCall.requestLogin(usernameTextField.getText(), passwordField.getText());
+//				forgottenUserInfoToggle.setSelected(false);
+//				sendUserInfoButton.setVisible(false);
+//				errorEmailLabel.setVisible(false);
+//				emailTextField.setVisible(false);
+//				emailTextField.clear();
+//				
+//				if (validateTextFields()) {
+//					loginCall.requestLogin(usernameTextField.getText(), passwordField.getText());
+//					usernameTextField.setText("");
+//					passwordField.setText("");
+//				}
+				login();
 //					main.requestLogin(usernameTextField.getText(),passwordField.getText());
 				
 				
@@ -270,6 +275,20 @@ public class LoginGUI extends Component{
 		
 		this.getChildren().add(mainVBox);
 
+	}
+	
+	private void login(){
+		forgottenUserInfoToggle.setSelected(false);
+		sendUserInfoButton.setVisible(false);
+		errorEmailLabel.setVisible(false);
+		emailTextField.setVisible(false);
+		emailTextField.clear();
+		
+		if (validateTextFields()) {
+			loginCall.requestLogin(usernameTextField.getText(), passwordField.getText());
+			usernameTextField.setText("");
+			passwordField.setText("");
+		}
 	}
 	
 	private boolean validateTextFields(){
