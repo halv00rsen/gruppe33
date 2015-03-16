@@ -199,7 +199,7 @@ public class SideMenu extends Component implements CalendarGUIListener{
 		if(event == null){
 			
 			eventInformation.getChildren().removeAll(fromTime, toTime, location, info, priority, fromTimeData, toTimeData, locationData, infoData, priorityData);
-			
+			return;
 		}
 		
 		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");

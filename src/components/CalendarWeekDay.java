@@ -8,8 +8,8 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 import components.CalendarGUI.ClockLines;
-
 import javafx.geometry.Insets;
+import javafx.scene.Cursor;
 import javafx.scene.control.Label;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
@@ -40,13 +40,9 @@ public class CalendarWeekDay extends CalendarDay{
 	}
 	
 	private Object draggingOn(MouseEvent e) {
-//		System.out.println("HEu");
 		if(isHighLighted){
 			box.setVisible(true);
-		}
-		
-		if(isHighLighted){
-			
+			setCursor(Cursor.NONE);
 			double h =  (Math.round(e.getY()/(calHeight/48)));
 			h = h*calHeight/48;
 			if(h >calHeight-calHeight/48){
@@ -55,7 +51,12 @@ public class CalendarWeekDay extends CalendarDay{
 			}else{
 				box.setTranslateY(h);
 			}
+		}else{
+			setCursor(Cursor.HAND);
+			
 		}
+		
+		
 		return null;
 	}
 	

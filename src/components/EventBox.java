@@ -49,7 +49,7 @@ public abstract class EventBox extends Pane{
 		
 		this.setOnMouseEntered(e -> hoverOn(e));
 		this.setOnMouseExited(e -> hoverOff(e));
-		this.setOnMouseClicked(e -> calday.onAction(e));
+		this.setOnMouseClicked(e -> calday.onEventAction(e));
 		
 	}
 	public void setHighlighted(boolean isHighLighted) {
