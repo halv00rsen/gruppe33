@@ -2,6 +2,7 @@ package components;
 import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -33,7 +34,8 @@ public abstract class CalendarDay extends Pane{
 	HashMap<Integer, EventBox> eventsHash;
 	boolean isUpperDisabled = false;
 	boolean isLowerDisabled = false;
-	BorderPane base;
+	Pane base;
+	EventBoxWeek box;
 	VBox body;
 	ArrayList<Event> events;
 	int calHeight;
@@ -41,6 +43,8 @@ public abstract class CalendarDay extends Pane{
 	CalendarGUI calGui;
 	public CalendarDay(CalendarGUI gui, LocalDate date,ArrayList<Event> events, boolean isUpperDisabled, boolean isLowerDisabled){
 		setCalHeight();
+		
+		
 		this.calGui = gui;
 		this.events = events;
 		this.date = date;
@@ -89,13 +93,12 @@ public abstract class CalendarDay extends Pane{
 		this.setStyle(this.getStyle());
 		this.defaultStyle = this.getStyle();
 		
-		base = new BorderPane();
+		base = new Pane();
 			base.setPadding(new Insets(5));
 				day = new Label();
-					base.setLeft(day);
+					base.getChildren().add(day);
 					day.setText("" + dayOfMonth);
-				body = new VBox(1);
-					base.setBottom(body);
+				
 					if(!(isLowerDisabled || isUpperDisabled)){
 
 						addEvents();
@@ -109,9 +112,7 @@ public abstract class CalendarDay extends Pane{
 	}
 
 	abstract void setCalHeight();
-
 	abstract void addEvents();
-
 	public void setIsUpperDisabled(boolean t){
 		this.isUpperDisabled = t;
 	}
@@ -119,15 +120,19 @@ public abstract class CalendarDay extends Pane{
 		this.isLowerDisabled = t;
 	}
 	private void hoverOff(MouseEvent e) {
+		if(box!= null){
+			box.setVisible(false);
+		}
 		this.setStyle(backupStyle);
 	}
-	
-	
+
 	private void hoverOn(MouseEvent e) {
+		
 		backupStyle = this.getStyle();
 		int[] a = {0,0,0};
 		Main.applyContrast(this,0.95,a);
 		setCursor(Cursor.HAND);
+
 	}
 
 	public boolean isUpperDisabled() {
@@ -154,6 +159,18 @@ public abstract class CalendarDay extends Pane{
 			}else{
 				calGui.highlightEvent(((EventBox)e.getSource()).event);
 			}
+		}
+		else if(isHighLighted && this instanceof CalendarWeekDay){
+			
+			double startTime = 0.5*Math.round(e.getY()/(calHeight/48));
+			int hour = (int)(Math.floor(startTime));
+			int minute = (int)((startTime-hour)*60);
+			Event event = new Event();
+			LocalDateTime dt = LocalDateTime.of(date, LocalTime.of(hour, minute));
+			event.setEventName("Hendelse");
+			event.setStartTime(dt);
+			event.setEndTime(dt.plusHours(1));
+			calGui.addEventFromCalendar(event);
 		}
 		if(e.getClickCount() == 2){
 			if(calGui.currentCalendarBase instanceof CalendarMonthBase){

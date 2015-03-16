@@ -24,6 +24,7 @@ import java.time.Month;
 import java.time.Year;
 import java.util.ArrayList;
 
+import components.CalendarGUI.ClockLines;
 import classes.Calendar;
 import classes.Event;
 
@@ -31,7 +32,8 @@ public class CalendarWeekBase extends CalendarBase{
 
 	public CalendarWeekBase(Pane parent,LocalDate date, Calendar[] args, CalendarGUI gui) {
 		super(date,args,gui);
-		
+		ClockLines l = CalendarGUI.clocklines;
+		innerBox.getChildren().add(l);
 	}
 	
 	

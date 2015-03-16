@@ -34,8 +34,8 @@ import javafx.scene.text.Font;
 
 public class Main extends Application implements ProgramListener{
 
-	public final static int SCREENHEIGHT = 600;
-	public final static int SCREENWIDTH = 1200;
+	public final static int SCREENHEIGHT = 650;
+	public final static int SCREENWIDTH = 1000;
 	public final static Pane root = new Pane();
 	public final static Font header1 = new Font("Verdana", 20);
 	public final static Insets paddingInsets = new Insets(10, 0, 0, 0);
@@ -118,9 +118,13 @@ public class Main extends Application implements ProgramListener{
 //			DebugMain debuglauncher = new DebugMain(root, this);
 			stage = primaryStage;
 			Scene scene = new Scene(root,SCREENWIDTH,SCREENHEIGHT);
+			
 			stage.setFullScreen(false);
 			stage.setTitle("xKal");
 			primaryStage.setScene(scene);
+			primaryStage.setMinWidth(900);
+
+			primaryStage.setMinHeight(660);
 			primaryStage.show();
 		} catch(Exception e) {
 			e.printStackTrace();
@@ -185,9 +189,10 @@ public class Main extends Application implements ProgramListener{
 		
 		
 		tabPane = new TabPane();
+		tabPane.setPrefWidth(1920);;
 		tabPane.setPrefHeight(1000);
 		home = new Tab("Hjem");
-		homeScreen  = new HomeScreen(new ChangeTab(), person);
+		homeScreen  = new HomeScreen(new ChangeTab(), person,new AddNewEvent());
 		home.setContent(homeScreen);
 		tabPane.setPrefHeight(1000);
 		
@@ -234,7 +239,7 @@ public class Main extends Application implements ProgramListener{
 		messageScreen = new MessageScreen();
 		Button slideButton = new Button("Vis melding");
 		VBox vBox = new VBox(3);
-		vBox.setLayoutX(1020);
+		vBox.translateXProperty().bind(stage.widthProperty().subtract(120));
 		vBox.setLayoutY(2);
 		Button slideAway = new Button("Fjern melding");
 		slideAway.setOnAction(e -> messageScreen.hide());

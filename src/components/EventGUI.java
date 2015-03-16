@@ -247,7 +247,7 @@ public class EventGUI extends Component implements GetPersonListener{
     }
 	
 	public void addElements(){
-    	pane.setStyle("-fx-background-color: #FFF");
+//    	pane.setStyle("-fx-background-color: #FFF");
 
         //formaal
         Label formaal = new Label();
@@ -279,13 +279,17 @@ public class EventGUI extends Component implements GetPersonListener{
        
         
         //dato
+        Label til1 = new Label();
+        til1.setText("\t\ttil\t\t");
         Label date = new Label();
-        date.setText("Dato\t\t\t");
-        HBox dateBox = new HBox(20);
+        date.setText("\tFra dato\t\t");
+        HBox dateBox = new HBox(0);
         dateBox.getChildren().add(date);
-        HBox heisann = new HBox(5);
-        heisann.getChildren().addAll(startDate, endDate);
+        HBox heisann = new HBox(0);
+        heisann.getChildren().addAll(startDate, til1,endDate);
         dateBox.getChildren().add(heisann);
+        startDate.setPrefWidth(100);
+        endDate.setPrefWidth(100);
 //        datePicker.setPrefWidth(225);
 //        setPos(dateBox,60,200);
 //        root.getChildren().add(dateBox);
@@ -293,9 +297,9 @@ public class EventGUI extends Component implements GetPersonListener{
       //klokken
         Label fra_klokken = new Label();
         Label til = new Label();
-        fra_klokken.setText("Fra klokken\t");
-        til.setText("til");
-        HBox klokkeBox = new HBox(20);
+        fra_klokken.setText("Fra klokken\t\t");
+        til.setText("\t\t\ttil\t\t");
+        HBox klokkeBox = new HBox(5);
         klokkeBox.getChildren().add(fra_klokken);
         klokkeBox.getChildren().add(start);
         klokkeBox.getChildren().add(til);
@@ -364,6 +368,7 @@ public class EventGUI extends Component implements GetPersonListener{
         invited.setItems(listPeople);
         VBox listButtons = new VBox(3);
         Button addPerson = new Button("Legg til"), removeButton = new Button("  Fjern  ");
+    	removeButton.setDisable(true);
         listButtons.getChildren().addAll(addPerson,removeButton);
         addPerson.setOnAction(new EventHandler<ActionEvent>(){
         	
@@ -378,7 +383,21 @@ public class EventGUI extends Component implements GetPersonListener{
 				searchPeople.getSelectionModel().clearSelection();
         	}
         });
-        
+        invited.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<Person>(){
+
+			
+			@Override
+			public void changed(ObservableValue<? extends Person> arg0,Person arg1, Person arg2) {
+				Person selected = invited.getSelectionModel().getSelectedItem();
+				if (selected != null){
+					removeButton.setDisable(false);
+				}else{
+					removeButton.setDisable(true);
+				}
+				
+			}
+        	
+        });
         removeButton.setOnAction(new EventHandler<ActionEvent>(){
         	
         	public void handle(ActionEvent e){
@@ -390,7 +409,6 @@ public class EventGUI extends Component implements GetPersonListener{
 				listPeople.remove(selected);
         	}
         });
-        
         BorderPane buttonsBox = new BorderPane();
         
         buttonsBox.setLeft(searchPeople);

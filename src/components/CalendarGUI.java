@@ -8,13 +8,18 @@ import classes.Event;
 import javafx.beans.Observable;
 import javafx.event.ActionEvent;
 import javafx.geometry.Pos;
+import javafx.scene.control.Label;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
+import javafx.scene.shape.Line;
+import javafx.scene.text.Font;
 import gui.Component;
 import gui.Main;
+import gui.Main.AddNewEvent;
 
 public class CalendarGUI extends Component{
 	RadioButton weekButton;
@@ -30,9 +35,17 @@ public class CalendarGUI extends Component{
 	ArrayList<Event> allEvents;
 	Calendar[] calendars;
 	Event highlightedEvent;
+	static ClockLines clocklines;
 	LocalDate highlightedDate;
+//	private final AddNewEvent eventCall;
+	SchedulingGUI sch;
 	public CalendarGUI(Pane parent, LocalDate date, Calendar... args) {
 		super(parent);
+		if(parent instanceof SchedulingGUI){
+			this.sch = (SchedulingGUI)parent;
+		}
+//		eventCall = new AddNewEvent();
+		clocklines =  new ClockLines();
 //		allEvents = new ArrayList<Event>();
 //		for(Calendar k : args){
 //			System.out.println(k);
@@ -86,6 +99,9 @@ public class CalendarGUI extends Component{
 		
 	}
 	public ArrayList<Event> getEventsByDay(LocalDate date){
+		if(date == null){
+			return null;
+		}
 		ArrayList<Event> events = new ArrayList<Event>();
 		for (Calendar calendar : calendars) {
 			events.addAll(calendar.getEventsByDay(date));
@@ -94,6 +110,7 @@ public class CalendarGUI extends Component{
 		return events;
 	}
 	public void updateCalendars(Calendar... calendars){
+		
 		this.calendars = calendars;
 		month.setNewCalendarList(calendars);
 		month.generateCalendars();
@@ -101,6 +118,12 @@ public class CalendarGUI extends Component{
 		week.setNewCalendarList(calendars);
 		week.generateCalendars();
 		week.redrawCalendar();
+		if(highlightedEvent != null){
+			highlightEvent(highlightedEvent);
+		}
+		if(highlightedDate != null){
+			highlightDate(highlightedDate);
+		}
 	}
 	public void addListener(CalendarGUIListener hei){
 		this.listeners.add(hei);
@@ -118,6 +141,7 @@ public class CalendarGUI extends Component{
 				
 
 				week.removeHighlightEvent();
+				
 				month.removeHighlightEvent();
 				highlightedEvent = null;
 				return;
@@ -126,44 +150,95 @@ public class CalendarGUI extends Component{
 				month.removeHighlightEvent();
 				highlightedEvent = null;
 			}
+			alertListenersAboutEvent(null);
 			
 		}
 		
 		this.highlightedEvent = event;
-		for (CalendarGUIListener i : listeners) {
-			i.eventIsHighligthed(event);
-		}
+		alertListenersAboutDate(event.getStartDate());
+		alertListenersAboutEvent(event);
 		month.highlightEvent(event);
 		week.highlightEvent(event);
 	}
 	public void highlightDate(LocalDate date) {
-		System.out.println("highlightedDate" + highlightedDate);
 		if(highlightedEvent != null){
 			if(!highlightedEvent.getStartDate().equals(date)){
 				week.removeHighlightEvent();
 				month.removeHighlightEvent();
+				alertListenersAboutEvent(null);
 				highlightedEvent = null;
 			}
 		}
 		
 		if(highlightedDate != null){
-			if(highlightedDate.equals(date)){
+//			if(highlightedDate.equals(date)){
 				month.removeHighlightDate();
 				week.removeHighlightDate();
 				highlightedDate = null;
+				alertListenersAboutDate(null);
 				return;
-			}else{
-				month.removeHighlightDate();
-				week.removeHighlightDate();
-				highlightedDate = null;
-			}
+//			}else{
+//				month.removeHighlightDate();
+//				week.removeHighlightDate();
+//				highlightedDate = null;
+//			}
+//			alertListenersAboutDate(null);
 		}
 		highlightedDate = date;
+		alertListenersAboutDate(date);
+		month.highlightDate(date);
+		week.highlightDate(date);
+	}
+	public void alertListenersAboutDate(LocalDate date){
 		for (CalendarGUIListener i : listeners) {
 			i.dayIsHighligthed(date, getEventsByDay(date));
 			
 		}
-		month.highlightDate(date);
-		week.highlightDate(date);
+	}
+	public void alertListenersAboutEvent(Event event){
+		for (CalendarGUIListener i : listeners) {
+			i.eventIsHighligthed(event);
+			
+		}
+	}
+	public class ClockLines extends Pane{
+		public double calWidth = CalendarBase.defaultCalWidth;
+		public double calHeight = CalendarBase.defaultCalHeight;
+		public ClockLines(){
+			double hourHeight = calHeight/24;
+			double u = hourHeight;
+//			this.setTranslateY(8);
+			for(int i = 0; i <24; i++){
+				Label number = new Label();
+				number.setText(""+(i+1)+".00");
+				Line l = new Line();
+				number.setTextFill(Color.DARKGREY);
+				number.setFont(Font.font ("Verdana", 8));
+				l.setStroke(Color.DARKGREY);
+				l.getStrokeDashArray().addAll(2d, 4d);
+
+				l.setStrokeWidth(0.5);
+				l.setStartX(0);
+				l.setEndX(calWidth);
+				l.setStartY(0);
+				l.setEndY(0);
+				l.setTranslateY(u);
+				l.setTranslateX(30);
+				number.setTranslateY(u-6);
+				number.setTranslateX(5);
+				this.getChildren().add(number);
+				this.getChildren().add(l);
+				u += hourHeight;
+				
+			}
+		
+		this.setDisable(true);
+			
+	}
+	}
+	public void addEventFromCalendar(Event event) {
+		sch.addEventFromCalendar(event);
+		
+		
 	}
 }

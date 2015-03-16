@@ -7,6 +7,8 @@ import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
+import components.CalendarGUI.ClockLines;
+
 import javafx.geometry.Insets;
 import javafx.scene.control.Label;
 import javafx.scene.input.MouseEvent;
@@ -16,6 +18,7 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Line;
+import javafx.scene.text.Font;
 import classes.Event;
 
 public class CalendarWeekDay extends CalendarDay{
@@ -24,7 +27,39 @@ public class CalendarWeekDay extends CalendarDay{
 	public CalendarWeekDay(CalendarGUI gui, LocalDate date,ArrayList<Event> events, boolean isUpperDisabled,boolean isLowerDisabled) {
 		super(gui, date, events, isUpperDisabled, isLowerDisabled);
 		this.setPrefHeight(calHeight);
+		box = new EventBoxWeek(null, calGui, null);
+		box.strokething.setStyle("-fx-border-color: rgba(0, 0, 0, 0.2);");
+		box.setNormalStyle("-fx-background-color: rgba(70, 100, 0, 0.1);");
+		box.setVisible(false);
+		box.setOnMouseEntered(null);
+		box.setOnMouseExited(null);
+		box.setDisable(true);
+		this.getChildren().add(box);
+
+		this.setOnMouseMoved(e -> draggingOn(e));
 	}
+	
+	private Object draggingOn(MouseEvent e) {
+//		System.out.println("HEu");
+		if(isHighLighted){
+			box.setVisible(true);
+		}
+		
+		if(isHighLighted){
+			
+			double h =  (Math.round(e.getY()/(calHeight/48)));
+			h = h*calHeight/48;
+			if(h >calHeight-calHeight/48){
+				box.setVisible(false);
+				return null;
+			}else{
+				box.setTranslateY(h);
+			}
+		}
+		return null;
+	}
+	
+	
 	
 	@Override
 	void addEvents(){
@@ -71,7 +106,7 @@ public class CalendarWeekDay extends CalendarDay{
 			
 		
 		
-		body.getChildren().add(innerBody);	
+		this.getChildren().add(innerBody);	
 	}
 
 	@Override

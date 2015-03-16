@@ -11,6 +11,8 @@ import java.time.Year;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import components.CalendarGUI.ClockLines;
+
 import classes.Calendar;
 import classes.Event;
 
@@ -21,6 +23,7 @@ public class CalendarWeekGrid extends CalendarGrid{
 		super(gui, date, cal);
 
 		// TODO Auto-generated constructor stub
+		
 	}
 	@Override
 	void generateGrid(LocalDate date) {

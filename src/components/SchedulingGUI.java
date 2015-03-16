@@ -1,6 +1,7 @@
 package components;
 
 import gui.Component;
+import gui.Main.AddNewEvent;
 import gui.Main.ChangeTab;
 import gui.Window;
 
@@ -25,6 +26,7 @@ public class SchedulingGUI extends Component{
     
 
 	private Button settings;
+	private AddNewEvent eventAdder;
 	public SchedulingGUI(Window parent, Person p, ChangeTab tab, Calendar... calendars ) {
 
 		super(parent);
@@ -55,5 +57,17 @@ public class SchedulingGUI extends Component{
 	}
 	public void highlightEvent(Event event){
 		calendargui.highlightEvent(event);
+	}
+	public void newEvent(Event event){
+		calendargui.highlightEvent(event);
+	}
+	
+	public void addEventFromCalendar(Event event) {
+		eventAdder.addEvent(event);
+	}
+
+	public void setEventAdder(AddNewEvent eventAdder) {
+		this.eventAdder = eventAdder;
+		
 	}
 }

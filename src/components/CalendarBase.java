@@ -42,14 +42,14 @@ public abstract class CalendarBase extends Pane{
 	Label l;
 	VBox box;
 	HBox hbox;
-	VBox innerBox;
+	StackPane innerBox;
 	
 	HBox dayTitles;
 	CalendarDay dayHighlighted;
 	StackPane calCnt;
 	Pane dayBox;
 	ArrayList<Event> events;
-	static int defaultCalHeight = 300;
+	static int defaultCalHeight = 440;
 	static int defaultCalWidth = 500;
 	VBox header;
 	static int headerHeight = 30;
@@ -86,7 +86,7 @@ public abstract class CalendarBase extends Pane{
 				sliderLeft = new Slider(true);
 					hbox.getChildren().add(sliderLeft);
 					sliderLeft.setOnMouseClicked(e -> nextSlide(e));
-				innerBox = new VBox();
+				innerBox = new StackPane();
 					hbox.getChildren().add(innerBox);
 					calCnt = new StackPane();
 						innerBox.getChildren().add(calCnt);

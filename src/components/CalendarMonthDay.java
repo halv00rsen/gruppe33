@@ -34,7 +34,7 @@ public class CalendarMonthDay extends CalendarDay{
 			EventBox eventBox = new EventBoxMonth(thisEvent,calGui,this);
 				
 			
-			body.getChildren().add(eventBox);		
+			this.getChildren().add(eventBox);		
 			eventsHash.put(thisEvent.getID(), eventBox);
 			
 		}

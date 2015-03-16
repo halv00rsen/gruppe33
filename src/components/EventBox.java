@@ -22,21 +22,31 @@ import classes.TimeMethods;
 public abstract class EventBox extends Pane{
 	
 
-	Priority priority;
+	Priority priority = Priority.NOT_IMPORTANT;
 	Event event;
 	String highLightStyle = "-fx-background-color: #8888FF";
 	String backupStyle;
 	String defaultStyle;
 	CalendarDay calday;
+	LocalDateTime startTime;
+	LocalDateTime endTime;
+	Label clock;
 	boolean isHighLighted = false;
 	protected CalendarGUI calGui;
 	public EventBox(Event event,CalendarGUI calGui,CalendarDay calday){
 		this.calday = calday;
-		this.event = event;
 		this.calGui = calGui;
-		this.priority = event.getPriority();
-		this.setStyle("-fx-background-color:"+ Main.colorToHex(priority.getColor()));			
-		defaultStyle = this.getStyle();
+		if(event != null){
+			this.event = event;
+			this.priority = event.getPriority();
+			startTime = event.getStartTime();
+			endTime = event.getEndTime();
+			this.event = event;
+		}
+		
+		
+		setNormalStyle("-fx-background-color:"+ Main.colorToHex(priority.getColor()));
+		
 		this.setOnMouseEntered(e -> hoverOn(e));
 		this.setOnMouseExited(e -> hoverOff(e));
 		this.setOnMouseClicked(e -> calday.onAction(e));
@@ -53,9 +63,18 @@ public abstract class EventBox extends Pane{
 		}
 		
 	}
-
 	
+	public void setNormalStyle(String string){
+		this.setStyle(string);			
+		defaultStyle = string;
+	}
 	
+	public void setEvent(Event event){
+		this.event = event;
+	}
+	public void setClockText(String string){
+		this.clock.setText(string);
+	}
 	protected void hoverOn(MouseEvent e) {
 		backupStyle = this.getStyle();
 		int[] a = {0,0,0};

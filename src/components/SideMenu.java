@@ -49,10 +49,12 @@ public class SideMenu extends Component implements CalendarGUIListener{
 	
 	ListView<Event> list;
 	ObservableList<Event> items;
-	
+	HBox listAndInformation;
 	
 	GridPane eventInformation;
 	VBox vbox;
+
+	private List<Event> eventList;
 
 	public SideMenu(Pane parent, List<Event> events, ChangeTab changeTab) {
 		super(parent);
@@ -61,7 +63,7 @@ public class SideMenu extends Component implements CalendarGUIListener{
 	}
 	
 	private void init(List<Event> events) {
-		
+		this.eventList = events;
 		// Viser dagens events
 		title = new Label("Dagens arrangementer");
 		title.setFont(Main.header1);
@@ -96,7 +98,6 @@ public class SideMenu extends Component implements CalendarGUIListener{
 		priorityData = new Text("");
 		
 		
-		
 		eventInformation = new GridPane();
 		eventInformation.setHgap(50); //horizontal gap in pixels 
 		eventInformation.setVgap(5); //vertical gap in pixels
@@ -113,11 +114,13 @@ public class SideMenu extends Component implements CalendarGUIListener{
 		eventInformation.add(infoData, 1, 3);
 		eventInformation.add(priorityData, 1, 4);
 		
-		
+		String hhhhh = this.toString();
 		//Endrer tabellen når man klikker på listen
 		list.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<Event>() {
 		    @Override
 		    public void changed(ObservableValue<? extends Event> observable, Event oldValue, Event newValue) {
+		    	System.out.println(hhhhh);
+		    	System.out.println(newValue.getID());
 		    	for (Event event : events) {
 		    		if (event == newValue){
 		    			changeEvent(event);
@@ -138,16 +141,15 @@ public class SideMenu extends Component implements CalendarGUIListener{
 		    }
 		});
 
-		HBox listAndInformation = new HBox(5, list, eventInformation);
+		listAndInformation = new HBox(5, list, eventInformation);
 		
 		
 		HBox eventButtons = new HBox(5);
 		eventButtons.getChildren().addAll(editEvent, deleteEvent);
 		
 		
-		
-		
 		vbox = new VBox();
+		
 		vbox.getChildren().addAll(title, listAndInformation, eventButtons);
 		this.getChildren().add(vbox);
 	}
@@ -176,6 +178,9 @@ public class SideMenu extends Component implements CalendarGUIListener{
 
 
 	private void addListElements(List<Event> events) {
+			if(events == null){
+				return;
+			}
 			for (Event event : events) {
 				try { items.add(event); }
 				catch (NullPointerException e) {}
@@ -186,11 +191,17 @@ public class SideMenu extends Component implements CalendarGUIListener{
 	}
 	
 	public void changeDate(List<Event> events) {
-		vbox.getChildren().clear();
 		init(events);
 	}
 	
 	private void changeEvent(Event event) {
+		
+		if(event == null){
+			
+			eventInformation.getChildren().removeAll(fromTime, toTime, location, info, priority, fromTimeData, toTimeData, locationData, infoData, priorityData);
+			
+		}
+		
 		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
 		String formattedStartTime = event.getStartTime().format(formatter);
 		String formattedEndTime = event.getEndTime().format(formatter);
@@ -219,12 +230,13 @@ public class SideMenu extends Component implements CalendarGUIListener{
 		eventInformation.add(locationData, 1, 2);
 		eventInformation.add(infoData, 1, 3);
 		eventInformation.add(priorityData, 1, 4);
+		
 	}
 	
 	@Override
 	public void dayIsHighligthed(LocalDate date, ArrayList<Event> events) {
 		changeDate(events);
-	}
+ 	}
 
 	@Override
 	public void eventIsHighligthed(Event event) {

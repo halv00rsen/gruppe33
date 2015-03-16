@@ -16,6 +16,7 @@ import classes.Person;
 import classes.PersonCalendar;
 import components.*;
 import gui.*;
+import gui.Main.AddNewEvent;
 import gui.Main.ChangeTab;
 public class HomeScreen extends Window{
 
@@ -24,8 +25,11 @@ public class HomeScreen extends Window{
     public SchedulingGUI schedulingGUI;
     private Person p;
     private PersonCalendar cal;
+
+	private AddNewEvent eventAdder;
     
-	public HomeScreen(ChangeTab tab, Person person) {
+	public HomeScreen(ChangeTab tab, Person person, AddNewEvent addNewEvent) {
+		this.eventAdder = addNewEvent;
 		this.p = person;
 		this.tab = tab;
 		cal = new PersonCalendar(p);
@@ -37,6 +41,7 @@ public class HomeScreen extends Window{
 	@Override
 	public void init() {
 		schedulingGUI = new SchedulingGUI(this,p, tab,cal);
+		schedulingGUI.setEventAdder(eventAdder);
 		borderPane.setCenter(schedulingGUI);
 	}
 

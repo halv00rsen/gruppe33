@@ -63,7 +63,7 @@ public class SettingsGUI extends Component{
 	private void init() {
 		
 		this.setTranslateX(0);
-		this.setPrefWidth(100);
+		this.setPrefWidth(300);
 		this.setPrefHeight(500);
 		
 		
