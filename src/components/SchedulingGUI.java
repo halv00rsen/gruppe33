@@ -27,7 +27,7 @@ public class SchedulingGUI extends Component{
 
 	private Button settings;
 	private AddNewEvent eventAdder;
-	public SchedulingGUI(Window parent, Person p, ChangeTab tab, Calendar... calendars ) {
+	public SchedulingGUI(Window parent, ChangeTab tab, Calendar... calendars ) {
 
 		super(parent);
 		mainBox = new HBox(30);
@@ -43,12 +43,16 @@ public class SchedulingGUI extends Component{
 		}
 		menu = new SideMenu(this, dagens, tab);
 		calendargui.addListener(menu);
-		userInfo = new UserInfoGUI(this, p);
+		userInfo = new UserInfoGUI(this);
 		
 		calendarAndInfo.getChildren().addAll(userInfo, menu);
 		
 		mainBox.getChildren().addAll(calendargui, calendarAndInfo);
 		this.getChildren().add(mainBox);
+	}
+	
+	public void changePerson(Person p){
+		userInfo.changePerson(p);
 	}
 
 	public void updateCalendars(Calendar... calendars){

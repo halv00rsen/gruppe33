@@ -40,7 +40,8 @@ public class HomeScreen extends Window{
 
 	@Override
 	public void init() {
-		schedulingGUI = new SchedulingGUI(this,p, tab,cal);
+		schedulingGUI = new SchedulingGUI(this, tab,cal);
+		schedulingGUI.changePerson(p);
 		schedulingGUI.setEventAdder(eventAdder);
 		borderPane.setCenter(schedulingGUI);
 	}

@@ -67,7 +67,8 @@ public class OtherPersonScreen extends Window implements GetPersonListener{
 			System.out.println("Hiodgjioerjgioe");
 	        mainBox.getChildren().remove(schedulingGUI);
 	        cal = new PersonCalendar(items.get(p));
-	        schedulingGUI = new SchedulingGUI(getThis(), items.get(p),tab,cal);
+	        schedulingGUI = new SchedulingGUI(getThis(),tab,cal);
+	        schedulingGUI.changePerson(items.get(p));
 	        mainBox.getChildren().add(schedulingGUI);
 		});
 //		peopleComboBox.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<Person>() {
@@ -86,7 +87,7 @@ public class OtherPersonScreen extends Window implements GetPersonListener{
 		pane.add(chosePersonLabel, 0, 0);
 		pane.add(peopleComboBox, 1, 0);
 		pane.add(button, 2,0);
-		schedulingGUI = new SchedulingGUI(this, null, tab, cal);
+		schedulingGUI = new SchedulingGUI(this, tab, cal);
 		
 		mainBox.getChildren().addAll(pane, schedulingGUI);
 		
@@ -110,7 +111,10 @@ public class OtherPersonScreen extends Window implements GetPersonListener{
 			return;
 		Person p = items.get(index);
 		cal = new PersonCalendar(p);
-		schedulingGUI = new SchedulingGUI(this, p, tab,cal);
+		mainBox.getChildren().remove(schedulingGUI);
+		schedulingGUI = new SchedulingGUI(this, tab,cal);
+		schedulingGUI.changePerson(p);
+		mainBox.getChildren().add(schedulingGUI);
 		
 	}
 }

@@ -138,6 +138,7 @@ public class GroupGUI extends Component implements GetPersonListener{
 		HBox box = new HBox(10);
 		box.getChildren().addAll(vBox, persons, subGroups);
 		getChildren().add(box);
+		changeStatus();
 		
 		
 //		HBox master = new HBox(20);
