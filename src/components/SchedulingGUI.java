@@ -8,6 +8,8 @@ import gui.Window;
 import java.time.LocalDate;
 import java.util.ArrayList;
 
+import components.SideMenu.SideMenuInterface;
+
 import classes.Calendar;
 import classes.Event;
 import classes.Person;
@@ -43,6 +45,7 @@ public class SchedulingGUI extends Component{
 		}
 		menu = new SideMenu(this, dagens, tab);
 		calendargui.addListener(menu);
+		menu.addListener(calendargui);
 		userInfo = new UserInfoGUI(this);
 		
 		calendarAndInfo.getChildren().addAll(userInfo, menu);
@@ -60,10 +63,10 @@ public class SchedulingGUI extends Component{
 		
 	}
 	public void highlightEvent(Event event){
-		calendargui.highlightEvent(event);
+		calendargui.highlightEvent(event,true);
 	}
 	public void newEvent(Event event){
-		calendargui.highlightEvent(event);
+		calendargui.highlightEvent(event,true);
 	}
 	
 	public void addEventFromCalendar(Event event) {
@@ -74,4 +77,5 @@ public class SchedulingGUI extends Component{
 		this.eventAdder = eventAdder;
 		
 	}
+
 }

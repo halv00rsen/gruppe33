@@ -41,6 +41,7 @@ public class SideMenu extends Component implements CalendarGUIListener{
 	private final Label title, fromTime, toTime, location, info, priority;
 	
 	private final Text fromTimeData, toTimeData, locationData, infoData, priorityData;
+	private ArrayList<SideMenuInterface> listeners = new ArrayList<SideMenuInterface>();
 	
 	public SideMenu(Pane parent, List<Event> events, ChangeTab changeTab) {
 		super(parent);
@@ -104,8 +105,8 @@ public class SideMenu extends Component implements CalendarGUIListener{
 //		    	System.out.println(newValue.getID());
 				for (Event event : items) {
 					if (event == newValue){
-						System.out.println("eventstuff");
 						changeEvent(event);
+						alertListenersAboutEventChange(event);
 						break;
 					}
 				}
@@ -215,5 +216,15 @@ public class SideMenu extends Component implements CalendarGUIListener{
 //		list.requestFocus();
 		list.getSelectionModel().select(event);
 	}
-	
+	public void addListener(SideMenuInterface obj){
+		this.listeners.add(obj);
+	}
+	public void alertListenersAboutEventChange(Event event){
+		for (SideMenuInterface listener : this.listeners) {
+			listener.changingSelectionToEvent(event);
+		}
+	}
+	public interface SideMenuInterface{
+		public void changingSelectionToEvent(Event event);
+	}
 }

@@ -3,6 +3,8 @@ package components;
 import java.time.LocalDate;
 import java.util.ArrayList;
 
+import components.SideMenu.SideMenuInterface;
+
 import classes.Calendar;
 import classes.Event;
 import javafx.beans.Observable;
@@ -21,7 +23,7 @@ import gui.Component;
 import gui.Main;
 import gui.Main.AddNewEvent;
 
-public class CalendarGUI extends Component{
+public class CalendarGUI extends Component implements SideMenuInterface{
 	RadioButton weekButton;
 	RadioButton monthButton;
 	ArrayList<CalendarGUIListener> listeners = new ArrayList<CalendarGUIListener>();
@@ -119,7 +121,7 @@ public class CalendarGUI extends Component{
 		week.generateCalendars();
 		week.redrawCalendar();
 		if(highlightedEvent != null){
-			highlightEvent(highlightedEvent);
+			highlightEvent(highlightedEvent,true);
 		}
 		if(highlightedDate != null){
 			highlightDate(highlightedDate);
@@ -133,11 +135,14 @@ public class CalendarGUI extends Component{
 		public void eventIsHighligthed(Event event);
 
 	}
-	public void highlightEvent(Event event) {
+	public void highlightEvent(Event event,boolean alert) {
 		if(highlightedDate != null){
 				week.removeHighlightDate();
 				month.removeHighlightDate();
-				alertListenersAboutDate(null);
+				if(alert){
+					alertListenersAboutDate(null);
+				}
+				
 				highlightedDate = null;
 		}
 		if(highlightedEvent != null){
@@ -156,13 +161,17 @@ public class CalendarGUI extends Component{
 				month.removeHighlightEvent();
 				highlightedEvent = null;
 			}
+			if(alert){
 			alertListenersAboutEvent(null);
-			
+			}
 		}
 		
 		this.highlightedEvent = event;
-		alertListenersAboutDate(event.getStartDate());
-		alertListenersAboutEvent(event);
+		if(alert){
+			alertListenersAboutDate(event.getStartDate());
+			alertListenersAboutEvent(event);
+		}
+		
 		month.highlightEvent(event);
 		week.highlightEvent(event);
 	}
@@ -243,6 +252,11 @@ public class CalendarGUI extends Component{
 	public void addEventFromCalendar(Event event) {
 		sch.addEventFromCalendar(event);
 		
+		
+	}
+	@Override
+	public void changingSelectionToEvent(Event event) {
+		highlightEvent(event,false);
 		
 	}
 }

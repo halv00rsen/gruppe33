@@ -184,9 +184,9 @@ public abstract class CalendarDay extends Pane{
 			timeline.play();
 			if(e.getClickCount() == 2){
 
-				calGui.highlightEvent(((EventBox)e.getSource()).event);
+				calGui.highlightEvent(((EventBox)e.getSource()).event,true);
 			}else{
-				calGui.highlightEvent(((EventBox)e.getSource()).event);
+				calGui.highlightEvent(((EventBox)e.getSource()).event,true);
 			}
 		}else if(evenBoxWasJustCalled == false){
 			if(e.getButton() == MouseButton.SECONDARY){
