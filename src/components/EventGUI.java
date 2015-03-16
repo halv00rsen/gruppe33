@@ -45,7 +45,7 @@ public class EventGUI extends Component implements GetPersonListener{
 	private final NumberField freqText;
 	private final AddNewEvent eventCall;
 	private final ChangeTab changeTab;
-	
+	Priority[] pList;
 	Label repeatTo = new Label();
     Label every = new Label();
     Label day = new Label();
@@ -217,6 +217,10 @@ public class EventGUI extends Component implements GetPersonListener{
     	infoText.clear();
     	freqText.clear();
     	currentEvent = null;
+    	for (Priority p : pList){
+				p.turnOff();
+		}
+    	pList[0].turnOn();
 //    	changeTab.goToHomeScreen();
 	}
 	
@@ -456,7 +460,7 @@ public class EventGUI extends Component implements GetPersonListener{
         prioThings.setCenter(priorityList);
         BorderPane.setAlignment(priorityList, Pos.CENTER);
         priority = Priority.NOT_IMPORTANT;
-        Priority[] pList = new Priority[3];
+        pList = new Priority[3];
         pList[0] = Priority.NOT_IMPORTANT;
         pList[0].turnOn();
         pList[1] = Priority.IMPORTANT;
@@ -569,8 +573,7 @@ public class EventGUI extends Component implements GetPersonListener{
 		endDate.setValue(event.getEndDate());
 		if (event.getFreqDate() != null)
 			repDate.setValue(event.getFreqDate());
-		priority = event.getPriority();
-		for (EventAppliance e : event.getAppliance()){
+				for (EventAppliance e : event.getAppliance()){
 			Person p = e.person;
 			int index = comboPeople.indexOf(p);
 			if (index != -1){
@@ -578,6 +581,16 @@ public class EventGUI extends Component implements GetPersonListener{
 				listPeople.add(p);
 			}
 		}
+		priority = event.getPriority();
+
+		for (Priority p : pList){
+			if (p.getVisualization() == event.getPriority().getVisualization()){
+					p.turnOn();
+					priority = p;
+			}else
+				p.turnOff();
+		}
+	
 		save.setText("Lagre");
 		trash.setText("Slett");
 		cancel.setText("Avbryt");
