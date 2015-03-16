@@ -10,6 +10,7 @@ import classes.Event;
 import javafx.geometry.Insets;
 import javafx.scene.Cursor;
 import javafx.scene.control.Label;
+import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Pane;
@@ -107,7 +108,6 @@ public abstract class CalendarDay extends Pane{
 		this.setOnMouseClicked(e -> onAction(e));
 		this.setOnMouseEntered(e -> hoverOn(e));
 		this.setOnMouseExited(e -> hoverOff(e));
-
 		this.setMouseTransparent(false);
 	}
 
@@ -131,7 +131,12 @@ public abstract class CalendarDay extends Pane{
 		backupStyle = this.getStyle();
 		int[] a = {0,0,0};
 		Main.applyContrast(this,0.95,a);
-		setCursor(Cursor.HAND);
+		if(isHighLighted){
+			setCursor(Cursor.NONE);
+		}else{
+			setCursor(Cursor.HAND);
+		}
+		
 
 	}
 
@@ -151,39 +156,50 @@ public abstract class CalendarDay extends Pane{
 	public LocalDate getDate(){
 		return this.date;
 	}
+	public Object onEventAction(MouseEvent e) {
+		// TODO Auto-generated method stub
+		return null;
+	}	
 	public LocalDate onAction(MouseEvent e) {
+//		System.out.println("CALLING");
+//		if(e.getTarget() instanceof EventBox){
+//			System.out.println("EVENTBOX");
+//		}else if(e.getTarget() instanceof CalendarDay){
+//			System.out.println("DAY");
+//		}
 		if(e.getSource() instanceof EventBox){
+			System.out.println("CALLING EVENTBOX");
 			if(e.getClickCount() == 2){
 
 				calGui.highlightEvent(((EventBox)e.getSource()).event);
 			}else{
 				calGui.highlightEvent(((EventBox)e.getSource()).event);
 			}
-		}
-		else if(isHighLighted && this instanceof CalendarWeekDay){
-			
-			double startTime = 0.5*Math.round(e.getY()/(calHeight/48));
-			int hour = (int)(Math.floor(startTime));
-			int minute = (int)((startTime-hour)*60);
-			Event event = new Event();
-			LocalDateTime dt = LocalDateTime.of(date, LocalTime.of(hour, minute));
-			event.setEventName("Hendelse");
-			event.setStartTime(dt);
-			event.setEndTime(dt.plusHours(1));
-			calGui.addEventFromCalendar(event);
-		}
-		if(e.getClickCount() == 2){
-			if(calGui.currentCalendarBase instanceof CalendarMonthBase){
-				calGui.changeToWeek(date);
-			}
-			calGui.highlightDate(date);
 		}else{
-			calGui.highlightDate(date);
+			System.out.println("CALLING DAY");
+			if(e.getButton() == MouseButton.SECONDARY){
+				if(calGui.currentCalendarBase instanceof CalendarMonthBase){
+					calGui.changeToWeek(date);
+				}else if(isHighLighted){
+						
+					double startTime = 0.5*Math.round(e.getY()/(calHeight/48));
+					int hour = (int)(Math.floor(startTime));
+					int minute = (int)((startTime-hour)*60);
+					Event event = new Event();
+					LocalDateTime dt = LocalDateTime.of(date, LocalTime.of(hour, minute));
+					event.setEventName("Hendelse");						
+					event.setStartTime(dt);
+					event.setEndTime(dt.plusHours(1));
+					calGui.addEventFromCalendar(event);
+				}
+			}else if(e.getClickCount() == 1){
+				calGui.highlightDate(date);	
+			}
+			
+				
 		}
 		
-		
-			
-		return this.date;
+		return null;
 	}
 	private LocalDate getLocalDate() {
 		return this.date;
@@ -210,9 +226,13 @@ public abstract class CalendarDay extends Pane{
 	public void setHighlighted(boolean isHighLighted) {
 		this.isHighLighted = isHighLighted;
 		if(isHighLighted){
+			
 			backupStyle = highLightStyle;
 			this.setStyle(highLightStyle);
 		}else{
+			if(box != null){
+				box.setVisible(false);
+			}
 			backupStyle = defaultStyle;
 			this.setStyle(defaultStyle);
 		}
@@ -223,5 +243,7 @@ public abstract class CalendarDay extends Pane{
 		highlightedEvent.setHighlighted(false);
 		highlightedEvent = null;
 		
-	}	
+	}
+
+	
 }

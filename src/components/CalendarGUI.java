@@ -171,18 +171,18 @@ public class CalendarGUI extends Component{
 		}
 		
 		if(highlightedDate != null){
-//			if(highlightedDate.equals(date)){
+			if(highlightedDate.equals(date)){
 				month.removeHighlightDate();
 				week.removeHighlightDate();
 				highlightedDate = null;
 				alertListenersAboutDate(null);
 				return;
-//			}else{
-//				month.removeHighlightDate();
-//				week.removeHighlightDate();
-//				highlightedDate = null;
-//			}
-//			alertListenersAboutDate(null);
+			}else{
+				month.removeHighlightDate();
+				week.removeHighlightDate();
+				highlightedDate = null;
+			}
+			alertListenersAboutDate(null);
 		}
 		highlightedDate = date;
 		alertListenersAboutDate(date);

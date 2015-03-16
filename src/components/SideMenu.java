@@ -179,6 +179,7 @@ public class SideMenu extends Component implements CalendarGUIListener{
 		resetFields();
 		System.out.println(event);
 		if(event == null){
+			eventInformation.getChildren().removeAll(fromTime, toTime, location, info, priority, fromTimeData, toTimeData, locationData, infoData, priorityData);
 			return;
 		}
 		System.out.println(event.getStartDate() + "  " + event.getEndTime());
