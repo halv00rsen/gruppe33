@@ -77,7 +77,10 @@ public class Main extends Application implements ProgramListener{
 			tabPane.getSelectionModel().select(newEvent);
 			eventScreen.showEvent(event);
 		}
-		
+		public void showEventInHomeScreen(Event event){
+			goToHomeScreen();
+			homeScreen.highlightEvent(event);
+		}
 		public void deleteEvent(Event event){
 			program.deleteEvent(event);
 		}
@@ -109,7 +112,11 @@ public class Main extends Application implements ProgramListener{
 	public class GoToEvent{
 		
 		public void goToEvent(int eventKey){
-			program.requestEvent(eventKey);
+//			//Dette er bare for å gå direkte til homescreen uten å gå gjennom program. Kan endres på!
+//			ChangeTab hei = new ChangeTab();
+//			Event event = new Event();
+//			
+//			hei.showEventInHomeScreen(event);
 		}
 	}
 	
@@ -123,7 +130,7 @@ public class Main extends Application implements ProgramListener{
 			stage.setFullScreen(false);
 			stage.setTitle("xKal");
 			primaryStage.setScene(scene);
-			primaryStage.setMinWidth(900);
+			primaryStage.setMinWidth(950);
 
 			primaryStage.setMinHeight(660);
 			primaryStage.show();

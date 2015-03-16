@@ -65,9 +65,9 @@ public class SchedulingGUI extends Component{
 	public void highlightEvent(Event event){
 		calendargui.highlightEvent(event,true);
 	}
-	public void newEvent(Event event){
-		calendargui.highlightEvent(event,true);
-	}
+//	public void newEvent(Event event){
+//		calendargui.highlightEvent(event,true);
+//	}
 	
 	public void addEventFromCalendar(Event event) {
 		eventAdder.addEvent(event);

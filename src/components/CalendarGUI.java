@@ -120,6 +120,8 @@ public class CalendarGUI extends Component implements SideMenuInterface{
 		week.setNewCalendarList(calendars);
 		week.generateCalendars();
 		week.redrawCalendar();
+//		highlightedDate = null;
+//		highlightedEvent = null;
 		if(highlightedEvent != null){
 			highlightEvent(highlightedEvent,true);
 		}
@@ -136,6 +138,7 @@ public class CalendarGUI extends Component implements SideMenuInterface{
 
 	}
 	public void highlightEvent(Event event,boolean alert) {
+		System.out.println("highlightedEvent"  + highlightedEvent);
 		if(highlightedDate != null){
 				week.removeHighlightDate();
 				month.removeHighlightDate();
@@ -162,7 +165,7 @@ public class CalendarGUI extends Component implements SideMenuInterface{
 				highlightedEvent = null;
 			}
 			if(alert){
-			alertListenersAboutEvent(null);
+				alertListenersAboutEvent(null);
 			}
 		}
 		
@@ -176,7 +179,9 @@ public class CalendarGUI extends Component implements SideMenuInterface{
 		week.highlightEvent(event);
 	}
 	public void highlightDate(LocalDate date) {
+		System.out.println("highlightedEvent"  + highlightedEvent);
 		if(highlightedEvent != null){
+				System.out.println("REMOVE REMOVE REMOVE");
 				week.removeHighlightEvent();
 				month.removeHighlightEvent();
 				alertListenersAboutEvent(null);
@@ -204,12 +209,14 @@ public class CalendarGUI extends Component implements SideMenuInterface{
 	}
 	public void alertListenersAboutDate(LocalDate date){
 		for (CalendarGUIListener i : listeners) {
+			
 			i.dayIsHighligthed(date, getEventsByDay(date));
 			
 		}
 	}
 	public void alertListenersAboutEvent(Event event){
 		for (CalendarGUIListener i : listeners) {
+		
 			i.eventIsHighligthed(event);
 			
 		}

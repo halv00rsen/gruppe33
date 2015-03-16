@@ -154,38 +154,40 @@ public class EventGUI extends Component implements GetPersonListener{
     		return;
     	LocalDateTime t1 = LocalDateTime.of(start, LocalTime.of(sh, sm)),
     			t2 = LocalDateTime.of(end, LocalTime.of(eh, em));
-    	classes.Event event = new classes.Event(t1, t2, null);
-    	event.setEventName(purposeText.getText());
+    	classes.Event newevent = new classes.Event(t1, t2, null);
+    	newevent.overrideEvent(currentEvent);
+    	newevent.setEventName(purposeText.getText());
     	Picker splitStuff = split.getValue();
     	LocalDate freqEnd = repDate.getValue();
     	if (freqEnd == null && splitStuff != Picker.Aldri)
     		return;
     	if (splitStuff == Picker.Daglig || splitStuff == Picker.Ukentlig)
-    		event.setFreq(splitStuff.freq, false, freqEnd);
+    		newevent.setFreq(splitStuff.freq, false, freqEnd);
     	else if (splitStuff == Picker.Aldri)
-    		event.setFreq(0, false, freqEnd);
+    		newevent.setFreq(0, false, freqEnd);
     	else if (splitStuff == Picker.Egendefinert){
     		int ting = freqText.getNumDays();
     		if (ting == -1)
     			return;
-    		event.setFreq(ting, false, freqEnd);
+    		newevent.setFreq(ting, false, freqEnd);
     	}else
-    		event.setFreq(0, true, freqEnd);
+    		newevent.setFreq(0, true, freqEnd);
     	List<EventAppliance> persons = new ArrayList<EventAppliance>();
     	for (Person p : listPeople){
     		persons.add(new EventAppliance(p, Appliance.Not_Answered));
     	}
-    	event.addAppliance(persons);
-    	event.setInfo(infoText.getText());
-    	event.setPriority(priority);
+    	newevent.addAppliance(persons);
+    	newevent.setInfo(infoText.getText());
+    	newevent.setPriority(priority);
     	
     	if (currentEvent == null)
-    		eventCall.addEvent(event);
+    		eventCall.addEvent(newevent);
     	else{
-    		currentEvent.overrideEvent(event);
+    		currentEvent.overrideEvent(newevent);
     	}
+   
     	trash();
-    	changeTab.goToHomeScreen();
+    	changeTab.showEventInHomeScreen(newevent);
 //    	PrintWriter writer;
     	
 //		try {
@@ -545,7 +547,6 @@ public class EventGUI extends Component implements GetPersonListener{
 		trash();
 		if (event == null)
 			return;
-		System.out.println(event.debugString());
 		currentEvent = event;
 		start.setTime(event.getStartTime().getHour(), event.getStartTime().getMinute());
 		end.setTime(event.getEndTime().getHour(), event.getEndTime().getMinute());
