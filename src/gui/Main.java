@@ -70,6 +70,7 @@ public class Main extends Application implements ProgramListener{
 		
 		public void goToHomeScreen(){
 			tabPane.getSelectionModel().select(home);
+			program.updateCalendars();
 		}
 		
 		public void showEvent(Event event){

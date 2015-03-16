@@ -120,6 +120,10 @@ public class Program {
 		callCreateUser(CreateUser.isValidNewUser(username, Person.hashPassword(password), name));
 	}
 	
+	public void updateCalendars(){
+		updateCalendarListeners();
+	}
+	
 	public void personLogin(String username, String password){
 		if (username == null || password == null || isLoggedIn()){
 			loginFailListeners();

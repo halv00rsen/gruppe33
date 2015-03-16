@@ -9,7 +9,7 @@ public class Event {
 	private final List<EventAppliance> appliance;
 	
 	private Person madeBy;
-	private  int id;
+	private int id;
 	private String eventName;
 	private String location;
 	private Room room;
@@ -32,7 +32,7 @@ public class Event {
 		endDate = null;
 		startTime = null;
 		endTime = null;
-		freq = null;
+		freq = 0;
 		appliance = new ArrayList<EventAppliance>();
 		priority = Priority.NOT_IMPORTANT;
 		info = "";
@@ -65,6 +65,23 @@ public class Event {
 		this.appliance = appliance;
 		this.priority = priority;
 		this.info = info;
+	}
+	
+	public void overrideEvent(Event event){
+		this.appliance.clear();
+		for (EventAppliance ec: event.appliance)
+			this.appliance.add(ec);
+		eventName = event.eventName;
+		location = event.location;
+		room = event.room;
+		startDate = event.startDate;
+		endDate = event.endDate;
+		startTime = event.startTime;
+		endTime = event.endTime;
+		freq = event.freq;
+		priority = event.priority;
+		info = event.info;
+		freqEnd = event.freqEnd;
 	}
 	
 	public LocalDate getFreqDate(){
@@ -185,6 +202,12 @@ public class Event {
 	
 	public String toString(){
 		return eventName;
+	}
+	
+	public String debugString(){
+		return "Name: " + eventName + ", madeBy: " + madeBy + ", id: " + id + ", startDate: " + startDate + 
+				", endDate: " + endDate + ", startTime: " + startTime + ", endTime: " + endTime+ ", freq: " +
+				freq + ", priority: " + priority + ", info: " + info + ", freqEnd: " + freqEnd;
 	}
 	
 	

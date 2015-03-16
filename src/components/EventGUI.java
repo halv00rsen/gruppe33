@@ -71,7 +71,7 @@ public class EventGUI extends Component implements GetPersonListener{
 	private ObservableList<Person> comboPeople, listPeople;
 	private ListView<Person> invited = new ListView<Person>();
 	
-	private boolean state = false;
+	private classes.Event currentEvent;
 	
 	public EventGUI(Pane parent, AddNewEvent eventCall, ChangeTab changeTab, AddPersonListener l) {
 		super(parent);
@@ -81,6 +81,7 @@ public class EventGUI extends Component implements GetPersonListener{
 		start = new TimeField(true);
 		end = new TimeField(false);
 		freqText = new NumberField();
+		currentEvent = null;
 		startDate.setOnAction(new EventHandler<ActionEvent>(){
 			
 			public void handle(ActionEvent event){
@@ -149,10 +150,8 @@ public class EventGUI extends Component implements GetPersonListener{
     	
     	int sh = this.start.getHour(), sm = this.start.getMinutes(),
     			eh = this.end.getHour(), em = this.end.getMinutes();
-    	System.out.println(sh + "  " + sm + "  " + eh + "  " + em);
     	if (sh == -1 || sm == -1 || eh == -1 || em == -1)
     		return;
-    	System.out.println("tull");
     	LocalDateTime t1 = LocalDateTime.of(start, LocalTime.of(sh, sm)),
     			t2 = LocalDateTime.of(end, LocalTime.of(eh, em));
     	classes.Event event = new classes.Event(t1, t2, null);
@@ -173,7 +172,6 @@ public class EventGUI extends Component implements GetPersonListener{
     	}else
     		event.setFreq(0, true, freqEnd);
     	List<EventAppliance> persons = new ArrayList<EventAppliance>();
-    	System.out.println("freq");
     	for (Person p : listPeople){
     		persons.add(new EventAppliance(p, Appliance.Not_Answered));
     	}
@@ -181,7 +179,11 @@ public class EventGUI extends Component implements GetPersonListener{
     	event.setInfo(infoText.getText());
     	event.setPriority(priority);
     	
-    	eventCall.addEvent(event);
+    	if (currentEvent == null)
+    		eventCall.addEvent(event);
+    	else{
+    		currentEvent.overrideEvent(event);
+    	}
     	trash();
     	changeTab.goToHomeScreen();
 //    	PrintWriter writer;
@@ -197,6 +199,9 @@ public class EventGUI extends Component implements GetPersonListener{
     	
 	}
 	private void trash() {
+		if (currentEvent != null){
+			resetButtons();
+		}
     	purposeText.clear();
     	romChoice.selectionModelProperty().set(null);
     	startDate.setValue(null);
@@ -211,10 +216,21 @@ public class EventGUI extends Component implements GetPersonListener{
     	listPeople.clear();
     	infoText.clear();
     	freqText.clear();
-    	state = false;
+    	currentEvent = null;
+//    	changeTab.goToHomeScreen();
+	}
+	
+	private void resetButtons(){
+		cancel.setText("Avbryt");
+        save.setText("Lag event");
+        trash.setText("Forkast");
 	}
 	
 	private void close(ActionEvent e) {
+		if (currentEvent != null){
+			trash();
+//			changeTab.goToHomeScreen();
+		}
 //    	Platform.setImplicitExit(true);
 //    	Platform.exit();
 	}
@@ -523,8 +539,12 @@ public class EventGUI extends Component implements GetPersonListener{
 
 	public void showEvent(classes.Event event) {
 		trash();
+		if (event == null)
+			return;
+		System.out.println(event.debugString());
+		currentEvent = event;
 		start.setTime(event.getStartTime().getHour(), event.getStartTime().getMinute());
-		end.setTime(event.getStartTime().getHour(), event.getStartTime().getMinute());
+		end.setTime(event.getEndTime().getHour(), event.getEndTime().getMinute());
 		Integer freq = event.getFreq();
 		if (freq == null)
 			split.getSelectionModel().select(Picker.Månedlig);
@@ -558,6 +578,9 @@ public class EventGUI extends Component implements GetPersonListener{
 				listPeople.add(p);
 			}
 		}
+		save.setText("Lagre");
+		trash.setText("Slett");
+		cancel.setText("Avbryt");
 	}
 
 	@Override
