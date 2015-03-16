@@ -1,4 +1,4 @@
-package windows;
+	package windows;
 import components.*;
 import database.ConnectionMySQL;
 import gui.*;
@@ -67,7 +67,7 @@ public class NewUserWindow extends Window{
 
 	@Override
 	public void init() {
-		this.setTranslateX(0);
+//		this.setTranslateX(0);
 		this.setPrefWidth(100);
 		this.setPrefHeight(500);
 		
@@ -241,7 +241,6 @@ public class NewUserWindow extends Window{
 			public void handle(ActionEvent arg0) {
 				
 				if(validateTextFields()){
-					System.out.println("lag bruker");
 					ConnectionMySQL.createUser(usernameTextField.getText(), firstNameTextField.getText(), lastNameTextField.getText(), passwordTextField.getText(),
 							emailTextField.getText(), phoneTextField.getText(), false);
 //					main.requestCreateUser(usernameTextField.getText(), passwordTextField.getText(), firstNameTextField.getText()
@@ -319,7 +318,7 @@ public class NewUserWindow extends Window{
 	}
 	
 	private void openSvada(ActionEvent e) {
-//		System.out.println("HEI");
+//		.println("HEI");
 		clicked = true;
 		SvadaScreen s = new SvadaScreen();
 	}

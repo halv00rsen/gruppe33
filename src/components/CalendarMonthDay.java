@@ -3,6 +3,7 @@ package components;
 import gui.*;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -20,22 +21,21 @@ import classes.Event;
 public class CalendarMonthDay extends CalendarDay{
 
 	
-	public CalendarMonthDay(CalendarBase gui, LocalDate date,ArrayList<Event> events, boolean isUpperDisabled,boolean isLowerDisabled) {
+	public CalendarMonthDay(CalendarGUI gui, LocalDate date,ArrayList<Event> events, boolean isUpperDisabled,boolean isLowerDisabled) {
 		super(gui, date, events, isUpperDisabled, isLowerDisabled);
 		this.setPrefHeight(calHeight);
 	}
 	@Override
 	void addEvents() {
+		eventsHash = new HashMap<Integer, EventBox>();
 		for (int i = 0; i < events.size(); i++) {
 			Event thisEvent = events.get(i);
 			
-			Pane thisEventPane = new Pane();
-				Label eventLabel = new Label();
-					eventLabel.setText(thisEvent.getEventName());
-					thisEventPane.getChildren().add(eventLabel);
+			EventBox eventBox = new EventBoxMonth(thisEvent,calGui,this);
+				
 			
-			body.getChildren().add(thisEventPane);		
-			
+			this.getChildren().add(eventBox);		
+			eventsHash.put(thisEvent.getID(), eventBox);
 			
 		}
 		
@@ -43,11 +43,6 @@ public class CalendarMonthDay extends CalendarDay{
 	@Override
 	void setCalHeight() {
 		calHeight = CalendarBase.defaultCalHeight/6;
-		
-	}
-	@Override
-	void continueHighlightEvent(Event event) {
-		// TODO Auto-generated method stub
 		
 	}
 }

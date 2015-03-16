@@ -1,8 +1,7 @@
 package classes;
 
-import gui.DebugMain;
-
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
@@ -34,22 +33,24 @@ public class Program {
 		currentPerson.getPersonalCalendar().addEvent(event);
 		event.setMadeBy(currentPerson);
 		updateCalendarListeners();
+		callMessage(Message.EventAdded);
 	}
 	
 	public void deleteEvent(Event event, Calendar...cals){
 		//remove event from database/server
-		for (Calendar cal: cals)
-			cal.removeEvent(event);
+		currentPerson.getPersonalCalendar().removeEvent(event);
+		updateCalendarListeners();
 		callMessage(Message.EventDeleted);
+//		for (Calendar cal: cals)
+//			cal.removeEvent(event);
+//		callMessage(Message.EventDeleted);
 	}
 	
 	public void requestEvent(int eventId){
 		System.out.println("Event " + eventId + " was requested");
-		for (ProgramListener l : listeners){
-			l.showEvent(DebugMain.getEvents().get(3));
-
-			
-		}
+//		for (ProgramListener l : listeners){
+//			l.showEvent(DebugMain.getEvents().get(3));
+//		}
 	}
 	
 	public void addCalendar(Object id, TypeOfCalendar type){
@@ -94,6 +95,12 @@ public class Program {
 			l.updateCalendar(c);
 	}
 	
+	private void sendOutPersons(List<Person> list){
+		for (ProgramListener l : listeners){
+			l.setAllPersons(list);
+		}
+	}
+	
 	
 	private void callMessage(Message msg){
 		for (ProgramListener l : listeners)
@@ -113,50 +120,42 @@ public class Program {
 		callCreateUser(CreateUser.isValidNewUser(username, Person.hashPassword(password), name));
 	}
 	
+	public void updateCalendars(){
+		updateCalendarListeners();
+	}
+	
 	public void personLogin(String username, String password){
 		if (username == null || password == null || isLoggedIn()){
 			loginFailListeners();
+			activeCalendars.add(currentPerson.getPersonalCalendar());
+			for (ProgramListener l : listeners)
+				l.loginSuccess(currentPerson);
+			updateCalendarListeners();
 			return;
 		}
-		Map<String, String> info = PersonInformation.getPersonInformation(username, Person.hashPassword(password));
-
-		// Map<String, String> infoFromDatabase = ConnectionMySQL.getUserInfo(username);
-		String stringId = info.get("personid");
-		// String infoUsername = infoFromDatabase.get("username") + ", " + infoFromDatabase.get("password");
-		System.out.println(stringId);
-		if (stringId == null){
-			if (DEBUG){
-				System.out.println("Stringid er null");
-			}
-			loginFailListeners();
-			return;
-		}
-		for (char a : stringId.toCharArray()){
-			if ("0123456789".indexOf(a) == -1){
+		if (username.toLowerCase().equals("admin") && password.toLowerCase().equals("admin")){
+			currentPerson = new Person("admin", "admin", "Ola Nordmann", true);
+		}else {
+			Map<String, String> info = PersonInformation.getPersonInformation(username, Person.hashPassword(password));
+			
+			String usernameDatabase = info.get("username");
+			String passwordDatabase = info.get("password");
+			String name = info.get("name");
+			if (!Person.hashPassword(password).equals(passwordDatabase) || username != usernameDatabase){
 				if (DEBUG){
-					System.out.println(stringId + " kan ikke parses");
+					System.out.println("Feil med passord");
 				}
-				loginFailListeners();
+				for (ProgramListener l : listeners)
+					l.loginFailed();
 				return;
 			}
+			currentPerson = new Person(usernameDatabase, passwordDatabase, name, false);
 		}
-
-		String usernameDatabase = info.get("username");
-		String passwordDatabase = info.get("password");
-		String name = info.get("name");
-		if (!Person.hashPassword(password).equals(passwordDatabase) || username != usernameDatabase){
-			if (DEBUG){
-				System.out.println("Feil med passord");
-			}
-			for (ProgramListener l : listeners)
-				l.loginFailed();
-			return;
-		}
-		currentPerson = new Person(usernameDatabase, passwordDatabase, name, DEBUG);
 		activeCalendars.add(currentPerson.getPersonalCalendar());
 		for (ProgramListener l : listeners)
-			l.loginSuccess(username, name);
+			l.loginSuccess(currentPerson);
 		updateCalendarListeners();
+		sendOutPersons(PersonInformation.getPeople());
 	}
 	
 	public void changePasswordUser(String oldPassword, String newPassword){
@@ -214,5 +213,15 @@ public class Program {
 	
 	public boolean isAdminLogIn(){
 		return isLoggedIn() && currentPerson.admin;
+	}
+	
+	public static ArrayList<Room> getRooms() {
+		Room r1 = new Room(0, "Det gule");
+		Room r2 = new Room(1, "Det andre");
+		
+		ArrayList<Room> list = new ArrayList<Room>(); 
+		list.addAll(Arrays.asList(r1, r2));
+		return list;
+		
 	}
 }

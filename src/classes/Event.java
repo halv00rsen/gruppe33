@@ -9,7 +9,7 @@ public class Event {
 	private final List<EventAppliance> appliance;
 	
 	private Person madeBy;
-	public  final int id;
+	private int id;
 	private String eventName;
 	private String location;
 	private Room room;
@@ -23,7 +23,7 @@ public class Event {
 	private LocalDate freqEnd;
 
 	public Event(){
-		id = (int)Math.random()*100000000;
+		id = (int)(Math.random()*100000000);
 		this.madeBy = null;
 		eventName = "";
 		location = "";
@@ -32,7 +32,7 @@ public class Event {
 		endDate = null;
 		startTime = null;
 		endTime = null;
-		freq = null;
+		freq = 0;
 		appliance = new ArrayList<EventAppliance>();
 		priority = Priority.NOT_IMPORTANT;
 		info = "";
@@ -41,6 +41,7 @@ public class Event {
 	}
 	public Event(LocalDateTime startTime,LocalDateTime endTime,Person person){
 		this();
+		id = (int)(Math.random()*100000000);
 		this.startDate = startTime.toLocalDate();
 		this.endDate = endTime.toLocalDate();
 		this.startTime = startTime;
@@ -49,9 +50,9 @@ public class Event {
 		priority = Priority.NOT_IMPORTANT;
 	}
 	public Event(String eventName, String location, Room room, LocalDateTime startTime,
-			LocalDateTime endTime, Integer freq, Person madeBy,
-			List<EventAppliance> appliance, Priority priority, String info) {
-		id = (int)Math.random()*100000000;
+		LocalDateTime endTime, Integer freq, Person madeBy,
+		List<EventAppliance> appliance, Priority priority, String info) {
+		id = (int)(Math.random()*100000000);
 		this.eventName = eventName;
 		this.location = location;
 		this.room = room;
@@ -64,6 +65,23 @@ public class Event {
 		this.appliance = appliance;
 		this.priority = priority;
 		this.info = info;
+	}
+	
+	public void overrideEvent(Event event){
+		this.appliance.clear();
+		for (EventAppliance ec: event.appliance)
+			this.appliance.add(ec);
+		eventName = event.eventName;
+		location = event.location;
+		room = event.room;
+		startDate = event.startDate;
+		endDate = event.endDate;
+		startTime = event.startTime;
+		endTime = event.endTime;
+		freq = event.freq;
+		priority = event.priority;
+		info = event.info;
+		freqEnd = event.freqEnd;
 	}
 	
 	public LocalDate getFreqDate(){
@@ -155,11 +173,16 @@ public class Event {
 	}
 
 	public Priority getPriority() {
+		if (priority == null)
+			return Priority.NOT_IMPORTANT;
 		return priority;
 	}
 
 	public void setPriority(Priority priority) {
-		this.priority = priority;
+		if (priority == null)
+			this.priority = Priority.NOT_IMPORTANT;
+		else
+			this.priority = priority;
 	}
 
 	public String getInfo() {
@@ -179,6 +202,12 @@ public class Event {
 	
 	public String toString(){
 		return eventName;
+	}
+	
+	public String debugString(){
+		return "Name: " + eventName + ", madeBy: " + madeBy + ", id: " + id + ", startDate: " + startDate + 
+				", endDate: " + endDate + ", startTime: " + startTime + ", endTime: " + endTime+ ", freq: " +
+				freq + ", priority: " + priority + ", info: " + info + ", freqEnd: " + freqEnd;
 	}
 	
 	

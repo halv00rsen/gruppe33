@@ -16,17 +16,21 @@ import classes.Person;
 import classes.PersonCalendar;
 import components.*;
 import gui.*;
+import gui.Main.AddNewEvent;
 import gui.Main.ChangeTab;
 public class HomeScreen extends Window{
 
 	private final ChangeTab tab;
     
     public SchedulingGUI schedulingGUI;
-    Person p;
-    PersonCalendar cal;
+    private Person p;
+    private PersonCalendar cal;
+
+	private AddNewEvent eventAdder;
     
-	public HomeScreen(ChangeTab tab) {
-		p = DebugMain.getPerson();
+	public HomeScreen(ChangeTab tab, Person person, AddNewEvent addNewEvent) {
+		this.eventAdder = addNewEvent;
+		this.p = person;
 		this.tab = tab;
 		cal = new PersonCalendar(p);
 //		this.setStyle("-fx-color-background: #ff0044");
@@ -37,15 +41,14 @@ public class HomeScreen extends Window{
 	@Override
 	public void init() {
 		schedulingGUI = new SchedulingGUI(this,p, tab,cal);
-		this.getChildren().add(schedulingGUI);
+		schedulingGUI.setEventAdder(eventAdder);
+		borderPane.setCenter(schedulingGUI);
 	}
 
 	public void highlightEvent(Event event) {
 		schedulingGUI.highlightEvent(event);
 		
 	}
-	
-	
-	
+
 
 }

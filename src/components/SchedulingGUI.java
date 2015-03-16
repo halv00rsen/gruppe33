@@ -1,7 +1,7 @@
 package components;
 
 import gui.Component;
-import gui.DebugMain;
+import gui.Main.AddNewEvent;
 import gui.Main.ChangeTab;
 import gui.Window;
 
@@ -26,6 +26,7 @@ public class SchedulingGUI extends Component{
     
 
 	private Button settings;
+	private AddNewEvent eventAdder;
 	public SchedulingGUI(Window parent, Person p, ChangeTab tab, Calendar... calendars ) {
 
 		super(parent);
@@ -34,7 +35,7 @@ public class SchedulingGUI extends Component{
 	
 //		settings.setOnAction(e -> main.requestSettingsWindow());
 		
-		calendars[0].addEvent(DebugMain.getEvents());
+//		calendars[0].addEvent(DebugMain.getEvents());
 		calendargui = new CalendarGUI(this, LocalDate.now(), calendars);
 		ArrayList<Event> dagens = new ArrayList<Event>();
 		for (int i = 0; i < calendars.length; i++) {
@@ -49,12 +50,24 @@ public class SchedulingGUI extends Component{
 		mainBox.getChildren().addAll(calendargui, calendarAndInfo);
 		this.getChildren().add(mainBox);
 	}
-	public void highlightEvent(Event event) {
-		calendargui.highlightEvent(event);
-		
-	}
+
 	public void updateCalendars(Calendar... calendars){
 		calendargui.updateCalendars(calendars);
+		
+	}
+	public void highlightEvent(Event event){
+		calendargui.highlightEvent(event);
+	}
+	public void newEvent(Event event){
+		calendargui.highlightEvent(event);
+	}
+	
+	public void addEventFromCalendar(Event event) {
+		eventAdder.addEvent(event);
+	}
+
+	public void setEventAdder(AddNewEvent eventAdder) {
+		this.eventAdder = eventAdder;
 		
 	}
 }

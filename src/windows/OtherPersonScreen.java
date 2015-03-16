@@ -1,36 +1,42 @@
 package windows;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import classes.Person;
 import classes.PersonCalendar;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
+import javafx.geometry.Insets;
+import javafx.collections.ObservableList;
+import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.VBox;
 import components.SchedulingGUI;
-import gui.DebugMain;
+import gui.FxUtil;
+import gui.GetPersonListener;
+import gui.Main.AddPersonListener;
 import gui.Main.ChangeTab;
 import gui.Window;
 
-public class OtherPersonScreen extends Window{
+public class OtherPersonScreen extends Window implements GetPersonListener{
 	VBox mainBox;
 	GridPane pane;
 	Label chosePersonLabel;
 	
 	SchedulingGUI schedulingGUI;
-	ComboBox<String> peopleComboBox;
+	ComboBox<Person> peopleComboBox;
 	
 	PersonCalendar cal;
-	ArrayList<Person> persons;
 	
 	private final ChangeTab tab;
+	private ObservableList<Person> items;
 	
 	
-	public OtherPersonScreen(ArrayList<Person> persons, ChangeTab tab) {
-		this.persons = persons;
+	public OtherPersonScreen(AddPersonListener l, ChangeTab tab) {
+		l.addListener(this);
 		this.tab = tab;
 		init();
 	}
@@ -43,53 +49,68 @@ public class OtherPersonScreen extends Window{
 		
 		chosePersonLabel = new Label("Velg person å se kalender til:");
 		
-		peopleComboBox = new ComboBox<String>();
+		peopleComboBox = new ComboBox<Person>();
 		peopleComboBox.setPromptText("Velg person");
-		peopleComboBox.setEditable(false); //Om man skal kunne skrive selv
-		addPeople();
+		FxUtil.autoCompleteComboBox(peopleComboBox, FxUtil.AutoCompleteMode.CONTAINING);
+		items = peopleComboBox.getItems();
 		
-		Person examplePerson = (DebugMain.getPerson());
-		cal = new PersonCalendar(examplePerson);
-		schedulingGUI = new SchedulingGUI(this, examplePerson, tab,cal);
+//		Person examplePerson = (DebugMain.getPerson());
+//		cal = new PersonCalendar(examplePerson);
+//		schedulingGUI = new SchedulingGUI(this, examplePerson, tab,cal);
 		
+		Button button = new Button("Vis");
 	
-		peopleComboBox.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<String>() {
-
-			public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
-		        mainBox.getChildren().remove(schedulingGUI);
-		        Person person = findPerson(newValue);
-		        cal = new PersonCalendar(person);
-		        schedulingGUI = new SchedulingGUI(getThis(), person,tab,cal);
-		        mainBox.getChildren().add(schedulingGUI);
-			}
+		button.setOnAction(e -> {
+			int p = peopleComboBox.getSelectionModel().getSelectedIndex();
+			if (p == -1)
+				return;
+			System.out.println("Hiodgjioerjgioe");
+	        mainBox.getChildren().remove(schedulingGUI);
+	        cal = new PersonCalendar(items.get(p));
+	        schedulingGUI = new SchedulingGUI(getThis(), items.get(p),tab,cal);
+	        mainBox.getChildren().add(schedulingGUI);
 		});
-		
+//		peopleComboBox.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<Person>() {
+//
+//			public void changed(ObservableValue<? extends Person> observable, Person oldValue, Person newValue) {
+//				if (newValue == null)
+//					return;
+//				System.out.println("Hiodgjioerjgioe");
+//		        mainBox.getChildren().remove(schedulingGUI);
+//		        cal = new PersonCalendar(newValue);
+//		        schedulingGUI = new SchedulingGUI(getThis(), newValue,tab,cal);
+//		        mainBox.getChildren().add(schedulingGUI);
+//			}
+//		});
+		cal = new PersonCalendar(null);
 		pane.add(chosePersonLabel, 0, 0);
 		pane.add(peopleComboBox, 1, 0);
-		
+		pane.add(button, 2,0);
+		schedulingGUI = new SchedulingGUI(this, null, tab, cal);
 		
 		mainBox.getChildren().addAll(pane, schedulingGUI);
 		
-		this.getChildren().add(mainBox);
+//		borderPane.setMargin(inbox, new Insets(20));
+		borderPane.setCenter(mainBox);
 	}
 
-	private void addPeople() {
-		for (Person person : persons) {
-			String name = person.getName();
-			peopleComboBox.getItems().add(name);
-		}
-	}
-	
-	private Person findPerson(String name) {
-		for (Person person : persons) {
-			if (name.equals(person.getName())) {
-				return person;
-			}
-		}
-		return null;
-	}
-	
 	private OtherPersonScreen getThis() {
 		return this;
+	}
+
+	@Override
+	public void updatePersons(List<Person> persons) {
+		// TODO Auto-generated method stub
+		for (Person person : persons) {
+			items.add(person);
+		}
+		peopleComboBox.getSelectionModel().selectFirst();
+		int index = peopleComboBox.getSelectionModel().getSelectedIndex();
+		if (index == -1)
+			return;
+		Person p = items.get(index);
+		cal = new PersonCalendar(p);
+		schedulingGUI = new SchedulingGUI(this, p, tab,cal);
+		
 	}
 }

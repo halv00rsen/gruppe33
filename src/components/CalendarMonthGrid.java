@@ -17,7 +17,7 @@ import classes.Event;
 public class CalendarMonthGrid extends CalendarGrid{
 
 	
-	public CalendarMonthGrid(CalendarBase gui, LocalDate date, Calendar[] calendars) {
+	public CalendarMonthGrid(CalendarGUI gui, LocalDate date, Calendar[] calendars) {
 		super(gui, date, calendars);
 		// TODO Auto-generated constructor stub
 	}
@@ -39,7 +39,7 @@ public class CalendarMonthGrid extends CalendarGrid{
 		int y = 0;
 		for (int i = 0; i < firstDayInMonthWeekday-1; i++) {
 			
-			CalendarMonthDay thisBox = new CalendarMonthDay(gui,dayLooper,getEventsByDay(dayLooper),false,true);
+			CalendarMonthDay thisBox = new CalendarMonthDay(gui,dayLooper,gui.getEventsByDay(dayLooper),false,true);
 			thisBox.setIsLowerDisabled(true);
 			grid.add(thisBox,x,y);
 			datesHash.put(dayLooper, thisBox);
@@ -52,7 +52,7 @@ public class CalendarMonthGrid extends CalendarGrid{
 		}
 		
 		for (int i = 0; i < daysInMonth; i++) {
-			CalendarMonthDay thisBox = new CalendarMonthDay(gui,dayLooper,getEventsByDay(dayLooper),false,false);
+			CalendarMonthDay thisBox = new CalendarMonthDay(gui,dayLooper,gui.getEventsByDay(dayLooper),false,false);
 			grid.add(thisBox,x,y);
 
 			datesHash.put(dayLooper, thisBox);
@@ -65,7 +65,7 @@ public class CalendarMonthGrid extends CalendarGrid{
 			}
 		}
 		for (int i = firstDayInMonthWeekday+daysInMonth-1; i < 7*6; i++) {
-			CalendarMonthDay thisBox = new CalendarMonthDay(gui,dayLooper,getEventsByDay(dayLooper),true,false);
+			CalendarMonthDay thisBox = new CalendarMonthDay(gui,dayLooper,gui.getEventsByDay(dayLooper),true,false);
 			thisBox.setIsUpperDisabled(true);
 			grid.add(thisBox,x,y);
 
