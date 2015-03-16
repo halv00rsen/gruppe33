@@ -26,7 +26,7 @@ public class LoginScreen extends Window{
 		LoginGUI login = new LoginGUI(this, loginCall);
 //		login.setStyle("-fx-background-color: #FFFF00");
 		BorderPane.setAlignment(login, Pos.CENTER);
-		borderPane.setMargin(login, new Insets(150));
+		BorderPane.setMargin(login, new Insets(150));
 		borderPane.setCenter(login);
 		//
 	}

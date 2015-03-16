@@ -156,11 +156,16 @@ public class Event {
 	}
 
 	public Priority getPriority() {
+		if (priority == null)
+			return Priority.NOT_IMPORTANT;
 		return priority;
 	}
 
 	public void setPriority(Priority priority) {
-		this.priority = priority;
+		if (priority == null)
+			this.priority = Priority.NOT_IMPORTANT;
+		else
+			this.priority = priority;
 	}
 
 	public String getInfo() {
