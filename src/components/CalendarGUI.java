@@ -134,6 +134,12 @@ public class CalendarGUI extends Component{
 
 	}
 	public void highlightEvent(Event event) {
+		if(highlightedDate != null){
+				week.removeHighlightDate();
+				month.removeHighlightDate();
+				alertListenersAboutDate(null);
+				highlightedDate = null;
+		}
 		if(highlightedEvent != null){
 			if(highlightedEvent.getID() == event.getID()){
 
@@ -162,12 +168,10 @@ public class CalendarGUI extends Component{
 	}
 	public void highlightDate(LocalDate date) {
 		if(highlightedEvent != null){
-			if(!highlightedEvent.getStartDate().equals(date)){
 				week.removeHighlightEvent();
 				month.removeHighlightEvent();
 				alertListenersAboutEvent(null);
 				highlightedEvent = null;
-			}
 		}
 		
 		if(highlightedDate != null){

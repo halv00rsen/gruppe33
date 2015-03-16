@@ -38,6 +38,7 @@ public class EventBoxWeek extends EventBox{
 	public EventBoxWeek(Event event,CalendarGUI calGui,CalendarDay calday){
 		super(event,calGui,calday);
 		strokething = new Pane();
+		strokething.setStyle("-fx-background-color: #00FFF0");
 			base = new BorderPane();
 				base.setPadding(new Insets(5));
 				strokething.getChildren().add(base);
@@ -65,7 +66,7 @@ public class EventBoxWeek extends EventBox{
 				this.setMinHeight(height);
 				this.setTranslateY(startPos);
 		}else{
-			this.name.setText("Ny hendelse");
+			this.name.setText("(Høyreklikk)");
 			this.setPrefHeight(calHeight/24);
 			this.setPrefWidth(calWidth);
 			this.setMinHeight(calHeight/24);
