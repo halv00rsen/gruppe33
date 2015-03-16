@@ -1,5 +1,6 @@
 
 package components;
+import database.ConnectionMySQL;
 import gui.*;
 import gui.Main.LoginCall;
 import javafx.beans.value.ChangeListener;
@@ -130,7 +131,6 @@ public class LoginGUI extends Component{
 				errorEmailLabel.setVisible(false);
 				emailTextField.setVisible(false);
 				emailTextField.clear();
-				
 				if (validateTextFields()) 
 					loginCall.requestLogin(usernameTextField.getText(), passwordField.getText());
 //					main.requestLogin(usernameTextField.getText(),passwordField.getText());

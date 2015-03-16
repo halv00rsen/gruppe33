@@ -238,26 +238,27 @@ public class ConnectionMySQL {
 	}
 
 	public static Map<String, String> getAvailableRooms(String start, String end, int capacity) {
+		System.out.println(start);
+		System.out.println(end);
 		
-		Map<String, String> availableRooms = new HashMap<String, String>();
 		try {
+			Map<String, String> availableRooms = new HashMap<String, String>();
 			ResultSet myRs = sendQuery("SELECT roomNr, capacity FROM room" +
 					" WHERE capacity >= " + capacity + " AND roomNr NOT IN " + 
 					"(SELECT room.roomNr" + 
 					"FROM room, event, reserve" + 
 					"WHERE room.roomNr = reserve.roomNr AND event.eventId = reserve.eventId AND start < '" + end + "' AND end > '" + start + "')" +
 					"ORDER BY roomNr;");
-			System.out.println("funker");
+			System.out.println("ok");
+			
 			while (myRs.next()){
 				availableRooms.put(myRs.getString("roomNr"), myRs.getString("capacity"));
-				
 			}
+			return availableRooms;
 		} catch (Exception e) {
-			if (DEBUG)
-				e.printStackTrace();
+			if (DEBUG) e.printStackTrace();
+			return null;
 		}
-
-		return availableRooms;
 	}
 	
 	public static boolean createAlarm(int minBeforeEvent) {
