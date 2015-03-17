@@ -86,6 +86,14 @@ public class Main extends Application implements ProgramListener{
 		}
 	}
 	
+	public class CreateUser{
+		
+		public void createNewUser(String username, String password, String firstname, String lastname,
+				String phone, String email, boolean isAdmin){
+			program.createUser(username, password, firstname, lastname, phone, email, isAdmin);
+		}
+	}
+	
 	
 	public class AddPersonListener{
 		
@@ -233,7 +241,7 @@ public class Main extends Application implements ProgramListener{
 		tabPane.setTabMinWidth(75);
 		if (program.isAdminLogIn()){
 			Tab newUser = new Tab("Ny bruker");
-			newUserScreen = new NewUserWindow();
+			newUserScreen = new NewUserWindow(new CreateUser());
 			newUser.setContent(newUserScreen);
 			tabPane.getTabs().add(newUser);
 		}
@@ -319,10 +327,6 @@ public class Main extends Application implements ProgramListener{
 	public void sendNotification(String notif) {
 		// TODO Auto-generated method stub
 		
-	}
-	
-	public void requestCreateUser(String username, String password, String name){
-		program.createUser(username, password, name);
 	}
 	
 	public void requestLogin(String userName, String password){
