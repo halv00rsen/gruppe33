@@ -2,6 +2,7 @@ package classes;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -94,7 +95,18 @@ public class Program {
 			l.updateCalendar(c);
 	}
 	
-	private void sendOutPersons(List<Person> list){
+	private void sendOutPersons(){
+		List<Person> list = new ArrayList<Person>();
+		List<HashMap<String, String>> info = ConnectionMySQL.getUsers();
+		if (info == null){
+			System.out.println("sendOutPersons connection null");
+			list = PersonInformation.getPeople();
+		}else{
+			for (Map<String, String> p : info){
+				Person p1 = new Person(p.get("username"), null, p.get("firstname"), p.get("lastname"), false);
+				list.add(p1);
+			}
+		}
 		for (ProgramListener l : listeners){
 			l.setAllPersons(list);
 		}
@@ -107,8 +119,9 @@ public class Program {
 	}
 	
 	
-	public void createUser(String username, String password, String name){
-		if (username == null || password == null || name == null || currentPerson == null){
+	public void createUser(String username, String password, String firstname, String lastname, 
+			String phone, String email, boolean isAdmin){
+		if (username == null || password == null || firstname == null || lastname == null){
 			callCreateUser(false);
 			return;
 		}
@@ -116,7 +129,13 @@ public class Program {
 			callCreateUser(false);
 			return;
 		}
-		callCreateUser(CreateUser.isValidNewUser(username, Person.hashPassword(password), name));
+		if (ConnectionMySQL.createUser(username, firstname, lastname, Person.hashPassword(password), email, phone, isAdmin)){
+			callCreateUser(true);
+		}else if (CreateUser.isValidNewUser(username, Person.hashPassword(password), firstname)){
+			callCreateUser(true);
+			System.out.println("Create user connection null");
+		}else
+			callCreateUser(false);
 	}
 	
 	public void updateCalendars(){
@@ -133,13 +152,18 @@ public class Program {
 			return;
 		}
 		if (username.toLowerCase().equals("admin") && password.toLowerCase().equals("admin")){
-			currentPerson = new Person("admin", "admin", "Ola Nordmann", true);
+			currentPerson = new Person("admin", "admin", "Ola", "Nordmann", true);
 		}else {
-			Map<String, String> info = PersonInformation.getPersonInformation(username, Person.hashPassword(password));
+			Map<String, String> info;
+			info = ConnectionMySQL.getUserInfo(username);
+			if (info == null){
+				System.out.println("personLogin connection null");
+				info = PersonInformation.getPersonInformation(username, Person.hashPassword(password));
+			}
 			
 			String usernameDatabase = info.get("username");
 			String passwordDatabase = info.get("password");
-			String name = info.get("name");
+			String firstname = info.get("firstname"), lastname = info.get("lastname");
 			if (!Person.hashPassword(password).equals(passwordDatabase) || username != usernameDatabase){
 				if (DEBUG){
 					System.out.println("Feil med passord");
@@ -148,13 +172,14 @@ public class Program {
 					l.loginFailed();
 				return;
 			}
-			currentPerson = new Person(usernameDatabase, passwordDatabase, name, false);
+			currentPerson = new Person(usernameDatabase, passwordDatabase, firstname, lastname, Boolean.getBoolean(info.get("isAdmin")));
+			currentPerson.setOtherInfo(info.get("phone"), info.get("email"));
 		}
 		activeCalendars.add(currentPerson.getPersonalCalendar());
 		for (ProgramListener l : listeners)
 			l.loginSuccess(currentPerson);
 		updateCalendarListeners();
-		sendOutPersons(PersonInformation.getPeople());
+		sendOutPersons();
 	}
 	
 	public void changePasswordUser(String oldPassword, String newPassword){

@@ -81,9 +81,7 @@ public class UserInfoGUI extends Component{
 	public void changePerson(Person p){
 		
 		if (p != null){
-			System.out.println("p is not null!!");
-			System.out.println(p.getName() + "   " + p.getUsername() + "   " + p.getGroups());
-			navn.setText(p.getName());
+			navn.setText(p.getFirstname() + p.getLastname());
 			brukernavn.setText(p.getUsername());
 			addListElements(p.getGroups());
 		}else

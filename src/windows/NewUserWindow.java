@@ -2,6 +2,7 @@
 import components.*;
 import database.ConnectionMySQL;
 import gui.*;
+import gui.Main.CreateUser;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
@@ -51,6 +52,7 @@ public class NewUserWindow extends Window{
 	PasswordField rePasswordTextField;
 	
 	private Button cancel;
+	private CheckBox isAdmin;
 	
 	TextFlow terms;
 	CheckBox acceptCheckBox;
@@ -60,8 +62,10 @@ public class NewUserWindow extends Window{
 	VBox vbox;
 	GridPane mainGridPane;
 	private boolean clicked = false;
+	private final CreateUser createUser;
 	
-	public NewUserWindow() {
+	public NewUserWindow(CreateUser createUser) {
+		this.createUser = createUser;
 		init();
 	}
 
@@ -241,8 +245,18 @@ public class NewUserWindow extends Window{
 			public void handle(ActionEvent arg0) {
 				
 				if(validateTextFields()){
-					ConnectionMySQL.createUser(usernameTextField.getText(), firstNameTextField.getText(), lastNameTextField.getText(), passwordTextField.getText(),
+					ConnectionMySQL.createUser(usernameTextField.getText(), firstNameTextField.getText(), lastNameTextField.getText(), 
+							passwordTextField.getText(),
 							emailTextField.getText(), phoneTextField.getText(), false);
+					String username = usernameTextField.getText();
+					String firstname = firstNameTextField.getText();
+					String lastname = lastNameTextField.getText();
+					String password = passwordTextField.getText();
+					String email = emailTextField.getText();
+					String phone = phoneTextField.getText();
+					boolean admin = isAdmin.isSelected();
+					createUser.createNewUser(username, password, firstname, lastname, phone, email, admin);
+					
 //					main.requestCreateUser(usernameTextField.getText(), passwordTextField.getText(), firstNameTextField.getText()
 //							+ " " + lastNameTextField.getText());
 				}
@@ -287,13 +301,16 @@ public class NewUserWindow extends Window{
 		mainGridPane.add(rePasswordLabel, 0, 6);
 		mainGridPane.add(rePasswordTextField, 1, 6);
 		mainGridPane.add(errorRePasswordText, 2, 6);
+		isAdmin = new CheckBox();
+		mainGridPane.add(new Label("Administrator:"), 0, 7);
+		mainGridPane.add(isAdmin, 1, 7);
 		
 		cancel = new Button("Avbryt");
 		cancel.setOnAction(new EventHandler<ActionEvent>(){
 
 			@Override
 			public void handle(ActionEvent event) {
-				
+				resetFields();
 			}
 			
 		});
@@ -315,6 +332,18 @@ public class NewUserWindow extends Window{
 		vbox.getChildren().add(errorTermsRead);
 		
 		this.getChildren().add(vbox);
+	}
+	
+	private void resetFields(){
+		firstNameTextField.setText("");
+		lastNameTextField.setText("");
+		emailTextField.setText("");
+		phoneTextField.setText("");
+		usernameTextField.setText("");
+		passwordTextField.setText("");
+		rePasswordTextField.setText("");
+		isAdmin.setSelected(false);
+		clicked = false;
 	}
 	
 	private void openSvada(ActionEvent e) {

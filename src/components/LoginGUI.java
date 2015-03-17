@@ -1,5 +1,6 @@
 
 package components;
+import database.ConnectionMySQL;
 import gui.*;
 import gui.Main.LoginCall;
 import javafx.beans.value.ChangeListener;
@@ -163,7 +164,8 @@ public class LoginGUI extends Component{
 
 			@Override
 			public void handle(ActionEvent arg0) {
-				
+		
+				System.out.println(ConnectionMySQL.getAppliances(1));
 				validateEmail();
 				
 			}
