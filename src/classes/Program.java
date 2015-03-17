@@ -141,7 +141,7 @@ public class Program {
 	public void updateCurrentPerson(String firstname, String lastname, String email, String phone){
 		if (isLoggedIn())
 			if (ConnectionMySQL.updateUser(currentPerson.username, currentPerson.getFirstname(), currentPerson.getLastname(), 
-					currentPerson.getPassword(), currentPerson.getMail(), currentPerson.getPhone(), currentPerson.admin)){
+					currentPerson.getMail(), currentPerson.getPhone(), currentPerson.admin)){
 				callMessage(Message.PersonUpdated);
 			}else{
 				System.out.println("updateCurrentPerson conntection false");
@@ -197,12 +197,18 @@ public class Program {
 		if (!isLoggedIn())
 			return;
 		if (currentPerson.isCorrectPassword(oldPassword)){
-			if (PersonInformation.changePassword(currentPerson.username, Person.hashPassword(oldPassword), Person.hashPassword(newPassword))){
-				currentPerson.changePassword(newPassword);
-				callChangePassword(true);
-				return;
+			if (ConnectionMySQL.changePassword(currentPerson.username, newPassword)){
+				currentPerson.changePassword(Person.hashPassword(newPassword));
 			}
+			else {
+				currentPerson.changePassword(newPassword);
+				System.out.println("changePasswordUser connection false");
+			}
+			callChangePassword(true);
+			callMessage(Message.PasswordChanged);
+			return;
 		}
+		callMessage(Message.PasswordNotChanged);
 		callChangePassword(false);
 	}
 	
