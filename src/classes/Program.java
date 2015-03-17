@@ -2,6 +2,7 @@ package classes;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -94,7 +95,18 @@ public class Program {
 			l.updateCalendar(c);
 	}
 	
-	private void sendOutPersons(List<Person> list){
+	private void sendOutPersons(){
+		List<Person> list = new ArrayList<Person>();
+		List<HashMap<String, String>> info = ConnectionMySQL.getUsers();
+		if (info == null){
+			System.out.println("sendOutPersons connection null");
+			list = PersonInformation.getPeople();
+		}else{
+			for (Map<String, String> p : info){
+				Person p1 = new Person(p.get("username"), null, p.get("firstname"), p.get("lastname"), false);
+				list.add(p1);
+			}
+		}
 		for (ProgramListener l : listeners){
 			l.setAllPersons(list);
 		}
@@ -167,7 +179,7 @@ public class Program {
 		for (ProgramListener l : listeners)
 			l.loginSuccess(currentPerson);
 		updateCalendarListeners();
-		sendOutPersons(PersonInformation.getPeople());
+		sendOutPersons();
 	}
 	
 	public void changePasswordUser(String oldPassword, String newPassword){
