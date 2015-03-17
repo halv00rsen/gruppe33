@@ -12,7 +12,7 @@ public class ConnectionMySQL {
 	private static String dbName = "calendar";
 	private static String user = "root";
 	private static String password = "passord";
-	
+		
 	private static ResultSet sendQuery(String query) {
 		System.out.println(query);
 		ResultSet myRs = null;
@@ -122,13 +122,19 @@ public class ConnectionMySQL {
 		
 	}
 	
-	public static boolean updateUser(String username, String firstName, String lastName, String password, String email, String phone, boolean isAdmin) { 
+	public static boolean updateUser(String username, String firstName, String lastName, String email, String phone, boolean isAdmin) { 
 		
 		String myStmt = "UPDATE person SET firstName = '" + firstName + "', lastName = '" + lastName
-				 + "', password = '" + password + "', email = '" + email + "', isAdmin = " + isAdmin;
+				 + "', email = '" + email + "', isAdmin = " + isAdmin;
 		if(!phone.isEmpty()) myStmt += ", phone = '" + phone + "'";
 		myStmt += " WHERE username = '" + username + "';";
-		System.out.println(myStmt);
+		return sendStatement(myStmt);
+		
+	}
+	
+	public static boolean changePassword(String username, String password){
+		
+		String myStmt = "UPDATE person SET password = '" + password + "' WHERE username = '" + username + "';";
 		return sendStatement(myStmt);
 		
 	}
@@ -203,7 +209,15 @@ public class ConnectionMySQL {
 		
 	}
 	
-	/*public static int createEvent(String eventName, String location, String start, String end, int priority, String lastChanged, int frequency, String info) {
+	public static boolean setEventCreator(int eventId, String username){
+		
+		String myStmt = "INSERT INTO madeBy VALUES(" + eventId + ", '" + username + "');";
+		return sendStatement(myStmt);
+		
+	}
+	
+	//start og end lagres med DATETIME i databasen (yyyy-mm-dd hh:mm:ss)
+	public static int createEvent(String eventName, String location, String start, String end, int priority, String lastChanged, int frequency, String info) {
 		
 		String myStmt = "INSERT INTO event set eventName = '" + eventName + "', start = '" + start + "', end = '" + end + "', lastChanged = now()" + ", priority = " + priority;
 		if(!location.isEmpty()) myStmt += ", location = '" + location + "'";
@@ -211,11 +225,19 @@ public class ConnectionMySQL {
 		if(!location.isEmpty()) myStmt += ", info = '" + info + "'";
 		myStmt += ";";
 		if(!sendStatement(myStmt)) return -1;
-		String myStmt = "SELECT eventId FROM event"
-		
-		
+		try {
+			int groupId = -1;
+			ResultSet myRs = sendQuery("SELECT eventId FROM event ORDER BY eventId DESC LIMIT 1;");
+			while (myRs.next()){
+				groupId = Integer.parseInt(myRs.getString("eventId"));
+			}
+			return groupId;
+			
+		} catch (Exception e) {
+			if (DEBUG) e.printStackTrace();
+			return -1;
+		}
 	}
-	*/
 	
 	
 	public static boolean updateEvent(String eventId, String eventName, String location, String start, String end, int priority,  String lastChanged, int frequency, String info) {
@@ -235,17 +257,73 @@ public class ConnectionMySQL {
 		return sendStatement(myStmt);
 	}
 	
-	// public static boolean getAppliance(int eventId){
+	public static ArrayList<HashMap<String, String>> getAppliances(int eventId){
 		
+		ArrayList<HashMap<String, String>> allAppliances = new ArrayList<HashMap<String, String>>();
+		try {
+			ResultSet myRs = sendQuery("SELECT username, appliance FROM isInvitedTo WHERE eventId = " + eventId + ";");
+			while (myRs.next()){
+				HashMap<String, String> appliance = new HashMap<String, String>();
+				appliance.put("username", myRs.getString("username"));
+				appliance.put("appliance", myRs.getString("appliance"));
+
+				allAppliances.add(appliance);
+				
+			}
+		} catch (Exception e) {
+			if (DEBUG)
+				e.printStackTrace();
+		}
+
+		return allAppliances;
 		
+	}
+	//sjekker om alle har sett eventen, og evt om lastSeen er senere enn lastChanged-attributten fra event
+	public static ArrayList<HashMap<String, String>> getLastSeen(int eventId){
 		
-	//}
+		ArrayList<HashMap<String, String>> allLastSeen = new ArrayList<HashMap<String, String>>();
+		try {
+			ResultSet myRs = sendQuery("SELECT username, lastSeen FROM isInvitedTo WHERE eventId = " + eventId + ";");
+			while (myRs.next()){
+				HashMap<String, String> lastSeen = new HashMap<String, String>();
+				lastSeen.put("username", myRs.getString("username"));
+				lastSeen.put("lastSeen", myRs.getString("lastSeen"));
+
+				allLastSeen.add(lastSeen);
+				
+			}
+		} catch (Exception e) {
+			if (DEBUG)
+				e.printStackTrace();
+		}
+
+		return allLastSeen;
+		
+	}
 	
 	public static boolean setAppliance(int eventId, String username, String appliance) {
 		
 		String myStmt = "UPDATE isInvitedTo SET lastSeen = now(), appliance = '" + appliance + "' WHERE eventId = " + eventId + " AND username = '" + username + "';";
 		return sendStatement(myStmt);
-	}	
+	}
+	
+	public static boolean setGroupAppliance(int eventId, int groupId, String appliance) {
+		
+		String myStmt = "UPDATE groupInvitation SET lastSeen = now(), appliance = '" + appliance + "' WHERE eventId = " + eventId + " AND groupId = " + groupId + ";";
+		return sendStatement(myStmt);
+	}
+	
+	public static boolean hideEvent(int eventId, String username, boolean isHidden){
+		
+		String myStmt = "UPDATE isInvitedTo SET isHidden = " + isHidden + " WHERE eventId = " + eventId + " AND username = '" + username + "';";
+		return sendStatement(myStmt);
+	}
+	
+	public static boolean hideEventGroup(int eventId, int groupId, boolean isHidden){
+		
+		String myStmt = "UPDATE groupInvitation SET isHidden = " + isHidden + " WHERE eventId = " + eventId + " AND groupId = " + groupId + ";";
+		return sendStatement(myStmt);
+	}
 	
 	public static boolean deleteEvent(int eventId) {
 		
@@ -319,11 +397,23 @@ public class ConnectionMySQL {
 		return allGroups;
 	}
 	
-	public static boolean createGroup(String groupName, int parent) {
+	public static int createGroup(String groupName, int parent) {
 		
 		String myStmt = "INSERT INTO personGroup SET groupName = '" + groupName + "'";
 		if(parent != 0) myStmt += ", parent = '" + parent + "'";
-		return sendStatement(myStmt);
+		if(!sendStatement(myStmt)) return -1;
+		try {
+			int groupId = -1;
+			ResultSet myRs = sendQuery("SELECT groupId FROM personGroup ORDER BY groupId DESC LIMIT 1;");
+			while (myRs.next()){
+				groupId = Integer.parseInt(myRs.getString("groupId"));
+			}
+			return groupId;
+			
+		} catch (Exception e) {
+			if (DEBUG) e.printStackTrace();
+			return -1;
+		}
 		
 	}
 	
