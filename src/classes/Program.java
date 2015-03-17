@@ -139,14 +139,18 @@ public class Program {
 	}
 	
 	public void updateCurrentPerson(String firstname, String lastname, String email, String phone){
-		if (isLoggedIn())
-			if (ConnectionMySQL.updateUser(currentPerson.username, currentPerson.getFirstname(), currentPerson.getLastname(), 
-					currentPerson.getMail(), currentPerson.getPhone(), currentPerson.admin)){
+		if (isLoggedIn()){
+			if (ConnectionMySQL.updateUser(currentPerson.username, firstname, lastname, 
+					email, phone, currentPerson.admin)){
 				callMessage(Message.PersonUpdated);
+				currentPerson.setOtherInfo(phone, email);
+				currentPerson.setFirstname(firstname);
+				currentPerson.setLastname(lastname);
 			}else{
 				System.out.println("updateCurrentPerson conntection false");
 				callMessage(Message.PersonNotUpdated);
 			}
+		}
 	}
 	
 	public void updateCalendars(){
@@ -197,8 +201,8 @@ public class Program {
 		if (!isLoggedIn())
 			return;
 		if (currentPerson.isCorrectPassword(oldPassword)){
-			if (ConnectionMySQL.changePassword(currentPerson.username, newPassword)){
-				currentPerson.changePassword(Person.hashPassword(newPassword));
+			if (ConnectionMySQL.changePassword(currentPerson.username, Person.hashPassword(newPassword))){
+				currentPerson.changePassword(newPassword);
 			}
 			else {
 				currentPerson.changePassword(newPassword);

@@ -58,6 +58,14 @@ public class Person {
 		//husk å endre passord i database
 	}
 	
+	public void setFirstname(String firstname){
+		this.firstname = firstname;
+	}
+	
+	public void setLastname(String lastname){
+		this.lastname = lastname;
+	}
+	
 	public void addGroup(Group group){
 		if (group != null)
 			groups.add(group);

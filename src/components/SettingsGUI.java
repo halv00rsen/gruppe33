@@ -134,7 +134,7 @@ public class SettingsGUI extends Component{
 			@Override
 			public void changed(ObservableValue<? extends String> observable,
 					String oldValue, String newValue) {
-				if(!(newValue.matches("[A-Za-z]*"))){
+				if(!(newValue.matches("[A-Za-zæøåÆØÅ]*"))){
 					firstNameTextField.setText(oldValue);
 				}
 				
@@ -164,7 +164,7 @@ public class SettingsGUI extends Component{
 			@Override
 			public void changed(ObservableValue<? extends String> observable,
 					String oldValue, String newValue) {
-				if(!(newValue.matches("[A-Za-z]*"))){
+				if(!(newValue.matches("[A-Za-zæøåÆØÅ]*"))){
 					lastNameTextField.setText(oldValue);
 				}
 				
