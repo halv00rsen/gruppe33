@@ -56,6 +56,7 @@ public class EventGUI extends Component implements GetPersonListener{
 	Button trash = new Button();
 	TextField purposeText = new TextField();
 	ComboBox romChoice = new ComboBox();
+	ComboBox calendarChoice = new ComboBox();
 //	TextField freqText = new TextField();
 	BorderPane pane = new BorderPane();
 	TextArea infoText = new TextArea();
@@ -180,9 +181,10 @@ public class EventGUI extends Component implements GetPersonListener{
     	newevent.setInfo(infoText.getText());
     	newevent.setPriority(priority);
     	
-    	if (currentEvent == null)
+    	if (currentEvent == null){
+    		System.out.println("freq" + newevent.getFreq() + "månedlig" + newevent.isMonthlyRepeat());
     		eventCall.addEvent(newevent);
-    	else{
+    	}else{
     		currentEvent.overrideEvent(newevent);
     	}
    
@@ -272,6 +274,16 @@ public class EventGUI extends Component implements GetPersonListener{
 	public void addElements(){
 //    	pane.setStyle("-fx-background-color: #FFF");
 
+		//calendar
+        Label calendarLabel = new Label();
+        calendarLabel.setText("Kalender\t\t\t");
+        FxUtil.autoCompleteComboBox(calendarChoice, FxUtil.AutoCompleteMode.CONTAINING);
+        VBox calendarBox = new VBox(2);
+        calendarBox.getChildren().add(calendarLabel);
+        calendarBox.getChildren().add(calendarChoice);
+        calendarChoice.setPrefWidth(200);
+       
+		
         //formaal
         Label formaal = new Label();
         formaal.setText("Formål");
@@ -280,6 +292,7 @@ public class EventGUI extends Component implements GetPersonListener{
         formalBox.getChildren().add(purposeText);
         purposeText.setPrefWidth(275);
         
+     
       //info
         Label info = new Label();
         info.setText("Informasjon\t");
@@ -497,8 +510,9 @@ public class EventGUI extends Component implements GetPersonListener{
         	p.getVisualization().setOnMouseClicked(event);
         
         //set alle
-        VBox rootBox = new VBox(30);
+        VBox rootBox = new VBox(25);
         BorderPane.setMargin(rootBox,new Insets(20));
+        rootBox.getChildren().add(calendarBox);
         rootBox.getChildren().add(formalBox);
         rootBox.getChildren().add(infoBox);
         rootBox.getChildren().add(dateBox);

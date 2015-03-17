@@ -26,13 +26,44 @@ public class Program {
 		//opprett kobling med database og/eller socketprogram
 	}
 	
-	public void createEvent(Event event, Calendar... cal){
+	public void createEvent(Event e, Calendar... cal){
 		//add events to server
 //		for (Calendar cals: cal)
 //			cals.addEvent(event);
 //		callMessage(Message.EventAdded);
-		currentPerson.getPersonalCalendar().addEvent(event);
-		event.setMadeBy(currentPerson);
+		e.setMadeBy(currentPerson);
+		
+		if(e.getFreq() != null){
+			
+			if(e.getFreq()==0){
+				PersonInformation.requestCreateEvent(e,currentPerson);
+				
+			}else if(e.getFreq()>0 || e.isMonthlyRepeat()){
+				int i = e.getFreq();
+				Event lastEvent = e;
+				Event nextEvent;
+				while(true){
+					nextEvent = new Event();
+					nextEvent.overrideEvent(e); // må ha ny ID da...
+					if(e.isMonthlyRepeat()){
+						nextEvent.setStartTime(lastEvent.getStartTime().plusMonths(1));
+						nextEvent.setEndTime(lastEvent.getEndTime().plusMonths(1));	
+					}else{
+						nextEvent.setStartTime(lastEvent.getStartTime().plusDays(i));
+						nextEvent.setEndTime(lastEvent.getEndTime().plusDays(i));	
+					}
+					if(nextEvent.getStartDate().isAfter(e.getFreqDate())){
+						break;
+					}
+					nextEvent.setLastEventInSequence(lastEvent);
+					lastEvent.setNextEventInSequence(nextEvent);
+					PersonInformation.requestCreateEvent(lastEvent,currentPerson);
+					lastEvent = nextEvent;
+				}
+				PersonInformation.requestCreateEvent(nextEvent,currentPerson);
+			}
+		}
+		
 		updateCalendarListeners();
 		callMessage(Message.EventAdded);
 	}
