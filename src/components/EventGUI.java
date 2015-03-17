@@ -45,7 +45,7 @@ public class EventGUI extends Component implements GetPersonListener{
 	private final NumberField freqText;
 	private final AddNewEvent eventCall;
 	private final ChangeTab changeTab;
-	
+	Priority[] pList;
 	Label repeatTo = new Label();
     Label every = new Label();
     Label day = new Label();
@@ -154,38 +154,40 @@ public class EventGUI extends Component implements GetPersonListener{
     		return;
     	LocalDateTime t1 = LocalDateTime.of(start, LocalTime.of(sh, sm)),
     			t2 = LocalDateTime.of(end, LocalTime.of(eh, em));
-    	classes.Event event = new classes.Event(t1, t2, null);
-    	event.setEventName(purposeText.getText());
+    	classes.Event newevent = new classes.Event(t1, t2, null);
+    	newevent.overrideEvent(currentEvent);
+    	newevent.setEventName(purposeText.getText());
     	Picker splitStuff = split.getValue();
     	LocalDate freqEnd = repDate.getValue();
     	if (freqEnd == null && splitStuff != Picker.Aldri)
     		return;
     	if (splitStuff == Picker.Daglig || splitStuff == Picker.Ukentlig)
-    		event.setFreq(splitStuff.freq, false, freqEnd);
+    		newevent.setFreq(splitStuff.freq, false, freqEnd);
     	else if (splitStuff == Picker.Aldri)
-    		event.setFreq(0, false, freqEnd);
+    		newevent.setFreq(0, false, freqEnd);
     	else if (splitStuff == Picker.Egendefinert){
     		int ting = freqText.getNumDays();
     		if (ting == -1)
     			return;
-    		event.setFreq(ting, false, freqEnd);
+    		newevent.setFreq(ting, false, freqEnd);
     	}else
-    		event.setFreq(0, true, freqEnd);
+    		newevent.setFreq(0, true, freqEnd);
     	List<EventAppliance> persons = new ArrayList<EventAppliance>();
     	for (Person p : listPeople){
     		persons.add(new EventAppliance(p, Appliance.Not_Answered));
     	}
-    	event.addAppliance(persons);
-    	event.setInfo(infoText.getText());
-    	event.setPriority(priority);
+    	newevent.addAppliance(persons);
+    	newevent.setInfo(infoText.getText());
+    	newevent.setPriority(priority);
     	
     	if (currentEvent == null)
-    		eventCall.addEvent(event);
+    		eventCall.addEvent(newevent);
     	else{
-    		currentEvent.overrideEvent(event);
+    		currentEvent.overrideEvent(newevent);
     	}
+   
     	trash();
-    	changeTab.goToHomeScreen();
+    	changeTab.showEventInHomeScreen(newevent);
 //    	PrintWriter writer;
     	
 //		try {
@@ -217,6 +219,10 @@ public class EventGUI extends Component implements GetPersonListener{
     	infoText.clear();
     	freqText.clear();
     	currentEvent = null;
+    	for (Priority p : pList){
+				p.turnOff();
+		}
+    	pList[0].turnOn();
 //    	changeTab.goToHomeScreen();
 	}
 	
@@ -456,7 +462,7 @@ public class EventGUI extends Component implements GetPersonListener{
         prioThings.setCenter(priorityList);
         BorderPane.setAlignment(priorityList, Pos.CENTER);
         priority = Priority.NOT_IMPORTANT;
-        Priority[] pList = new Priority[3];
+        pList = new Priority[3];
         pList[0] = Priority.NOT_IMPORTANT;
         pList[0].turnOn();
         pList[1] = Priority.IMPORTANT;
@@ -541,7 +547,6 @@ public class EventGUI extends Component implements GetPersonListener{
 		trash();
 		if (event == null)
 			return;
-		System.out.println(event.debugString());
 		currentEvent = event;
 		start.setTime(event.getStartTime().getHour(), event.getStartTime().getMinute());
 		end.setTime(event.getEndTime().getHour(), event.getEndTime().getMinute());
@@ -569,8 +574,7 @@ public class EventGUI extends Component implements GetPersonListener{
 		endDate.setValue(event.getEndDate());
 		if (event.getFreqDate() != null)
 			repDate.setValue(event.getFreqDate());
-		priority = event.getPriority();
-		for (EventAppliance e : event.getAppliance()){
+				for (EventAppliance e : event.getAppliance()){
 			Person p = e.person;
 			int index = comboPeople.indexOf(p);
 			if (index != -1){
@@ -578,6 +582,16 @@ public class EventGUI extends Component implements GetPersonListener{
 				listPeople.add(p);
 			}
 		}
+		priority = event.getPriority();
+
+		for (Priority p : pList){
+			if (p.getVisualization() == event.getPriority().getVisualization()){
+					p.turnOn();
+					priority = p;
+			}else
+				p.turnOff();
+		}
+	
 		save.setText("Lagre");
 		trash.setText("Slett");
 		cancel.setText("Avbryt");

@@ -3,6 +3,8 @@ package components;
 import java.time.LocalDate;
 import java.util.ArrayList;
 
+import components.SideMenu.SideMenuInterface;
+
 import classes.Calendar;
 import classes.Event;
 import javafx.beans.Observable;
@@ -21,7 +23,7 @@ import gui.Component;
 import gui.Main;
 import gui.Main.AddNewEvent;
 
-public class CalendarGUI extends Component{
+public class CalendarGUI extends Component implements SideMenuInterface{
 	RadioButton weekButton;
 	RadioButton monthButton;
 	ArrayList<CalendarGUIListener> listeners = new ArrayList<CalendarGUIListener>();
@@ -118,8 +120,10 @@ public class CalendarGUI extends Component{
 		week.setNewCalendarList(calendars);
 		week.generateCalendars();
 		week.redrawCalendar();
+//		highlightedDate = null;
+//		highlightedEvent = null;
 		if(highlightedEvent != null){
-			highlightEvent(highlightedEvent);
+			highlightEvent(highlightedEvent,true);
 		}
 		if(highlightedDate != null){
 			highlightDate(highlightedDate);
@@ -133,7 +137,17 @@ public class CalendarGUI extends Component{
 		public void eventIsHighligthed(Event event);
 
 	}
-	public void highlightEvent(Event event) {
+	public void highlightEvent(Event event,boolean alert) {
+		System.out.println("highlightedEvent"  + highlightedEvent);
+		if(highlightedDate != null){
+				week.removeHighlightDate();
+				month.removeHighlightDate();
+				if(alert){
+					alertListenersAboutDate(null);
+				}
+				
+				highlightedDate = null;
+		}
 		if(highlightedEvent != null){
 			if(highlightedEvent.getID() == event.getID()){
 
@@ -150,24 +164,28 @@ public class CalendarGUI extends Component{
 				month.removeHighlightEvent();
 				highlightedEvent = null;
 			}
-			alertListenersAboutEvent(null);
-			
+			if(alert){
+				alertListenersAboutEvent(null);
+			}
 		}
 		
 		this.highlightedEvent = event;
-		alertListenersAboutDate(event.getStartDate());
-		alertListenersAboutEvent(event);
+		if(alert){
+			alertListenersAboutDate(event.getStartDate());
+			alertListenersAboutEvent(event);
+		}
+		
 		month.highlightEvent(event);
 		week.highlightEvent(event);
 	}
 	public void highlightDate(LocalDate date) {
+		System.out.println("highlightedEvent"  + highlightedEvent);
 		if(highlightedEvent != null){
-			if(!highlightedEvent.getStartDate().equals(date)){
+				System.out.println("REMOVE REMOVE REMOVE");
 				week.removeHighlightEvent();
 				month.removeHighlightEvent();
 				alertListenersAboutEvent(null);
 				highlightedEvent = null;
-			}
 		}
 		
 		if(highlightedDate != null){
@@ -191,12 +209,14 @@ public class CalendarGUI extends Component{
 	}
 	public void alertListenersAboutDate(LocalDate date){
 		for (CalendarGUIListener i : listeners) {
+			
 			i.dayIsHighligthed(date, getEventsByDay(date));
 			
 		}
 	}
 	public void alertListenersAboutEvent(Event event){
 		for (CalendarGUIListener i : listeners) {
+		
 			i.eventIsHighligthed(event);
 			
 		}
@@ -239,6 +259,11 @@ public class CalendarGUI extends Component{
 	public void addEventFromCalendar(Event event) {
 		sch.addEventFromCalendar(event);
 		
+		
+	}
+	@Override
+	public void changingSelectionToEvent(Event event) {
+		highlightEvent(event,false);
 		
 	}
 }

@@ -11,15 +11,18 @@ import java.util.List;
 
 import components.CalendarGUI.CalendarGUIListener;
 import classes.Event;
+import classes.Priority;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.geometry.Insets;
+import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
+import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
@@ -39,13 +42,14 @@ public class SideMenu extends Component implements CalendarGUIListener{
 	
 	private final Button editEvent, deleteEvent;
 	private final Label title, fromTime, toTime, location, info, priority;
-	
+	ArrayList<Event> events = new ArrayList<Event>();
 	private final Text fromTimeData, toTimeData, locationData, infoData, priorityData;
+	private ArrayList<SideMenuInterface> listeners = new ArrayList<SideMenuInterface>();
 	
 	public SideMenu(Pane parent, List<Event> events, ChangeTab changeTab) {
 		super(parent);
 		this.changeTab = changeTab;
-		title = new Label("Dagens arrangementer");
+		title = new Label("Arrangementinfo");
 		title.setFont(Main.header1);
 		title.setPadding(new Insets(10, 0, 0, 0));
 		
@@ -58,10 +62,12 @@ public class SideMenu extends Component implements CalendarGUIListener{
 		
 		addListElements(events);
 		
-		editEvent = new Button("Endre dette arrangementet");
+		editEvent = new Button("Endre");
 		editEvent.setOnAction(e -> editEventMethod());
 		
-		deleteEvent = new Button("Slett dette arrangementet");
+		deleteEvent = new Button("Slett");
+		editEvent.setDisable(true);
+		deleteEvent.setDisable(true);
 		deleteEvent.setOnAction(e -> deleteEventMethod());
 		
 		
@@ -70,15 +76,14 @@ public class SideMenu extends Component implements CalendarGUIListener{
 		toTime = new Label("Til:");
 		location = new Label("Rom");
 		info = new Label("Informasjon");
-		priority = new Label("Priority:");
+		priority = new Label("Prioritet:");
 		
 		fromTimeData = new Text("");
 		toTimeData = new Text("");
 		locationData = new Text("");
 		infoData = new Text("");
 		priorityData = new Text("");
-		
-		
+
 		eventInformation = new GridPane();
 		eventInformation.setHgap(50); //horizontal gap in pixels 
 		eventInformation.setVgap(5); //vertical gap in pixels
@@ -104,10 +109,18 @@ public class SideMenu extends Component implements CalendarGUIListener{
 //		    	System.out.println(newValue.getID());
 				for (Event event : items) {
 					if (event == newValue){
-						System.out.println("eventstuff");
 						changeEvent(event);
+						alertListenersAboutEventChange(event);
+						
 						break;
 					}
+				}
+				if(list.getSelectionModel().getSelectedIndex() > -1){
+					editEvent.setDisable(false);
+					deleteEvent.setDisable(false);
+				}else{
+					editEvent.setDisable(true);
+					deleteEvent.setDisable(true);
 				}
 			}
 		});
@@ -159,13 +172,17 @@ public class SideMenu extends Component implements CalendarGUIListener{
 	
 	public void changeDate(List<Event> events) {
 //	 	init(events);
-		System.out.println("changedate");
 		resetFields();
+		this.events = (ArrayList<Event>) events;
 		items.clear();
 		addListElements(events);
 	}
 	
 	private void resetFields(){
+		if(events != null){
+
+			events.clear();
+		}
 		fromTimeData.setText("");
 		toTimeData.setText("");
 		locationData.setText("");
@@ -177,7 +194,6 @@ public class SideMenu extends Component implements CalendarGUIListener{
 	private void changeEvent(Event event) {
 		
 		resetFields();
-		System.out.println(event);
 		if(event == null){
 			eventInformation.getChildren().removeAll(fromTime, toTime, location, info, priority, fromTimeData, toTimeData, locationData, infoData, priorityData);
 			return;
@@ -207,13 +223,33 @@ public class SideMenu extends Component implements CalendarGUIListener{
 	public void dayIsHighligthed(LocalDate date, ArrayList<Event> events) {
 		changeDate(events);
  	}
-
+	
 	@Override
 	public void eventIsHighligthed(Event event) {
 //		changeEvent(event);
-		System.out.println("eventishigligheterweoigjegoieojgojgio");
 //		list.requestFocus();
-		list.getSelectionModel().select(event);
+		event.getID();
+		
+		for (int i = 0; i< events.size(); i++) {
+			if(event.getID() == events.get(i).getID()){
+				System.out.println("FOUND FOUND FOUND");
+				list.getSelectionModel().select(events.get(i));
+				
+			}
+			
+		}
+		
+		
 	}
-	
+	public void addListener(SideMenuInterface obj){
+		this.listeners.add(obj);
+	}
+	public void alertListenersAboutEventChange(Event event){
+		for (SideMenuInterface listener : this.listeners) {
+			listener.changingSelectionToEvent(event);
+		}
+	}
+	public interface SideMenuInterface{
+		public void changingSelectionToEvent(Event event);
+	}
 }

@@ -7,6 +7,10 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 import classes.Event;
+import javafx.animation.KeyFrame;
+import javafx.animation.Timeline;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.scene.Cursor;
 import javafx.scene.control.Label;
@@ -17,6 +21,7 @@ import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Line;
+import javafx.util.Duration;
 import gui.Component;
 import gui.Main;
 
@@ -159,24 +164,31 @@ public abstract class CalendarDay extends Pane{
 	public Object onEventAction(MouseEvent e) {
 		// TODO Auto-generated method stub
 		return null;
-	}	
+	}
+	boolean evenBoxWasJustCalled = false;
 	public LocalDate onAction(MouseEvent e) {
-//		System.out.println("CALLING");
-//		if(e.getTarget() instanceof EventBox){
-//			System.out.println("EVENTBOX");
-//		}else if(e.getTarget() instanceof CalendarDay){
-//			System.out.println("DAY");
-//		}
+		
+		
 		if(e.getSource() instanceof EventBox){
-			System.out.println("CALLING EVENTBOX");
+			Timeline timeline = new Timeline();
+			KeyFrame h = new KeyFrame(Duration.millis(3));
+			timeline.getKeyFrames().add(h);
+			evenBoxWasJustCalled = true;
+			timeline.setOnFinished( new EventHandler<ActionEvent>(){
+				@Override
+				public void handle(ActionEvent event) {
+					evenBoxWasJustCalled = false;
+					
+				}
+			});
+			timeline.play();
 			if(e.getClickCount() == 2){
 
-				calGui.highlightEvent(((EventBox)e.getSource()).event);
+				calGui.highlightEvent(((EventBox)e.getSource()).event,true);
 			}else{
-				calGui.highlightEvent(((EventBox)e.getSource()).event);
+				calGui.highlightEvent(((EventBox)e.getSource()).event,true);
 			}
-		}else{
-			System.out.println("CALLING DAY");
+		}else if(evenBoxWasJustCalled == false){
 			if(e.getButton() == MouseButton.SECONDARY){
 				if(calGui.currentCalendarBase instanceof CalendarMonthBase){
 					calGui.changeToWeek(date);
