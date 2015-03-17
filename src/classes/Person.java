@@ -28,9 +28,21 @@ public class Person {
 		toStringName = true;
 	}
 	
+	public String getPassword(){
+		return password;
+	}
+	
 	public void setOtherInfo(String phone, String email){
 		this.phone = phone;
 		this.email = email;
+	}
+	
+	public String getMail(){
+		return email;
+	}
+	
+	public String getPhone(){
+		return phone;
 	}
 	
 	public boolean isCorrectPassword(String password){
