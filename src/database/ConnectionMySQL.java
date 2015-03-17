@@ -89,20 +89,25 @@ public class ConnectionMySQL {
 		
 	}
 	
-	public static ArrayList<String> getUsers(){
+	public static ArrayList<HashMap<String, String>> getUsers(){
 		
-		ArrayList<String> users = new ArrayList<String>();
+		ArrayList<HashMap<String, String>> allUsers = new ArrayList<HashMap<String, String>>();
 			
 			try {
-				ResultSet myRs = sendQuery("SELECT username FROM person;");
+				HashMap<String, String> users = new HashMap<String, String>();
+				ResultSet myRs = sendQuery("SELECT username, firstName, lastName FROM person;");
 				while (myRs.next()){
-					users.add(myRs.getString("username"));
+					users.put("username", myRs.getString("username"));
+					users.put("firstName", myRs.getString("firstName"));
+					users.put("lastName", myRs.getString("lastName"));
+					allUsers.add(users);
+					
 				}
 			} catch (Exception e) {
 				if (DEBUG)
 					e.printStackTrace();
 			}
-			return users;	
+			return allUsers;	
 		}
 
 	public static boolean createUser(String username, String firstName, String lastName, String password, String email, String phone, boolean isAdmin) { 
@@ -163,23 +168,29 @@ public class ConnectionMySQL {
 		
 	}
 	
-	public static ArrayList<String> getEventsForGroup(int groupId){
+	public static ArrayList<HashMap<String, String>> getEventsForGroup(int groupId){
 		
-		ArrayList<String> myEvents = new ArrayList<String>();
+		ArrayList<HashMap<String, String>> allEvents = new ArrayList<HashMap<String, String>>();
 		try {
 			ResultSet myRs = sendQuery("SELECT event.eventId, eventName, location, start, end, priority, lastChanged, frequency, info, alarmId, lastSeen, appliance, isHidden " + 
 					"FROM event, groupInvitation, personGroup " + 
 					"WHERE event.eventId = groupInvitation.eventId AND personGroup.groupId = groupInvitation.groupId AND personGroup.groupId = '" + groupId + "';");
 			while (myRs.next()){
-				
-				myEvents.add(myRs.getString("eventId"));
-				myEvents.add(myRs.getString("eventName"));
-				myEvents.add(myRs.getString("location"));
-				myEvents.add(myRs.getString("start"));
-				myEvents.add(myRs.getString("end"));
-				myEvents.add(myRs.getString("priority"));
-				myEvents.add(myRs.getString("lastChanged"));
-				myEvents.add(myRs.getString("frequency"));
+				HashMap<String, String> events = new HashMap<String, String>();
+				events.put("eventId", myRs.getString("eventId"));
+				events.put("eventName", myRs.getString("eventName"));
+				events.put("location", myRs.getString("location"));
+				events.put("start", myRs.getString("end"));
+				events.put("end", myRs.getString("end"));
+				events.put("priority", myRs.getString("priority"));
+				events.put("lastChanged", myRs.getString("lastChanged"));
+				events.put("frequency", myRs.getString("frequency"));
+				events.put("info", myRs.getString("info"));
+				events.put("alarmId", myRs.getString("alarmId"));
+				events.put("lastSeen", myRs.getString("lastSeen"));
+				events.put("appliance", myRs.getString("appliance"));
+				events.put("isHidden", myRs.getString("isHidden"));
+				allEvents.add(events);
 				
 			}
 		} catch (Exception e) {
@@ -187,20 +198,23 @@ public class ConnectionMySQL {
 				e.printStackTrace();
 		}
 
-		return myEvents;
+		return allEvents;
 		
 	}
 	
-	public static boolean createEvent(String eventName, String location, String start, String end, int priority, String lastChanged, int frequency, String info) {
+	/*public static int createEvent(String eventName, String location, String start, String end, int priority, String lastChanged, int frequency, String info) {
 		
 		String myStmt = "INSERT INTO event set eventName = '" + eventName + "', start = '" + start + "', end = '" + end + "', lastChanged = now()" + ", priority = " + priority;
 		if(!location.isEmpty()) myStmt += ", location = '" + location + "'";
 		if(frequency != 0) myStmt += ", frequency = " + frequency;
 		if(!location.isEmpty()) myStmt += ", info = '" + info + "'";
 		myStmt += ";";
-		return sendStatement(myStmt);
+		if(!sendStatement(myStmt)) return -1;
+		String myStmt = "SELECT eventId FROM event"
+		
 		
 	}
+	*/
 	
 	
 	public static boolean updateEvent(String eventId, String eventName, String location, String start, String end, int priority,  String lastChanged, int frequency, String info) {
@@ -220,7 +234,13 @@ public class ConnectionMySQL {
 		return sendStatement(myStmt);
 	}
 	
-	public static boolean setApplianceEvent(int eventId, String username, String appliance) {
+	// public static boolean getAppliance(int eventId){
+		
+		
+		
+	//}
+	
+	public static boolean setAppliance(int eventId, String username, String appliance) {
 		
 		String myStmt = "UPDATE isInvitedTo SET lastSeen = now(), appliance = '" + appliance + "' WHERE eventId = " + eventId + " AND username = '" + username + "';";
 		return sendStatement(myStmt);
