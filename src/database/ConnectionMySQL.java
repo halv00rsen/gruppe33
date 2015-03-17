@@ -4,6 +4,19 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
+/*noen forskjeller fra xkal-scheme.sql, ny versjon på drive
+ * personGroup / group
+ * appliance   / isGoing
+ * små bokstaver på tabeller
+ * ikke tatt hensyn til nye endringer i Event-tabellen enda:
+ * (freqToDate DATETIME,
+	parentEvent INT unsigned,
+	info VARCHAR(255),
+	FOREIGN KEY (parentEvent) REFERENCES `Event`(eventId) ON DELETE CASCADE)
+	
+	tid/dato lagres som DATETIME i databasen (yyyy-mm-dd hh:mm:ss)
+*/
+
 public class ConnectionMySQL {
 	
 	private static boolean DEBUG = false;
@@ -216,7 +229,6 @@ public class ConnectionMySQL {
 		
 	}
 	
-	//start og end lagres med DATETIME i databasen (yyyy-mm-dd hh:mm:ss)
 	public static int createEvent(String eventName, String location, String start, String end, int priority, String lastChanged, int frequency, String info) {
 		
 		String myStmt = "INSERT INTO event set eventName = '" + eventName + "', start = '" + start + "', end = '" + end + "', lastChanged = now()" + ", priority = " + priority;
