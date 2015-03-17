@@ -105,6 +105,12 @@ public class ProgramTest implements ProgramListener{
 		// TODO Auto-generated method stub
 		
 	}
+
+	@Override
+	public void updatePersonInformation(Person person) {
+		// TODO Auto-generated method stub
+		
+	}
 	
 	
 }

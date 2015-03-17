@@ -138,6 +138,17 @@ public class Program {
 			callCreateUser(false);
 	}
 	
+	public void updateCurrentPerson(String firstname, String lastname, String email, String phone){
+		if (isLoggedIn())
+			if (ConnectionMySQL.updateUser(currentPerson.username, currentPerson.getFirstname(), currentPerson.getLastname(), 
+					currentPerson.getPassword(), currentPerson.getMail(), currentPerson.getPhone(), currentPerson.admin)){
+				callMessage(Message.PersonUpdated);
+			}else{
+				System.out.println("updateCurrentPerson conntection false");
+				callMessage(Message.PersonNotUpdated);
+			}
+	}
+	
 	public void updateCalendars(){
 		updateCalendarListeners();
 	}
