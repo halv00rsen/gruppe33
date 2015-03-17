@@ -4,8 +4,13 @@ import java.util.List;
 
 
 
-import components.GroupGUI.FieldListener;
 
+
+
+
+
+
+import components.GroupGUI.FieldListener;
 import classes.Group;
 import classes.Person;
 import gui.FxUtil;
@@ -17,10 +22,14 @@ import javafx.event.EventHandler;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
+import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
 import javafx.scene.control.ToggleButton;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
+import javafx.scene.shape.Rectangle;
+import javafx.util.Callback;
 
 public class GroupList<Value> extends VBox{
 	
@@ -123,13 +132,25 @@ public class GroupList<Value> extends VBox{
 				
 			}
 		});
-		
 		valueChooser.setVisible(false);
 		addButton.setVisible(false);
 		
 		getChildren().addAll(head, list, buttons, valueChooser, addButton);
+		
 	}
 	
+	 
+	static class ColorRectCell extends ListCell<String> {
+        @Override
+        public void updateItem(String item, boolean empty) {
+            super.updateItem(item, empty);
+            Rectangle rect = new Rectangle(100, 20);
+            if (item != null) {
+                rect.setFill(Color.web(item));
+                setGraphic(rect);
+            }
+        }
+    }
 	public void setValues(List<Value> values){
 		for (Value v : items){
 			valueList.add(v);
