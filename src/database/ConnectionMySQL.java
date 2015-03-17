@@ -94,9 +94,9 @@ public class ConnectionMySQL {
 		ArrayList<HashMap<String, String>> allUsers = new ArrayList<HashMap<String, String>>();
 			
 			try {
-				HashMap<String, String> users = new HashMap<String, String>();
 				ResultSet myRs = sendQuery("SELECT username, firstName, lastName FROM person;");
 				while (myRs.next()){
+					HashMap<String, String> users = new HashMap<String, String>();
 					users.put("username", myRs.getString("username"));
 					users.put("firstName", myRs.getString("firstName"));
 					users.put("lastName", myRs.getString("lastName"));
@@ -106,6 +106,7 @@ public class ConnectionMySQL {
 			} catch (Exception e) {
 				if (DEBUG)
 					e.printStackTrace();
+				return null;
 			}
 			return allUsers;	
 		}

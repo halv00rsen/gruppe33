@@ -34,6 +34,8 @@ public class Person {
 	}
 	
 	public boolean isCorrectPassword(String password){
+		if (this.password == null)
+			return false;
 		return this.password.equals(hashPassword(password));
 	}
 	
