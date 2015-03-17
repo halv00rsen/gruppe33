@@ -19,9 +19,12 @@ public class PersonInformation {
 		Map<String, String> info = new HashMap<String, String>();
 		info.put("username", username);
 		info.put("password", password);
-		info.put("personid", "4");
-		info.put("events", "events");
-		info.put("name", "Ola Nordmann");
+		info.put("firstname", "Ola");
+		info.put("lastname", "Nordmann");
+		info.put("isAdmin", "false");
+		info.put("email", "ola@nordmann.no");
+		info.put("phone", "12345678");
+		
 		return info;
 	}
 	
@@ -30,9 +33,9 @@ public class PersonInformation {
 	}
 	
 	public static ArrayList<Person> getPeople() {
-		Person kari = new Person("kariHols", "hallo", "Kari Holst", false);
-		Person benjamin = new Person("bennyBoy", "naughty", "Benjamin Button", false);
-		Person erlend = new Person("erlbe", "passord123", "Erlend Berger", true);
+		Person kari = new Person("kariHols", "hallo", "Kari",  "Holst", false);
+		Person benjamin = new Person("bennyBoy", "naughty", "Benjamin",  "Button", false);
+		Person erlend = new Person("erlbe", "passord123", "Erlend",  "Berger", true);
 		
 		ArrayList<Person> list = new ArrayList<Person>(); 
 		list.addAll(Arrays.asList(kari, benjamin, erlend));

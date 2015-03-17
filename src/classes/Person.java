@@ -7,23 +7,30 @@ import java.util.List;
 
 public class Person {
 	
-	public final String username, name;
+	public final String username;
 	public final boolean admin;
 	
 	private final Calendar calendar;
 	private final List<Group> groups;
 	
-	private String password;
+	private String password, phone, email, firstname, lastname;
 	private boolean toStringName;
 	
-	public Person(String username, String password, String name, boolean admin){
+	public Person(String username, String password, String firstname, String lastname
+			, boolean admin){
 		calendar = new PersonCalendar(this);
 		groups = new ArrayList<Group>();
 		this.username = username;
 		this.password = password;
-		this.name = name;
+		this.firstname = firstname;
+		this.lastname = lastname;
 		this.admin = admin;
 		toStringName = true;
+	}
+	
+	public void setOtherInfo(String phone, String email){
+		this.phone = phone;
+		this.email = email;
 	}
 	
 	public boolean isCorrectPassword(String password){
@@ -77,8 +84,12 @@ public class Person {
 		return username;
 	}
 
-	public String getName() {
-		return name;
+	public String getFirstname() {
+		return firstname;
+	}
+	
+	public String getLastname(){
+		return lastname;
 	}
 
 	public List<Group> getGroups() {
@@ -91,7 +102,7 @@ public class Person {
 	
 	public String toString(){
 		if (toStringName)
-			return name;
+			return firstname + lastname;
 		return username;
 	}
 	
