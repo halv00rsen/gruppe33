@@ -85,7 +85,7 @@ public class SideMenu extends Component implements CalendarGUIListener{
 		priorityData = new Text("");
 
 		eventInformation = new GridPane();
-		eventInformation.setHgap(50); //horizontal gap in pixels 
+		eventInformation.setHgap(20); //horizontal gap in pixels 
 		eventInformation.setVgap(5); //vertical gap in pixels
 		eventInformation.setGridLinesVisible(false);
 		eventInformation.add(fromTime, 0, 0);
