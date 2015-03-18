@@ -4,6 +4,7 @@ import gui.Component;
 import gui.Main.AddGroupListener;
 import gui.Main.AddNewEvent;
 import gui.Main.ChangeTab;
+import gui.Main.UpdateAppliance;
 import gui.Window;
 
 import java.time.LocalDate;
@@ -12,6 +13,7 @@ import java.util.ArrayList;
 import components.SideMenu.SideMenuInterface;
 import classes.Calendar;
 import classes.Event;
+import classes.EventAppliance;
 import classes.Group;
 import classes.Person;
 import classes.PersonCalendar;
@@ -33,9 +35,10 @@ public class SchedulingGUI extends Component{
     public GroupCheckBox groupChechBox;
     VBox interactiveElementsBox;
     HBox mainBox;
-
+    Applicants applicants;
 	private Button settings;
 	private AddNewEvent eventAdder;
+	private UpdateAppliance updateAppliance;
 	public SchedulingGUI(Window parent, ChangeTab tab, AddGroupListener l, Calendar... calendars ) {
 		super(parent);
 
@@ -45,6 +48,8 @@ public class SchedulingGUI extends Component{
 		interactiveElementsBox.setTranslateY(CalendarBase.headerHeight);
 		BorderPane.setMargin(interactiveElementsBox, new Insets(10));
 		groupChechBox = new GroupCheckBox(this, l);
+
+		applicants = new Applicants(this);
 //		settings.setOnAction(e -> main.requestSettingsWindow());
 //		calendars[0].addEvent(DebugMain.getEvents());
 		calendargui = new CalendarGUI(this, LocalDate.now(), calendars);
@@ -54,11 +59,11 @@ public class SchedulingGUI extends Component{
 		}
 		menu = new SideMenu(this, dagens, tab);
 		calendargui.addListener(menu);
+		calendargui.addListener(applicants);
 		menu.addListener(calendargui);
 		userInfo = new UserInfoGUI(this);
-		Applicants applicants = new Applicants(this);
 //		calendarAndInfo.getChildren().addAll(userInfo, menu);
-		interactiveElementsBox.getChildren().addAll(groupChechBox,menu,applicants);
+		interactiveElementsBox.getChildren().addAll(groupChechBox,applicants,menu);
 		borderPane.setTop(userInfo);
 		borderPane.setCenter(calendargui);
 		borderPane.setRight(interactiveElementsBox);
@@ -69,6 +74,7 @@ public class SchedulingGUI extends Component{
 	
 	public void changePerson(Person p){
 		userInfo.changePerson(p);
+		applicants.changePerson(p);
 	}
 
 	public void updateCalendars(Calendar... calendars){
@@ -88,6 +94,12 @@ public class SchedulingGUI extends Component{
 
 	public void setEventAdder(AddNewEvent eventAdder) {
 		this.eventAdder = eventAdder;
+		
+	}
+
+	public void setEventApplianceCaller(UpdateAppliance updateAppliance) {
+		this.updateAppliance = updateAppliance;
+		applicants.setEventApplianceCaller(updateAppliance);
 		
 	}
 

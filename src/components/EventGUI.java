@@ -195,13 +195,15 @@ public class EventGUI extends Component implements GetPersonListener, GetGroupLi
     	Calendar calendar = calendarChoice.getItems().get(index);
     	if (currentEvent == null){
     		eventCall.addEvent(newevent, (calendar.type == TypeOfCalendar.Personal ? null: calendar) );
+    		changeTab.showEventInHomeScreen(newevent);
     	}else{
     		//skal sendes til server.
-    		currentEvent.overrideEvent(newevent);
+    		eventCall.changeEvent(currentEvent.getID(), currentCal, (calendar.type == TypeOfCalendar.Personal ? null: calendar) , newevent);
+//    		currentEvent.overrideEvent(newevent);
+    		changeTab.showEventInHomeScreen(currentEvent);
     	}
    
     	trash();
-    	changeTab.showEventInHomeScreen(newevent);
 //    	PrintWriter writer;
     	
 //		try {
@@ -569,11 +571,23 @@ public class EventGUI extends Component implements GetPersonListener, GetGroupLi
     	a.setLayoutY(y);
     	
     }
+    
+    private Calendar currentCal;
 
-	public void showEvent(classes.Event event) {
+	public void showEvent(classes.Event event, Calendar cal) {
 		trash();
+		System.out.println("Show event: " + cal);
 		if (event == null)
 			return;
+		currentCal = cal;
+		int calIndex = calendarItems.indexOf(cal);
+		if (calIndex == -1){
+//			currentCal = calendarChoice.getSelectionModel().getSelectedItem();
+//			currentCal = calendarItems.get(0);
+			currentCal = null;
+		}else{
+			calendarChoice.getSelectionModel().select(calIndex);
+		}
 		currentEvent = event;
 		start.setTime(event.getStartTime().getHour(), event.getStartTime().getMinute());
 		end.setTime(event.getEndTime().getHour(), event.getEndTime().getMinute());

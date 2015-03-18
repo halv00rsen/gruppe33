@@ -28,6 +28,125 @@ public class Program {
 		//opprett kobling med database og/eller socketprogram
 	}
 	
+	public void createGroup(String name){
+		int groupId = ConnectionMySQL.createGroup(name, 0);
+		if (groupId == -1){
+			if (DEBUG){
+				System.out.println("Create group connection null");
+				Group group = new Group(name, (int)( Math.random() * 10000));
+				currentPerson.getGroups().add(group);
+				activeCalendars.add(group.getGroupCalendar());
+				updateGroups();
+			}
+			callMessage(Message.GroupNotCreated);
+			return;
+		}else{
+			Group group = new Group(name, groupId);
+			currentPerson.getGroups().add(group);
+			activeCalendars.add(group.getGroupCalendar());
+		}
+		updateGroups();
+	}
+	
+	public void deleteGroup(int groupId){
+		for (Calendar a : activeCalendars){
+			System.out.println(a.debugString());
+		}
+		for (Calendar a : unactive)
+			System.out.println(a.debugString());
+		if (ConnectionMySQL.deleteGroup(groupId)){
+			for (Group g : currentPerson.getGroups()){
+				if (g.id == groupId){
+					currentPerson.getGroups().remove(g);
+					activeCalendars.remove(g.getGroupCalendar());
+					unactive.remove(g.getGroupCalendar());
+					break;
+				}
+			}
+		}else if (DEBUG){
+			System.out.println("delete group connection false");
+			for (Group g : currentPerson.getGroups()){
+				System.out.println(g.id + "   " + groupId);
+				if (g.id == groupId){
+					currentPerson.getGroups().remove(g);
+					activeCalendars.remove(g.getGroupCalendar());
+					unactive.remove(g.getGroupCalendar());
+					break;
+				}
+			}
+		}
+		updateGroups();
+		updateCalendars();
+	}
+	
+	public void changeEvent(int eventId, Calendar oldCal, Calendar newCal, Event event){
+		Event oldEvent = null;
+		if (newCal == null){
+			newCal = currentPerson.getPersonalCalendar();
+		}
+		if (oldCal == null){
+			oldCal = currentPerson.getPersonalCalendar();
+		}
+		for (Event e: oldCal.getEvents()){
+			if (e.getID() == eventId){
+				oldEvent = e;
+				break;
+			}
+		}
+		if (oldEvent == null){
+			System.out.println("change event er null");
+			return;
+		}
+		String[] from = event.getStartTime().toString().split("T");
+		String[] to = event.getEndTime().toString().split("T");
+		String start = from[0] + " " + from[1] + ":00";
+		String end = to[0] + " " + to[1] + ":00";
+		if (ConnectionMySQL.updateEvent("" + eventId, event.getEventName(), event.getLocation(), start, end, event.getPriority().pri, null
+				, event.getFreq(), event.getInfo())){
+			
+		}else{
+			if (DEBUG){
+				System.out.println("change event connection false");
+			}
+		}
+		if (oldCal != newCal){
+//			if (ConnectionMySQL.updateEvent(eventId, newEven, location, start, end, priority, lastChanged, frequency, info))
+			System.out.println("changed cal");
+			oldCal.removeEvent(oldEvent);
+			newCal.addEvent(oldEvent);
+		}
+		for (EventAppliance e : oldEvent.getAppliance()){
+			ConnectionMySQL.removeMembersFromEvent(eventId, e.person.username);
+		}
+		for (EventAppliance e : event.getAppliance()){
+			ConnectionMySQL.addMembersToEvent(eventId, e.person.username);
+		}
+		
+		oldEvent.overrideEvent(event);
+		
+		updateCalendars();
+	}
+	
+	private void updateGroups(){
+		for (ProgramListener l : listeners)
+			l.updateGroups(currentPerson.getGroups());
+	}
+	
+	public Calendar getCalendarFor(int eventId){
+		for (Calendar c : activeCalendars){
+			for (Event e : c.getEvents()){
+				if (e.getID() == eventId)
+					return c;
+			}
+		}
+		for (Calendar c : unactive){
+			for (Event e : c.getEvents()){
+				if (e.getID() == eventId)
+					return c;
+			}
+		}return null;
+	}
+	
 	public void createEvent(Event e, Calendar cal){
 		//add events to server
 //		for (Calendar cals: cal)
@@ -98,9 +217,17 @@ public class Program {
 				System.out.println("Group not saved createEvent");
 			}
 		}
+		for (EventAppliance p : event.getAppliance()){
+			ConnectionMySQL.addMembersToEvent(eventId, p.getPerson().getUsername());
+			updateAppliance(event, p);
+		}
+		event.setId(eventId);
 		cal.addEvent(event);
 	}
 	
+	public void updateAppliance(Event event, EventAppliance eventAppliance){
+		ConnectionMySQL.setAppliance(event.getID(), eventAppliance.getPerson().getUsername(), eventAppliance.getAppliance().getStateName());
+	}
 	public void deleteEvent(Event event, Calendar...cals){
 		//remove event from database/server
 		currentPerson.getPersonalCalendar().removeEvent(event);
@@ -117,7 +244,7 @@ public class Program {
 //		}
 	}
 	
-	public void addCalendar(Object id, TypeOfCalendar type){
+	public void addCalendar(int id, TypeOfCalendar type){
 		for (Calendar c : activeCalendars){
 			if (c.isOwner(id, type)){
 				return;
@@ -134,13 +261,14 @@ public class Program {
 		//else, get calendar from database
 	}
 	
-	public void removeCalendar(Object id, TypeOfCalendar type){
+	public void removeCalendar(int id, TypeOfCalendar type){
+		
 		for (Calendar c : unactive){
 			if (c.isOwner(id, type))
 				return;
 		}
 		for (Calendar c : activeCalendars){
-			if (c.isOwner(c, type)){
+			if (c.isOwner(id, type)){
 				unactive.add(c);
 				activeCalendars.remove(c);
 				updateCalendarListeners();
@@ -270,10 +398,10 @@ public class Program {
 		
 		updateCalendarListeners();
 		sendOutPersons();
-		setGroupsCurrentUser();
+		initGroupsCurrentUser();
 	}
 	
-	private void setGroupsCurrentUser(){
+	private void initGroupsCurrentUser(){
 		if (!isLoggedIn())
 			return;
 		List<Group> groups = new ArrayList<Group>();
@@ -306,6 +434,10 @@ public class Program {
 					}
 				}
 			}
+		}
+		for (Group g : groups){
+			currentPerson.addGroup(g);
+			activeCalendars.add(g.getGroupCalendar());
 		}
 		for (ProgramListener l : listeners){
 			l.updateGroups(groups);

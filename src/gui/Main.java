@@ -8,12 +8,14 @@ import java.util.List;
 import windows.*;
 import classes.Calendar;
 import classes.Event;
+import classes.EventAppliance;
 import classes.Group;
 import classes.Message;
 import classes.Person;
 import classes.Program;
 import classes.ProgramListener;
 import classes.Room;
+import classes.Calendar.TypeOfCalendar;
 import javafx.application.Application;
 import javafx.beans.value.ObservableNumberValue;
 import javafx.event.EventHandler;
@@ -77,7 +79,8 @@ public class Main extends Application implements ProgramListener{
 		
 		public void showEvent(Event event){
 			tabPane.getSelectionModel().select(newEvent);
-			eventScreen.showEvent(event);
+			Calendar cal = program.getCalendarFor(event.getID());
+			eventScreen.showEvent(event, cal);
 		}
 		public void showEventInHomeScreen(Event event){
 			goToHomeScreen();
@@ -112,6 +115,22 @@ public class Main extends Application implements ProgramListener{
 		public void addListener(GetGroupListener l){
 			groupListeners.add(l);
 		}
+		
+		public void addNewGroup(String name){
+			program.createGroup(name);
+		}
+		
+		public void deleteGroup(int groupId){
+			program.deleteGroup(groupId);
+		}
+		
+		public void showGroup(int g){
+			program.addCalendar(g, TypeOfCalendar.Group);
+		}
+		
+		public void hideGroup(int g){
+			program.removeCalendar(g, TypeOfCalendar.Group);
+		}
 	}
 	
 	
@@ -135,8 +154,18 @@ public class Main extends Application implements ProgramListener{
 			program.createEvent(event, cal);
 		}
 		
+		public void changeEvent(int eventId, Calendar old, Calendar newCal, Event newEvent){
+			program.changeEvent(eventId, old, newCal, newEvent);
+		}
+		
 	}
-	
+	public class UpdateAppliance{
+		
+		public void update(Event event, EventAppliance eventAppliance){
+			program.updateAppliance(event, eventAppliance);
+		}
+		
+	}
 	public class GoToEvent{
 		
 		public void goToEvent(int eventKey){
@@ -229,6 +258,7 @@ public class Main extends Application implements ProgramListener{
 		tabPane.setPrefHeight(1000);
 		home = new Tab("Hjem");
 		homeScreen  = new HomeScreen(new ChangeTab(), person,new AddNewEvent(), new AddGroupListener());
+		homeScreen.setEventApplianceCaller(new UpdateAppliance());
 		home.setContent(homeScreen);
 		tabPane.setPrefHeight(1000);
 		

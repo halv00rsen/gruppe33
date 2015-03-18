@@ -1,4 +1,5 @@
 package windows;
+import classes.Calendar;
 import classes.Event;
 import components.*;
 import gui.*;
@@ -41,9 +42,9 @@ public class EventScreen extends Window{
 		
 	}
 	
-	public void showEvent(Event event){
+	public void showEvent(Event event, Calendar cal){
 		if (eg != null)
-			eg.showEvent(event);
+			eg.showEvent(event, cal);
 	}
 
 }

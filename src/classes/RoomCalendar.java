@@ -9,8 +9,8 @@ public class RoomCalendar extends Calendar {
 		this.roomNr = roomNr;
 	}
 	
-	public boolean isOwner(Object roomNr, TypeOfCalendar type){
-		return ("" + roomNr).equals(roomNr.toString()) && type == super.type;
+	public boolean isOwner(int roomNr, TypeOfCalendar type){
+		return ("" + roomNr).equals(roomNr) && type == super.type;
 	}
 
 }

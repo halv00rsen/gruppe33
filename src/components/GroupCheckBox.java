@@ -13,6 +13,8 @@ import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
@@ -26,15 +28,17 @@ public class GroupCheckBox extends Component implements GetGroupListener{
 		Label grupperLabel;
 		ScrollPane scrollPane;
 		private final ObservableList<Group> items;
+		private final AddGroupListener l;
 		public GroupCheckBox(Pane parent, AddGroupListener l){
 			super(parent);
+			this.l = l;
 			scrollPane = new ScrollPane();
 			elements = new VBox(4);
 			grupperLabel = new Label();
 			grupperLabel.setText("Synlig grupper");
 			grupperLabel.setFont(Main.header1);
 			scrollPane.setContent(box);
-			scrollPane.setPrefSize(170, 80);
+			scrollPane.setPrefSize(300, 80);
 			items = FXCollections.observableArrayList();
 			elements.getChildren().addAll(grupperLabel,scrollPane);
 			this.getChildren().add(elements);
@@ -46,6 +50,7 @@ public class GroupCheckBox extends Component implements GetGroupListener{
 		ArrayList<Group> inactiveGroups = new ArrayList<Group>();
 
 		ArrayList<ChangeListener<ArrayList<Group>>> listeners = new ArrayList<ChangeListener<ArrayList<Group>>>();
+		
 		public void addGroups(List<Group> items){
 			this.items.clear();
 			for (Group group : items){
@@ -81,7 +86,15 @@ public class GroupCheckBox extends Component implements GetGroupListener{
 			GroupElement(Group group){
 				this.group = group;
 				check = new CheckBox();
-
+				check.setOnAction(new EventHandler<ActionEvent>(){
+					
+					public void handle(ActionEvent e){
+						if (check.isSelected()){
+							l.showGroup(group.id);
+						}else
+							l.hideGroup(group.id);
+					}
+				});
 				check.selectedProperty().set(true);
 				Label l = new Label();
 				l.setText(group.getName());

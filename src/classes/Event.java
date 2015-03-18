@@ -42,6 +42,11 @@ public class Event implements Comparable<Event>{
 		freqEnd = null;
 		
 	}
+	
+	public void setId(int id){
+		this.id = id;
+	}
+	
 	public Event nextEventInSequence(){
 		return this.nextInSequence;
 	}
@@ -88,7 +93,6 @@ public class Event implements Comparable<Event>{
 			this.appliance.add(ec);
 		eventName = event.eventName;
 		location = event.location;
-		this.id = event.getID();
 		room = event.room;
 		startDate = event.startDate;
 		endDate = event.endDate;
@@ -109,6 +113,7 @@ public class Event implements Comparable<Event>{
 	}
 	public void setMadeBy(Person p){
 		madeBy = p;
+		appliance.add(new EventAppliance(p, Appliance.Not_Answered));
 	}
 
 	public String getEventName() {
