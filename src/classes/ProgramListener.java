@@ -9,7 +9,7 @@ public interface ProgramListener {
 	public void userCreated(final boolean isCreated);
 	public void passwordChange(final boolean isChanged);
 	public void sendMessage(Message msg);
-	public void updateGroups(Group... groups);
+	public void updateGroups(List<Group> groups);
 	public void showEvent(Event event);
 	public void updateRoomNames(Room... rooms);
 	public void sendNotification(String notif);

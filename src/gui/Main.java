@@ -315,7 +315,7 @@ public class Main extends Application implements ProgramListener{
 	}
 
 	@Override
-	public void updateGroups(Group... groups) {
+	public void updateGroups(List<Group> groups) {
 		// TODO Auto-generated method stub
 		
 	}
