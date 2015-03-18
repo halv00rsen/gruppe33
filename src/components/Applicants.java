@@ -1,5 +1,10 @@
 package components;
 
+import java.time.LocalDate;
+import java.util.ArrayList;
+
+import components.CalendarGUI.CalendarGUIListener;
+import classes.Event;
 import classes.EventAppliance;
 import classes.Person;
 import gui.Component;
@@ -9,6 +14,8 @@ import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.scene.control.Button;
+import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
@@ -16,6 +23,7 @@ import javafx.scene.control.ScrollPane;
 import javafx.scene.control.cell.CheckBoxListCell;
 import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
@@ -42,31 +50,41 @@ import javafx.scene.text.Font;
 import javafx.stage.Stage;
 import javafx.util.Callback;
 import classes.Appliance;
-public class Applicants extends Component{
-	ObservableList<EventAppliance> items =FXCollections.observableArrayList (
-			new EventAppliance(new Person("agnar123"," ","Bjarne","Agnar",false),Appliance.Attending),
-			new EventAppliance(new Person("peder123"," ","Peder","Pedersen",false),Appliance.Not_Attending),
-			new EventAppliance(new Person("stine123"," ","Stine","Stinesen",false),Appliance.Maybe),
-			new EventAppliance(new Person("grethe123"," ","Grethe","Grethesen",false),Appliance.Not_Answered),
-			new EventAppliance(new Person("synne123"," ","Synne","Synnesen",false),Appliance.Late),
-			new EventAppliance(new Person("lars123"," ","Lars","Jakobsen",false),Appliance.Attending)
-			);
+public class Applicants extends Component implements CalendarGUIListener{
+	ObservableList<EventAppliance> items = FXCollections.observableArrayList ();
 	VBox elements;
 	Label grupperLabel;
 	final Label label = new Label();
 	ListView<EventAppliance> listView;
+	Button btn1 = new Button("Meld ankomst");
+	ChoiceBox<Appliance> choiceBox = new ChoiceBox<Appliance>();
+	ObservableList<Appliance> listAppliance = FXCollections.observableArrayList(Appliance.values());
+	private Person currentUser;
 	public Applicants(Pane parent){
 		super(parent);
 		listView = new ListView<EventAppliance>();
-		
+		items.addAll(
+				new EventAppliance(new Person("agnar123"," ","Bjarne","Agnar",false),Appliance.Attending),
+				new EventAppliance(new Person("peder123"," ","Peder","Pedersen",false),Appliance.Not_Attending),
+				new EventAppliance(new Person("stine123"," ","Stine","Stinesen",false),Appliance.Maybe),
+				new EventAppliance(new Person("grethe123"," ","Grethe","Grethesen",false),Appliance.Not_Answered),
+				new EventAppliance(new Person("synne123"," ","Synne","Synnesen",false),Appliance.Late),
+				new EventAppliance(new Person("lars123"," ","Lars","Jakobsen",false),Appliance.Attending)
+				);
 		elements = new VBox(4);
 		grupperLabel = new Label();
-		grupperLabel.setText("Meldt ankomst");
+		grupperLabel.setText("Meldte ankomster");
 		grupperLabel.setFont(Main.header1);
 		listView.setPrefSize(250, 80);
-		elements.getChildren().addAll(grupperLabel,listView);
-		this.getChildren().add(elements);
+		listView.setMaxSize(300, 80);
+		choiceBox.setItems(listAppliance);
 		
+		Label l = new Label("Din melding:");
+		HBox hbox = new HBox(10);
+		hbox.getChildren().addAll(l,choiceBox,btn1);
+		elements.getChildren().addAll(grupperLabel,listView,hbox);
+		this.getChildren().addAll(elements);
+//		btn1.setOnAction(value);
 		
 		
 		
@@ -111,13 +129,39 @@ public class Applicants extends Component{
 
                 
                 setGraphic(p);
+            }else{
+            	setGraphic(null);
             }
         }
     }
-    
-	String stringMaker(EventAppliance e){
-		return e.person.getFirstname() + " " + e.person.getLastname() + "\t\t" + e.appliance;
+
+	@Override
+	public void dayIsHighligthed(LocalDate date, ArrayList<Event> events) {
+		// TODO Auto-generated method stub
+		
 	}
+
+	@Override
+	public void eventIsHighligthed(Event event) {
+		items.clear();
+		if(event == null){
+			return;
+		}else{
+			for (EventAppliance e : event.getAppliance()){
+				if(e.getPerson().getUsername().equals(currentUser.username)){
+					choiceBox.getSelectionModel().select(e.getAppliance());
+				}
+				items.add(e);
+			}
+		}
+		
+	}
+
+	public void changePerson(Person p) {
+		this.currentUser = p;
+		
+	}
+    
 	
 	
 }
