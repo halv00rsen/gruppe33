@@ -2,6 +2,7 @@ package windows;
 import classes.Event;
 import components.*;
 import gui.*;
+import gui.Main.AddGroupListener;
 import gui.Main.AddNewEvent;
 import gui.Main.AddPersonListener;
 import gui.Main.ChangeTab;
@@ -19,11 +20,13 @@ public class EventScreen extends Window{
 	private final ChangeTab tab;
 	
 	private AddPersonListener l;
+	private AddGroupListener gl;
 	
 	private EventGUI eg;
 	
-	public EventScreen(AddNewEvent event, ChangeTab tab, AddPersonListener l) {
+	public EventScreen(AddNewEvent event, ChangeTab tab, AddPersonListener l, AddGroupListener gl) {
 		this.l = l;
+		this.gl = gl;
 		this.event = event;
 		this.tab = tab;
 		// TODO Auto-generated constructor stub
@@ -32,7 +35,7 @@ public class EventScreen extends Window{
 
 	@Override
 	public void init() {
-		eg = new EventGUI(this, event, tab, l);
+		eg = new EventGUI(this, event, tab, l, gl);
 		
 		borderPane.setCenter(eg);
 		

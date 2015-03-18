@@ -131,8 +131,8 @@ public class Main extends Application implements ProgramListener{
 	
 	public class AddNewEvent{
 		
-		public void addEvent(Event event){
-			program.createEvent(event);
+		public void addEvent(Event event, Calendar cal){
+			program.createEvent(event, cal);
 		}
 		
 	}
@@ -233,7 +233,7 @@ public class Main extends Application implements ProgramListener{
 		tabPane.setPrefHeight(1000);
 		
 		newEvent = new Tab("Ny event");
-		eventScreen = new EventScreen(new AddNewEvent(), new ChangeTab(), new AddPersonListener());
+		eventScreen = new EventScreen(new AddNewEvent(), new ChangeTab(), new AddPersonListener(), new AddGroupListener());
 		newEvent.setContent(eventScreen);
 		
 		room = new Tab("Reserver Rom");
@@ -241,7 +241,7 @@ public class Main extends Application implements ProgramListener{
 		room.setContent(reserveRoomScreen);
 		
 		groups = new Tab("Grupper");
-		groups.setContent(new GroupScreen(new AddPersonListener()));
+		groups.setContent(new GroupScreen(new AddPersonListener(), new AddGroupListener()));
 		
 		
 		persons = new Tab("Personer");

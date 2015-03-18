@@ -6,9 +6,13 @@ import java.time.Month;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import classes.Event;
+import classes.Group;
 import classes.Person;
 import classes.Priority;
 
@@ -43,12 +47,27 @@ public class PersonInformation {
 		
 	}
 	
-	public static int requestCreateEvent(Event event, Person person){
-		System.out.println(event.getEventName() + " dato" + event.getStartDate());
-		///logikk for snakking med server. Midliertidig lager den bare lokalt. Den returnerer en key;
-		person.getPersonalCalendar().addEvent(event);
-		int newKey = (int)(Math.random()*1000000);
-		return newKey;
+//	public static int requestCreateEvent(Event event, Person person){
+//		System.out.println(event.getEventName() + " dato" + event.getStartDate());
+//		///logikk for snakking med server. Midliertidig lager den bare lokalt. Den returnerer en key;
+//		person.getPersonalCalendar().addEvent(event);
+//		int newKey = (int)(Math.random()*1000000);
+//		return newKey;
+//	}
+	
+	public static List<Group> getGroups(){
+		  List<Group> eksempel = FXCollections.observableArrayList(
+				  	new Group("En veldig bra gruppe", (int) Math.random()*10000),
+		            new Group("chocolate",(int)Math.random()*10000), 
+		            new Group("salmon",(int)Math.random()*10000),
+		            new Group("gold",(int)Math.random()*10000),
+		            new Group("coral",(int)Math.random()*10000),
+		            new Group("darkorchid",(int)Math.random()*10000),
+		            new Group("darkgoldenrod",(int)Math.random()*10000),
+		            new Group("lightsalmon",(int)Math.random()*10000),
+		            new Group("black",(int)Math.random()*10000)
+		            );
+		  return new ArrayList<Group>(eksempel);
 	}
 	
 	public static ArrayList<Event> getEvents(){

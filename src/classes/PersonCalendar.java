@@ -22,5 +22,9 @@ public class PersonCalendar extends Calendar{
 			return false;
 		return ownerPerson.username.equals(username) && type == super.type;
 	}
+	
+	public String toString(){
+		return ownerPerson.getFirstname() + " " +  ownerPerson.getLastname();
+	}
 
 }

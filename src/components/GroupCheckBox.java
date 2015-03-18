@@ -2,12 +2,16 @@ package components;
 
 import gui.Component;
 import gui.Main;
+import gui.Main.AddGroupListener;
+import gui.Main.GetGroupListener;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import classes.Group;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
+import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.Label;
@@ -16,13 +20,13 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 
-public class GroupCheckBox extends Component{
+public class GroupCheckBox extends Component implements GetGroupListener{
 		VBox box = new VBox(5);
 		VBox elements;
 		Label grupperLabel;
 		ScrollPane scrollPane;
-		ObservableList<Group> items;
-		public GroupCheckBox(Pane parent){
+		private final ObservableList<Group> items;
+		public GroupCheckBox(Pane parent, AddGroupListener l){
 			super(parent);
 			scrollPane = new ScrollPane();
 			elements = new VBox(4);
@@ -31,16 +35,22 @@ public class GroupCheckBox extends Component{
 			grupperLabel.setFont(Main.header1);
 			scrollPane.setContent(box);
 			scrollPane.setPrefSize(170, 80);
+			items = FXCollections.observableArrayList();
 			elements.getChildren().addAll(grupperLabel,scrollPane);
 			this.getChildren().add(elements);
+			if (l != null)
+				l.addListener(this);
 			
 		}
 		ArrayList<Group> activeGroups = new ArrayList<Group>();
 		ArrayList<Group> inactiveGroups = new ArrayList<Group>();
 
 		ArrayList<ChangeListener<ArrayList<Group>>> listeners = new ArrayList<ChangeListener<ArrayList<Group>>>();
-		public void addGroups(ObservableList<Group> items){
-			this.items = items;
+		public void addGroups(List<Group> items){
+			this.items.clear();
+			for (Group group : items){
+				this.items.add(group);
+			}
 			for (Group group : items) {
 				GroupElement p = new GroupElement(group);
 				activeGroups.add(p.getGroup());
@@ -59,12 +69,6 @@ public class GroupCheckBox extends Component{
 				box.getChildren().add(p);
 			}
 			
-		}
-		public void updateGroups(ObservableList<Group> items){
-			activeGroups.clear();
-			inactiveGroups.clear();
-			box.getChildren().clear();
-			addGroups(items);
 		}
 		public void alertListeners(){
 			for (ChangeListener<ArrayList<Group>> listener : listeners) {
@@ -90,5 +94,13 @@ public class GroupCheckBox extends Component{
 			public CheckBox getCheckBox(){
 				return check;
 			}
+		}
+		@Override
+		public void setGroups(List<Group> groups) {
+			// TODO Auto-generated method stub
+			activeGroups.clear();
+			inactiveGroups.clear();
+			box.getChildren().clear();
+			addGroups(groups);
 		}
 	}

@@ -28,15 +28,52 @@ public class Program {
 		//opprett kobling med database og/eller socketprogram
 	}
 	
-	public void createEvent(Event event, Calendar... cal){
+	public void createEvent(Event e, Calendar cal){
 		//add events to server
 //		for (Calendar cals: cal)
 //			cals.addEvent(event);
 //		callMessage(Message.EventAdded);
-		currentPerson.getPersonalCalendar().addEvent(event);
-		event.setMadeBy(currentPerson);
+		e.setMadeBy(currentPerson);
+		
+		if(e.getFreq() != null){
+			
+			if(e.getFreq()==0){
+				createEventServer(e, (cal == null ? currentPerson.getPersonalCalendar(): cal));
+				
+			}else if(e.getFreq()>0 || e.isMonthlyRepeat()){
+				int i = e.getFreq();
+				Event lastEvent = e;
+				Event nextEvent;
+				while(true){
+					nextEvent = new Event();
+					nextEvent.overrideEvent(e); // må ha ny ID da...
+					if(e.isMonthlyRepeat()){
+						nextEvent.setStartTime(lastEvent.getStartTime().plusMonths(1));
+						nextEvent.setEndTime(lastEvent.getEndTime().plusMonths(1));	
+					}else{
+						nextEvent.setStartTime(lastEvent.getStartTime().plusDays(i));
+						nextEvent.setEndTime(lastEvent.getEndTime().plusDays(i));	
+					}
+					
+					nextEvent.setLastEventInSequence(lastEvent);
+					lastEvent.setNextEventInSequence(nextEvent);
+					createEventServer(lastEvent, (cal == null ? currentPerson.getPersonalCalendar(): cal));
+					if(nextEvent.getStartDate().isAfter(e.getFreqDate())){
+						break;
+					}
+					lastEvent = nextEvent;
+				}
+			}
+		}
+		
 		updateCalendarListeners();
 		callMessage(Message.EventAdded);
+	}
+	
+	private void createEventServer(Event event, Calendar cal){
+//		int eventId = ConnectionMySQL.createEvent(event.getEventName(), event.getLocation(), event., end, priority, lastChanged, frequency, info)
+		if (cal.type == TypeOfCalendar.Personal){
+		}
 	}
 	
 	public void deleteEvent(Event event, Calendar...cals){
@@ -212,26 +249,32 @@ public class Program {
 			return;
 		List<Group> groups = new ArrayList<Group>();
 		List<HashMap<String, String>> dbGroups = ConnectionMySQL.getGroups(currentPerson.getUsername());
-		for (Map<String, String> g : dbGroups){
-			Group group = new Group(g.get("groupName"), Integer.parseInt(g.get("groupId")));
-			if (!g.get("parent").equals("null")){
-				group.setParent(Integer.parseInt(g.get("parent")));
-			}
-			List<String> users = ConnectionMySQL.getGroupMembers(group.id);
-			for (String user: users){
-				for (Person p : allUsers){
-					if (p.username.equals(user)){
-						group.addMembers(p);
-						break;
+		if (dbGroups == null){
+			System.out.println("setGroups connection null");
+			groups = PersonInformation.getGroups();
+		}
+		else{
+			for (Map<String, String> g : dbGroups){
+				Group group = new Group(g.get("groupName"), Integer.parseInt(g.get("groupId")));
+				if (!g.get("parent").equals("null")){
+					group.setParent(Integer.parseInt(g.get("parent")));
+				}
+				List<String> users = ConnectionMySQL.getGroupMembers(group.id);
+				for (String user: users){
+					for (Person p : allUsers){
+						if (p.username.equals(user)){
+							group.addMembers(p);
+							break;
+						}
 					}
 				}
+				groups.add(group);
 			}
-			groups.add(group);
-		}
-		for (Group g1: groups){
-			for (Group g2 : groups){
-				if (g2.getParent() == g1.id){
-					g1.addSubGroups(g2);
+			for (Group g1: groups){
+				for (Group g2 : groups){
+					if (g2.getParent() == g1.id){
+						g1.addSubGroups(g2);
+					}
 				}
 			}
 		}

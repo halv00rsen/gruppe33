@@ -1,6 +1,7 @@
 package components;
 
 import gui.Component;
+import gui.Main.AddGroupListener;
 import gui.Main.AddNewEvent;
 import gui.Main.ChangeTab;
 import gui.Window;
@@ -32,20 +33,10 @@ public class SchedulingGUI extends Component{
     public GroupCheckBox groupChechBox;
     VBox interactiveElementsBox;
     HBox mainBox;
-    ObservableList<Group> eksempel = FXCollections.observableArrayList(
-            new Group("chocolate",(int)Math.random()*10000), 
-            new Group("salmon",(int)Math.random()*10000),
-            new Group("gold",(int)Math.random()*10000),
-            new Group("coral",(int)Math.random()*10000),
-            new Group("darkorchid",(int)Math.random()*10000),
-            new Group("darkgoldenrod",(int)Math.random()*10000),
-            new Group("lightsalmon",(int)Math.random()*10000),
-            new Group("black",(int)Math.random()*10000)
-            );
 
 	private Button settings;
 	private AddNewEvent eventAdder;
-	public SchedulingGUI(Window parent, ChangeTab tab, Calendar... calendars ) {
+	public SchedulingGUI(Window parent, ChangeTab tab, AddGroupListener l, Calendar... calendars ) {
 		super(parent);
 
 		BorderPane borderPane = new BorderPane();
@@ -53,8 +44,7 @@ public class SchedulingGUI extends Component{
 		interactiveElementsBox = new VBox(8);
 		interactiveElementsBox.setTranslateY(CalendarBase.headerHeight);
 		BorderPane.setMargin(interactiveElementsBox, new Insets(10));
-		groupChechBox = new GroupCheckBox(this);
-		groupChechBox.addGroups(eksempel);
+		groupChechBox = new GroupCheckBox(this, l);
 //		settings.setOnAction(e -> main.requestSettingsWindow());
 //		calendars[0].addEvent(DebugMain.getEvents());
 		calendargui = new CalendarGUI(this, LocalDate.now(), calendars);
@@ -93,7 +83,7 @@ public class SchedulingGUI extends Component{
 //	}
 	
 	public void addEventFromCalendar(Event event) {
-		eventAdder.addEvent(event);
+		eventAdder.addEvent(event, null);
 	}
 
 	public void setEventAdder(AddNewEvent eventAdder) {
