@@ -39,11 +39,9 @@ public class Main extends Application implements ProgramListener{
 	public final static Pane root = new Pane();
 	public final static Font header1 = new Font("Verdana", 20);
 	public final static Insets paddingInsets = new Insets(10, 0, 0, 0);
-
 	private final Program program;
 	private final LoginScreen loginScreen;
 	private final List<GetPersonListener> personListeners;
-	
 	public static Stage stage;
 	private Window currentWindow;
 	private TabPane tabPane;
@@ -54,7 +52,6 @@ public class Main extends Application implements ProgramListener{
 	private EventScreen eventScreen;
 	private OtherPersonScreen otherPersonScreen;
 	private ReserveRoomScreen reserveRoomScreen;
-
 	private MessageScreen messageScreen;
 	
 	public Main(){

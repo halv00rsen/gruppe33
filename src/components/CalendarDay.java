@@ -252,8 +252,12 @@ public abstract class CalendarDay extends Pane{
 	}
 
 	public void removeHighlightEvent() {
-		highlightedEvent.setHighlighted(false);
-		highlightedEvent = null;
+		if(highlightedEvent!=null){
+			highlightedEvent.setHighlighted(false);
+			highlightedEvent = null;
+		}else{
+			System.out.println("FANT IKKE highlightedEvent i calendarDay");
+		}
 		
 	}
 

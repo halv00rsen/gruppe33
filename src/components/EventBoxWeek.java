@@ -33,7 +33,7 @@ public class EventBoxWeek extends EventBox{
 	public int calWidth = 100;
 	int overlapCount = 1;
 	int overlap = 1;
-	private Label name;
+	
 	
 	public EventBoxWeek(Event event,CalendarGUI calGui,CalendarDay calday){
 		super(event,calGui,calday);
@@ -44,15 +44,12 @@ public class EventBoxWeek extends EventBox{
 				strokething.getChildren().add(base);
 				clock = new Label();
 					base.setRight(clock);
-	//				clock.setText("23:15-23:20");
-				name = new Label();
-					base.setLeft(name);
+				nameLabel = new Label();
+					base.setLeft(nameLabel);
 				body = new VBox(1);
 					base.setBottom(body);
 			if(event != null){
 				this.startTimeDay = (startTime.minusHours(startTime.getHour())).minusMinutes(startTime.getMinute());
-				clock.setText(startTime.getHour() +":" + startTime.getMinute() + "-" + endTime.getHour() +":" + endTime.getMinute());			
-				name.setText(event.getEventName());
 				double heightUnit = ((double)CalendarBase.defaultCalHeight)/(24.0*60.0);
 				long minuteDiff = ChronoUnit.MINUTES.between(startTime, endTime);
 				double height = minuteDiff*heightUnit;
@@ -66,7 +63,7 @@ public class EventBoxWeek extends EventBox{
 				this.setMinHeight(height);
 				this.setTranslateY(startPos);
 		}else{
-			this.name.setText("(Høyreklikk)");
+			this.nameLabel.setText("(Høyreklikk)");
 			this.setPrefHeight(calHeight/24);
 			this.setPrefWidth(calWidth);
 			this.setMinHeight(calHeight/24);

@@ -30,7 +30,8 @@ public abstract class EventBox extends Pane{
 	CalendarDay calday;
 	LocalDateTime startTime;
 	LocalDateTime endTime;
-	Label clock;
+	protected Label clock;
+	protected Label nameLabel;
 	boolean isHighLighted = false;
 	protected CalendarGUI calGui;
 	public EventBox(Event event,CalendarGUI calGui,CalendarDay calday){
@@ -42,6 +43,10 @@ public abstract class EventBox extends Pane{
 			startTime = event.getStartTime();
 			endTime = event.getEndTime();
 			this.event = event;
+//			nameLabel.setText(event.getEventName());
+//			clock.setText(startTime.getHour() +":" + startTime.getMinute() + "-" + endTime.getHour() +":" + endTime.getMinute());			
+			
+			
 		}
 		
 		
