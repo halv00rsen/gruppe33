@@ -7,16 +7,18 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 
 public enum Priority{
-	NOT_IMPORTANT(Color.LIGHTYELLOW, "Ikke viktig!"), IMPORTANT(Color.ORANGE,"Viktig!"), VERY_IMPORTANT(Color.RED,"Veldig viktig!");
+	NOT_IMPORTANT(Color.LIGHTYELLOW, "Ikke viktig!", 0), IMPORTANT(Color.ORANGE,"Viktig!", 1), VERY_IMPORTANT(Color.RED,"Veldig viktig!", 2);
 	private Pane pane = new Pane();
+	public final int pri;
 	private Circle circle = new Circle();
 	private Color c;
 	private boolean active;
 	private int radius = 15;
 	String thisString;
-	Priority(Color color,String thisString){
+	Priority(Color color,String thisString, int pri){
 		this.thisString = thisString;
 		this.c = color;
+		this.pri = pri;
 		circle.setRadius(radius);
 		circle.setFill(color);
 		circle.setOnMouseEntered(e -> hoverOn(e));

@@ -71,9 +71,34 @@ public class Program {
 	}
 	
 	private void createEventServer(Event event, Calendar cal){
-//		int eventId = ConnectionMySQL.createEvent(event.getEventName(), event.getLocation(), event., end, priority, lastChanged, frequency, info)
-		if (cal.type == TypeOfCalendar.Personal){
+		String[] from = event.getStartTime().toString().split("T");
+		String[] to = event.getEndTime().toString().split("T");
+		String start = from[0] + " " + from[1] + ":00";
+		String end = to[0] + " " + to[1] + ":00";
+		int eventId = ConnectionMySQL.createEvent(event.getEventName(), event.getLocation(), start, end, event.getPriority().pri
+				, event.getFreq(), event.getInfo());
+		if (eventId == -1){
+			if (DEBUG){
+				cal.addEvent(event);
+				System.out.println("Create event server connection null");
+				
+			}
+//			callMessage(Message.EventNotAdded);
+			return;
 		}
+		if (!ConnectionMySQL.setEventCreator(eventId, currentPerson.username)){
+			if (DEBUG){
+				cal.addEvent(event);
+			}
+			callMessage(Message.EventNotAdded);
+			return;
+		}
+		if (cal.type == TypeOfCalendar.Group){
+			if (!ConnectionMySQL.addGroupsToEvent(eventId, ((GroupCalendar) cal).getOwnerGroup().id)){
+				System.out.println("Group not saved createEvent");
+			}
+		}
+		cal.addEvent(event);
 	}
 	
 	public void deleteEvent(Event event, Calendar...cals){

@@ -24,6 +24,8 @@ public class PersonCalendar extends Calendar{
 	}
 	
 	public String toString(){
+		if (ownerPerson == null)
+			return "Personlig kalender";
 		return ownerPerson.getFirstname() + " " +  ownerPerson.getLastname();
 	}
 
