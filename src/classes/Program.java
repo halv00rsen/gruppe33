@@ -66,6 +66,10 @@ public class Program {
 	
 	public void changeEvent(int eventId, Calendar oldCal, Calendar newCal, Event event){
 		Event oldEvent = null;
+		if (newCal == null){
+			newCal = currentPerson.getPersonalCalendar();
+			oldCal = currentPerson.getPersonalCalendar();
+		}
 		for (Event e: oldCal.getEvents()){
 			if (e.getID() == eventId){
 				oldEvent = e;
@@ -90,6 +94,7 @@ public class Program {
 		}
 		if (oldCal != newCal){
 //			if (ConnectionMySQL.updateEvent(eventId, newEven, location, start, end, priority, lastChanged, frequency, info))
+			System.out.println("changed cal");
 			oldCal.removeEvent(oldEvent);
 			newCal.addEvent(oldEvent);
 		}
@@ -100,7 +105,11 @@ public class Program {
 			ConnectionMySQL.addMembersToEvent(eventId, e.person.username);
 		}
 		
+		System.out.println(oldEvent.debugString() + "    " + event.debugString());
+		
 		oldEvent.overrideEvent(event);
+		
+		System.out.println(oldEvent.debugString() + "    " + event.debugString());
 		
 		updateCalendars();
 	}

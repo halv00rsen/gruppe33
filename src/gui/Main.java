@@ -146,8 +146,6 @@ public class Main extends Application implements ProgramListener{
 		}
 		
 		public void changeEvent(int eventId, Calendar old, Calendar newCal, Event newEvent){
-			System.out.println(old);
-			System.out.println(newCal);
 			program.changeEvent(eventId, old, newCal, newEvent);
 		}
 		
