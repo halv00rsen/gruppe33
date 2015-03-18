@@ -174,6 +174,7 @@ public class Program {
 		}
 		if (username.toLowerCase().equals("admin") && password.toLowerCase().equals("admin")){
 			currentPerson = new Person("admin", "admin", "Ola", "Nordmann", true);
+			currentPerson.setOtherInfo("12345678", "olaNordmann@mail.com");
 		}else {
 			Map<String, String> info;
 			info = ConnectionMySQL.getUserInfo(username);

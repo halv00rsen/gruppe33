@@ -245,9 +245,6 @@ public class NewUserWindow extends Window{
 			public void handle(ActionEvent arg0) {
 				
 				if(validateTextFields()){
-					ConnectionMySQL.createUser(usernameTextField.getText(), firstNameTextField.getText(), lastNameTextField.getText(), 
-							passwordTextField.getText(),
-							emailTextField.getText(), phoneTextField.getText(), false);
 					String username = usernameTextField.getText();
 					String firstname = firstNameTextField.getText();
 					String lastname = lastNameTextField.getText();
