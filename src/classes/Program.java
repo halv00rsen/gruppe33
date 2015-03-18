@@ -71,7 +71,12 @@ public class Program {
 	}
 	
 	private void createEventServer(Event event, Calendar cal){
-//		int eventId = ConnectionMySQL.createEvent(event.getEventName(), event.getLocation(), event., end, priority, lastChanged, frequency, info)
+		String[] from = event.getStartTime().toString().split("T");
+		String[] to = event.getEndTime().toString().split("T");
+		String start = from[0] + " " + from[1] + ":00";
+		String end = to[0] + " " + to[1] + ":00";
+		int eventId = ConnectionMySQL.createEvent(event.getEventName(), event.getLocation(), start, end, event.getPriority()
+				, event.getFreq(), event.getInfo());
 		if (cal.type == TypeOfCalendar.Personal){
 		}
 	}
