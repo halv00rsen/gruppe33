@@ -18,7 +18,9 @@ import classes.Calendar;
 import classes.EventAppliance;
 import classes.Group;
 import classes.Person;
+import classes.PersonCalendar;
 import classes.Priority;
+import classes.Calendar.TypeOfCalendar;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
@@ -192,7 +194,7 @@ public class EventGUI extends Component implements GetPersonListener, GetGroupLi
     	int index = calendarChoice.getSelectionModel().getSelectedIndex();
     	Calendar calendar = calendarChoice.getItems().get(index);
     	if (currentEvent == null){
-    		eventCall.addEvent(newevent, calendar);
+    		eventCall.addEvent(newevent, (calendar.type == TypeOfCalendar.Personal ? null: calendar) );
     	}else{
     		//skal sendes til server.
     		currentEvent.overrideEvent(newevent);
@@ -632,8 +634,10 @@ public class EventGUI extends Component implements GetPersonListener, GetGroupLi
 	@Override
 	public void setGroups(List<Group> groups) {
 		calendarItems.clear();
+		calendarItems.add(new PersonCalendar(null));
 		for (Group g : groups){
 			calendarItems.add(g.getGroupCalendar());
 		}
+		calendarChoice.getSelectionModel().selectFirst();
 	}
 }
