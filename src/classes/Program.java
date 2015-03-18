@@ -222,11 +222,25 @@ public class Program {
 			currentPerson = new Person(usernameDatabase, passwordDatabase, firstname, lastname, Boolean.getBoolean(info.get("isAdmin")));
 			currentPerson.setOtherInfo(info.get("phone"), info.get("email"));
 		}
+		
 		activeCalendars.add(currentPerson.getPersonalCalendar());
 		for (ProgramListener l : listeners)
 			l.loginSuccess(currentPerson);
+		
 		updateCalendarListeners();
 		sendOutPersons();
+	}
+	
+	private void setGroupsCurrentUser(){
+		if (!isLoggedIn())
+			return;
+		List<Group> groups = new ArrayList<Group>();
+		List<HashMap<String, String>> dbGroups = ConnectionMySQL.getGroups(currentPerson.getUsername());
+		for (Map<String, String> g : dbGroups){
+			Group group = new Group(g.get("groupName"), Integer.parseInt(g.get("groupId")));
+		}
+//		groups.put("groupId", myRs.getString("groupId"));
+//		groups.put("groupName", myRs.getString("groupName"));
 	}
 	
 	public void changePasswordUser(String oldPassword, String newPassword){
