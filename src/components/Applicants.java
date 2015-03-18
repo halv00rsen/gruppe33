@@ -9,6 +9,7 @@ import classes.EventAppliance;
 import classes.Person;
 import gui.Component;
 import gui.Main;
+import gui.Main.UpdateAppliance;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
@@ -38,6 +39,7 @@ import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.event.ActionEvent;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListCell;
@@ -60,31 +62,33 @@ public class Applicants extends Component implements CalendarGUIListener{
 	ChoiceBox<Appliance> choiceBox = new ChoiceBox<Appliance>();
 	ObservableList<Appliance> listAppliance = FXCollections.observableArrayList(Appliance.values());
 	private Person currentUser;
+	private UpdateAppliance updateAppliance;
+	Event currentEvent = null;
 	public Applicants(Pane parent){
 		super(parent);
 		listView = new ListView<EventAppliance>();
-		items.addAll(
-				new EventAppliance(new Person("agnar123"," ","Bjarne","Agnar",false),Appliance.Attending),
-				new EventAppliance(new Person("peder123"," ","Peder","Pedersen",false),Appliance.Not_Attending),
-				new EventAppliance(new Person("stine123"," ","Stine","Stinesen",false),Appliance.Maybe),
-				new EventAppliance(new Person("grethe123"," ","Grethe","Grethesen",false),Appliance.Not_Answered),
-				new EventAppliance(new Person("synne123"," ","Synne","Synnesen",false),Appliance.Late),
-				new EventAppliance(new Person("lars123"," ","Lars","Jakobsen",false),Appliance.Attending)
-				);
+//		items.addAll(
+//				new EventAppliance(new Person("agnar123"," ","Bjarne","Agnar",false),Appliance.Attending),
+//				new EventAppliance(new Person("peder123"," ","Peder","Pedersen",false),Appliance.Not_Attending),
+//				new EventAppliance(new Person("stine123"," ","Stine","Stinesen",false),Appliance.Maybe),
+//				new EventAppliance(new Person("grethe123"," ","Grethe","Grethesen",false),Appliance.Not_Answered),
+//				new EventAppliance(new Person("synne123"," ","Synne","Synnesen",false),Appliance.Late),
+//				new EventAppliance(new Person("lars123"," ","Lars","Jakobsen",false),Appliance.Attending)
+//				);
 		elements = new VBox(4);
 		grupperLabel = new Label();
 		grupperLabel.setText("Meldte ankomster");
 		grupperLabel.setFont(Main.header1);
 		listView.setPrefSize(250, 80);
 		listView.setMaxSize(300, 80);
+        
 		choiceBox.setItems(listAppliance);
-		
 		Label l = new Label("Din melding:");
 		HBox hbox = new HBox(10);
 		hbox.getChildren().addAll(l,choiceBox,btn1);
 		elements.getChildren().addAll(grupperLabel,listView,hbox);
 		this.getChildren().addAll(elements);
-//		btn1.setOnAction(value);
+		btn1.setOnAction(e -> btnCalled(e));
 		
 		
 		
@@ -102,7 +106,27 @@ public class Applicants extends Component implements CalendarGUIListener{
  
     }
     
-    static class ColorRectCell extends ListCell<EventAppliance> {
+    private void btnCalled(ActionEvent e) {
+    	if(currentEvent != null){
+    		updateAppliance.update(currentEvent, new EventAppliance(currentUser, choiceBox.getSelectionModel().getSelectedItem()));
+    		for (EventAppliance c : items){
+    			if(c.getPerson().getUsername().equals(currentUser.username)){
+    				c.setAppliance(choiceBox.getSelectionModel().getSelectedItem());
+    				redraw();
+    			}
+    		}
+    	}
+    	
+	}
+
+	private void redraw() {
+		for (int i = 0; i < items.size(); i++) {
+			items.set(i, items.get(i));
+		}
+		
+	}
+
+	static class ColorRectCell extends ListCell<EventAppliance> {
         @Override
         public void updateItem(EventAppliance item, boolean empty) {
             super.updateItem(item, empty);
@@ -145,14 +169,21 @@ public class Applicants extends Component implements CalendarGUIListener{
 	public void eventIsHighligthed(Event event) {
 		items.clear();
 		if(event == null){
+			currentEvent = null;
 			return;
 		}else{
+			currentEvent = event;
+			EventAppliance me = null;
 			for (EventAppliance e : event.getAppliance()){
 				if(e.getPerson().getUsername().equals(currentUser.username)){
-					choiceBox.getSelectionModel().select(e.getAppliance());
+					me = e;
+					choiceBox.getSelectionModel().select(me.getAppliance());
 				}
 				items.add(e);
 			}
+			items.remove(me);
+			items.sort(null);
+			items.add(0, me);
 		}
 		
 	}
@@ -160,6 +191,14 @@ public class Applicants extends Component implements CalendarGUIListener{
 	public void changePerson(Person p) {
 		this.currentUser = p;
 		
+	}
+
+	public void setEventApplianceCaller(UpdateAppliance updateAppliance) {
+		this.updateAppliance = updateAppliance;
+		
+	}
+	public void updateAppliance(Event event, EventAppliance eventAppliance){
+		updateAppliance.update(event, eventAppliance);
 	}
     
 	

@@ -120,12 +120,16 @@ public class Program {
 			}
 		}
 		for (EventAppliance p : event.getAppliance()){
-			ConnectionMySQL.addMembersToEvent(eventId, p.person.username);
+			ConnectionMySQL.addMembersToEvent(eventId, p.getPerson().getUsername());
+			updateAppliance(event, p);
 		}
 		event.setId(eventId);
 		cal.addEvent(event);
 	}
 	
+	public void updateAppliance(Event event, EventAppliance eventAppliance){
+		ConnectionMySQL.setAppliance(event.getID(), eventAppliance.getPerson().getUsername(), eventAppliance.getAppliance().getStateName());
+	}
 	public void deleteEvent(Event event, Calendar...cals){
 		//remove event from database/server
 		currentPerson.getPersonalCalendar().removeEvent(event);

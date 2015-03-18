@@ -22,6 +22,25 @@ public enum Appliance{
 	public int getValue(){
 		return this.value;
 	}
+	public String getStateName(){
+		if(this.equals(Appliance.Attending)){
+			return "Attending";
+		}
+		if(this.equals(Appliance.Not_Attending)){
+			return "Not_Attending";
+		}
+		if(this.equals(Appliance.Maybe)){
+			return "Maybe";
+		}
+		if(this.equals(Appliance.Late)){
+			return "Late";
+		}
+		if(this.equals(Appliance.Not_Answered)){
+			return "Not_Answered";
+		}
+		return "";
+
+	}
 	public String toString(){
 		return norsk;
 	}
