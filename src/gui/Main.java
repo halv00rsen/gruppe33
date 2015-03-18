@@ -15,6 +15,7 @@ import classes.Person;
 import classes.Program;
 import classes.ProgramListener;
 import classes.Room;
+import classes.Calendar.TypeOfCalendar;
 import javafx.application.Application;
 import javafx.beans.value.ObservableNumberValue;
 import javafx.event.EventHandler;
@@ -121,6 +122,14 @@ public class Main extends Application implements ProgramListener{
 		
 		public void deleteGroup(int groupId){
 			program.deleteGroup(groupId);
+		}
+		
+		public void showGroup(int g){
+			program.addCalendar(g, TypeOfCalendar.Group);
+		}
+		
+		public void hideGroup(int g){
+			program.removeCalendar(g, TypeOfCalendar.Group);
 		}
 	}
 	

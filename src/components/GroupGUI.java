@@ -67,7 +67,10 @@ public class GroupGUI extends Component implements GetPersonListener, GetGroupLi
 		Button delete = new Button("Slett");
 		delete.setOnAction(e -> {
 			Group group = groupList.getSelectionModel().getSelectedItem();
-			groupItems.remove(group);
+			if (group == null)
+				return;
+			agl.deleteGroup(group.id);
+//			groupItems.remove(group);
 			changeStatus();
 		});
 		ToggleButton addToggle = new ToggleButton("Legg til ...");

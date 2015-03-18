@@ -76,10 +76,18 @@ public abstract class Calendar {
 			events.remove(event);
 	}
 	
-	public abstract boolean isOwner(Object object, TypeOfCalendar type);
+	public abstract boolean isOwner(int id, TypeOfCalendar type);
 	
 	public enum TypeOfCalendar{
 		Room, Group, Personal;
+	}
+	
+	public String debugString(){
+		String hei = "";
+		for (Event e : events){
+			hei += e.toString() + ", ";
+		}
+		return hei;
 	}
 
 }

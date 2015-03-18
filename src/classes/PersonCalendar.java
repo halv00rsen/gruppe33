@@ -17,10 +17,10 @@ public class PersonCalendar extends Calendar{
 		this.ownerPerson = ownerPerson;
 	}
 	
-	public boolean isOwner(Object username, TypeOfCalendar type){
+	public boolean isOwner(int id, TypeOfCalendar type){
 		if (ownerPerson.username == null)
 			return false;
-		return ownerPerson.username.equals(username) && type == super.type;
+		return false;
 	}
 	
 	public String toString(){

@@ -57,15 +57,9 @@ public class PersonInformation {
 	
 	public static List<Group> getGroups(){
 		  List<Group> eksempel = FXCollections.observableArrayList(
-				  	new Group("En veldig bra gruppe", (int) Math.random()*10000),
-		            new Group("chocolate",(int)Math.random()*10000), 
-		            new Group("salmon",(int)Math.random()*10000),
-		            new Group("gold",(int)Math.random()*10000),
-		            new Group("coral",(int)Math.random()*10000),
-		            new Group("darkorchid",(int)Math.random()*10000),
-		            new Group("darkgoldenrod",(int)Math.random()*10000),
-		            new Group("lightsalmon",(int)Math.random()*10000),
-		            new Group("black",(int)Math.random()*10000)
+				  	new Group("Gitargruppa", 1),
+		            new Group("Pianogruppa",2), 
+		            new Group("Jobbgruppa",3)
 		            );
 		  return new ArrayList<Group>(eksempel);
 	}
