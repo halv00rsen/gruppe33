@@ -9,12 +9,12 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 
 import components.SideMenu.SideMenuInterface;
-
 import classes.Calendar;
 import classes.Event;
 import classes.Person;
 import classes.PersonCalendar;
 import javafx.scene.control.Button;
+import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 
@@ -30,11 +30,11 @@ public class SchedulingGUI extends Component{
 	private Button settings;
 	private AddNewEvent eventAdder;
 	public SchedulingGUI(Window parent, ChangeTab tab, Calendar... calendars ) {
-
 		super(parent);
-		mainBox = new HBox(30);
-		calendarAndInfo = new VBox(0);
+//		mainBox = new HBox(30);
+//		calendarAndInfo = new VBox(0);
 	
+		BorderPane borderPane = new BorderPane();
 //		settings.setOnAction(e -> main.requestSettingsWindow());
 		
 //		calendars[0].addEvent(DebugMain.getEvents());
@@ -48,10 +48,12 @@ public class SchedulingGUI extends Component{
 		menu.addListener(calendargui);
 		userInfo = new UserInfoGUI(this);
 		
-		calendarAndInfo.getChildren().addAll(userInfo, menu);
-		
-		mainBox.getChildren().addAll(calendargui, calendarAndInfo);
-		this.getChildren().add(mainBox);
+//		calendarAndInfo.getChildren().addAll(userInfo, menu);
+		borderPane.setTop(userInfo);
+		borderPane.setCenter(calendargui);
+		borderPane.setRight(menu);
+//		mainBox.getChildren().addAll(calendargui, calendarAndInfo);
+		this.getChildren().add(borderPane);
 	}
 	
 	public void changePerson(Person p){
