@@ -8,13 +8,13 @@ import java.util.List;
 
 
 public abstract class Calendar {
-	
 	public final TypeOfCalendar type;
 	private final List<Event> events;
 	
 	public Calendar(TypeOfCalendar type){
 		events = new ArrayList<Event>();
 		this.type = type;
+		events.sort(null);
 		//hent data fra database		
 	}
 	
@@ -61,12 +61,14 @@ public abstract class Calendar {
 	public void addEvent(Event event){
 		if (event != null)
 			events.add(event);
+		events.sort(null);
+		
 	}
 	public void addEvent(ArrayList<Event> args){
 		for(Event i : args){
 			events.add(i);
 		}
-			
+		events.sort(null);	
 	}
 	
 	public void removeEvent(Event event){

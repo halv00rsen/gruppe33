@@ -17,7 +17,7 @@ public class GroupCheckBox extends ScrollPane{
 		ObservableList<Group> items;
 		public GroupCheckBox(){
 			this.setContent(box);
-			this.setPrefSize(170, 120);
+			this.setPrefSize(170, 80);
 			
 		}
 		ArrayList<Group> activeGroups = new ArrayList<Group>();

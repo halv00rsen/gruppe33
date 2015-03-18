@@ -5,7 +5,7 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Event {
+public class Event implements Comparable<Event>{
 	private final List<EventAppliance> appliance;
 	
 	private Person madeBy;
@@ -21,7 +21,10 @@ public class Event {
 	private Priority priority;
 	private String info;
 	private LocalDate freqEnd;
+	private Event nextInSequence;
+	private Event lastInSequence;
 
+	private boolean monthlyRepeat;
 	public Event(){
 		id = (int)(Math.random()*100000000);
 		this.madeBy = null;
@@ -38,6 +41,18 @@ public class Event {
 		info = "";
 		freqEnd = null;
 		
+	}
+	public Event nextEventInSequence(){
+		return this.nextInSequence;
+	}
+	public Event lastEventInSequence(){
+		return this.lastInSequence;
+	}
+	public void setNextEventInSequence(Event nextEvent){
+		this.lastInSequence = nextEvent;
+	}
+	public void setLastEventInSequence(Event lastEvent){
+		this.lastInSequence = lastEvent;
 	}
 	public Event(LocalDateTime startTime,LocalDateTime endTime,Person person){
 		this();
@@ -89,6 +104,9 @@ public class Event {
 		return freqEnd;
 	}
 	
+	public boolean isMonthlyRepeat(){
+		return this.monthlyRepeat;
+	}
 	public void setMadeBy(Person p){
 		madeBy = p;
 	}
@@ -155,11 +173,11 @@ public class Event {
 
 	public void setFreq(Integer freq,boolean monthlyRepeat, LocalDate freqEnd) {
 		if(! monthlyRepeat){
-			monthlyRepeat = false;
+			this.monthlyRepeat = false;
 			this.freq = freq;
 		}else if(monthlyRepeat){
-			monthlyRepeat = true;
-			this.freq = null;
+			this.monthlyRepeat = true;
+			this.freq = -1;
 		}
 		this.freqEnd = freqEnd;
 		
@@ -210,6 +228,15 @@ public class Event {
 				", endDate: " + endDate + ", startTime: " + startTime + ", endTime: " + endTime+ ", freq: " +
 				freq + ", priority: " + priority + ", info: " + info + ", freqEnd: " + freqEnd;
 	}
-	
+	@Override
+	public int compareTo(Event other) {
+		if(this.getStartTime().isBefore(other.getStartTime())){
+			return -1;
+		}else if(this.getStartTime().isEqual(other.getStartTime())){
+			return 0;
+		}else{
+			return 1;
+		}
+	}
 	
 }

@@ -56,6 +56,7 @@ public class EventGUI extends Component implements GetPersonListener{
 	Button trash = new Button();
 	TextField purposeText = new TextField();
 	ComboBox romChoice = new ComboBox();
+	ComboBox calendarChoice = new ComboBox();
 //	TextField freqText = new TextField();
 	BorderPane pane = new BorderPane();
 	TextArea infoText = new TextArea();
@@ -155,7 +156,6 @@ public class EventGUI extends Component implements GetPersonListener{
     	LocalDateTime t1 = LocalDateTime.of(start, LocalTime.of(sh, sm)),
     			t2 = LocalDateTime.of(end, LocalTime.of(eh, em));
     	classes.Event newevent = new classes.Event(t1, t2, null);
-    	newevent.overrideEvent(currentEvent);
     	newevent.setEventName(purposeText.getText());
     	Picker splitStuff = split.getValue();
     	LocalDate freqEnd = repDate.getValue();
@@ -180,9 +180,10 @@ public class EventGUI extends Component implements GetPersonListener{
     	newevent.setInfo(infoText.getText());
     	newevent.setPriority(priority);
     	
-    	if (currentEvent == null)
+    	if (currentEvent == null){
     		eventCall.addEvent(newevent);
-    	else{
+    	}else{
+    		//skal sendes til server.
     		currentEvent.overrideEvent(newevent);
     	}
    
@@ -272,6 +273,16 @@ public class EventGUI extends Component implements GetPersonListener{
 	public void addElements(){
 //    	pane.setStyle("-fx-background-color: #FFF");
 
+		//calendar
+        Label calendarLabel = new Label();
+        calendarLabel.setText("Kalender\t\t\t");
+        FxUtil.autoCompleteComboBox(calendarChoice, FxUtil.AutoCompleteMode.CONTAINING);
+        VBox calendarBox = new VBox(2);
+        calendarBox.getChildren().add(calendarLabel);
+        calendarBox.getChildren().add(calendarChoice);
+        calendarChoice.setPrefWidth(200);
+       
+		
         //formaal
         Label formaal = new Label();
         formaal.setText("Formål");
@@ -280,6 +291,7 @@ public class EventGUI extends Component implements GetPersonListener{
         formalBox.getChildren().add(purposeText);
         purposeText.setPrefWidth(275);
         
+     
       //info
         Label info = new Label();
         info.setText("Informasjon\t");
@@ -497,8 +509,9 @@ public class EventGUI extends Component implements GetPersonListener{
         	p.getVisualization().setOnMouseClicked(event);
         
         //set alle
-        VBox rootBox = new VBox(30);
+        VBox rootBox = new VBox(25);
         BorderPane.setMargin(rootBox,new Insets(20));
+        rootBox.getChildren().add(calendarBox);
         rootBox.getChildren().add(formalBox);
         rootBox.getChildren().add(infoBox);
         rootBox.getChildren().add(dateBox);

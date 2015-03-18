@@ -49,7 +49,7 @@ public class UserInfoGUI extends Component{
 		title.setFont(Main.header1);
 		title.setPadding(new Insets(10, 0, 0, 0));
 		pane = new GridPane();
-		pane.setHgap(30);
+		pane.setHgap(10);
 		pane.setVgap(5);
 		
 		
@@ -62,17 +62,19 @@ public class UserInfoGUI extends Component{
 		grupperLabel = new Label("Grupper synlig:");
 		navn = new Text("");
 		brukernavn = new Text("");
-		pane.add(navn, 1, 0);
-		pane.add(brukernavn, 1, 1);
-		pane.add(groupChechBox, 0, 3);
+		pane.add(title, 0, 0);
+		pane.add(navn, 1, 1);
+		pane.add(brukernavn, 1, 2);
+		pane.add(groupChechBox, 3, 1);
+		GridPane.setRowSpan(groupChechBox, 3);
 		
-		pane.add(navnLabel, 0, 0);
-		pane.add(brukernavnLabel, 0, 1);
-		pane.add(grupperLabel, 0, 2);
+		pane.add(navnLabel, 0, 1);
+		pane.add(brukernavnLabel, 0, 2);
+		pane.add(grupperLabel, 3, 0);
 		
 		
 		VBox mainBox = new VBox(5);
-		mainBox.getChildren().addAll(title, pane);
+		mainBox.getChildren().addAll(pane);
 		this.getChildren().add(mainBox);
 	}
 	public GroupCheckBox getGroupChechBox(){

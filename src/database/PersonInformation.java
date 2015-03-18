@@ -43,6 +43,14 @@ public class PersonInformation {
 		
 	}
 	
+	public static int requestCreateEvent(Event event, Person person){
+		System.out.println(event.getEventName() + " dato" + event.getStartDate());
+		///logikk for snakking med server. Midliertidig lager den bare lokalt. Den returnerer en key;
+		person.getPersonalCalendar().addEvent(event);
+		int newKey = (int)(Math.random()*1000000);
+		return newKey;
+	}
+	
 	public static ArrayList<Event> getEvents(){
 		ArrayList<Event> events = new ArrayList<Event>();
 		Event event1 = new Event();
