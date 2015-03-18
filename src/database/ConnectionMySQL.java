@@ -389,7 +389,7 @@ public class ConnectionMySQL {
 		
 		ArrayList<HashMap<String, String>> allGroups = new ArrayList<HashMap<String, String>>();
 		try {
-			ResultSet myRs = sendQuery("SELECT personGroup.groupid, groupName " + 
+			ResultSet myRs = sendQuery("SELECT personGroup.groupid, groupName, parent " + 
 					"FROM personGroup, person, isMemberOF " + 
 					"WHERE personGroup.groupId = isMemberOF.groupId AND person.username = isMemberOf.username AND person.username = '" + username + "';");
 			System.out.println(myRs);
@@ -398,6 +398,7 @@ public class ConnectionMySQL {
 				HashMap<String, String> groups = new HashMap<String, String>();
 				groups.put("groupId", myRs.getString("groupId"));
 				groups.put("groupName", myRs.getString("groupName"));
+				groups.put("parent", myRs.getString("parent"));
 				allGroups.add(groups);
 				
 			}
@@ -480,7 +481,7 @@ public class ConnectionMySQL {
 		
 	}
 
-	public static Map<String, String> getAvailableRooms(String start, String end, int capacity) {
+	public static Map<String, String> getAvailableRooms(String start, String end) {
 		
 		try {
 			Map<String, String> availableRooms = new HashMap<String, String>();
