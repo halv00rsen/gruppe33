@@ -169,6 +169,21 @@ public class Program {
 			callCreateUser(false);
 	}
 	
+	public void updateCurrentPerson(String firstname, String lastname, String email, String phone){
+		if (isLoggedIn()){
+			if (ConnectionMySQL.updateUser(currentPerson.username, firstname, lastname, 
+					email, phone, currentPerson.admin)){
+				callMessage(Message.PersonUpdated);
+				currentPerson.setOtherInfo(phone, email);
+				currentPerson.setFirstname(firstname);
+				currentPerson.setLastname(lastname);
+			}else{
+				System.out.println("updateCurrentPerson conntection false");
+				callMessage(Message.PersonNotUpdated);
+			}
+		}
+	}
+	
 	public void updateCalendars(){
 		updateCalendarListeners();
 	}
@@ -217,12 +232,18 @@ public class Program {
 		if (!isLoggedIn())
 			return;
 		if (currentPerson.isCorrectPassword(oldPassword)){
-			if (PersonInformation.changePassword(currentPerson.username, Person.hashPassword(oldPassword), Person.hashPassword(newPassword))){
+			if (ConnectionMySQL.changePassword(currentPerson.username, Person.hashPassword(newPassword))){
 				currentPerson.changePassword(newPassword);
-				callChangePassword(true);
-				return;
 			}
+			else {
+				currentPerson.changePassword(newPassword);
+				System.out.println("changePasswordUser connection false");
+			}
+			callChangePassword(true);
+			callMessage(Message.PasswordChanged);
+			return;
 		}
+		callMessage(Message.PasswordNotChanged);
 		callChangePassword(false);
 	}
 	

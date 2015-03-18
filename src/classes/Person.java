@@ -28,9 +28,21 @@ public class Person {
 		toStringName = true;
 	}
 	
+	public String getPassword(){
+		return password;
+	}
+	
 	public void setOtherInfo(String phone, String email){
 		this.phone = phone;
 		this.email = email;
+	}
+	
+	public String getMail(){
+		return email;
+	}
+	
+	public String getPhone(){
+		return phone;
 	}
 	
 	public boolean isCorrectPassword(String password){
@@ -44,6 +56,14 @@ public class Person {
 		if (pswrd != null)
 			this.password = pswrd;
 		//husk å endre passord i database
+	}
+	
+	public void setFirstname(String firstname){
+		this.firstname = firstname;
+	}
+	
+	public void setLastname(String lastname){
+		this.lastname = lastname;
 	}
 	
 	public void addGroup(Group group){

@@ -91,6 +91,17 @@ public class Main extends Application implements ProgramListener{
 		}
 	}
 	
+	public class SaveUserInfo{
+		
+		public void saveUserInfo(String firstname, String lastname, String phone, String email){
+			program.updateCurrentPerson(firstname, lastname, email, phone);
+		}
+		
+		public void changePassword(String newPassword, String oldPassword){
+			program.changePasswordUser(oldPassword, newPassword);
+		}
+	}
+	
 	
 	public class AddPersonListener{
 		
@@ -231,8 +242,9 @@ public class Main extends Application implements ProgramListener{
 		inbox.setContent(inboxScreen);
 		
 		settings = new Tab("Innstillinger");
-		settingsScreen = new SettingsScreen();
+		settingsScreen = new SettingsScreen(new SaveUserInfo());
 		settings.setContent(settingsScreen);
+		settingsScreen.setUserInfo(person.getFirstname(), person.getLastname(), person.getMail(), person.getPhone(), person.username);
 		
 		tabPane.getTabs().addAll(home, newEvent, room, persons, inbox, settings, groups);
 		tabPane.setTabMinWidth(75);
@@ -368,6 +380,14 @@ public class Main extends Application implements ProgramListener{
 	public void setAllPersons(List<Person> persons) {
 		for (GetPersonListener l : personListeners)
 			l.updatePersons(persons);
+	}
+
+
+
+	@Override
+	public void updatePersonInformation(Person person) {
+		// TODO Auto-generated method stub
+		
 	}
 	
 }

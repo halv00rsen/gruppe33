@@ -22,9 +22,13 @@ import javafx.scene.text.Text;
 import javafx.scene.text.TextFlow;
 import gui.Component;
 import gui.Main;
+import gui.Main.SaveUserInfo;
 import gui.Window;
 
 public class SettingsGUI extends Component{
+	
+	private CheckBox passwordBox;
+	private PasswordField oldPassword;
 	
 	Label title;
 	Label firstNameLabel;
@@ -33,7 +37,7 @@ public class SettingsGUI extends Component{
 	Label passwordLabel;
 	Label rePasswordLabel;
 	Label emailLabel;
-	Label phoneLabel;
+	Label phoneLabel, oldPasswordLabel;
 	Text errorFirstNameText;
 	Text errorLastNameText;
 	Text errorEmailText;
@@ -54,9 +58,11 @@ public class SettingsGUI extends Component{
 	HBox hbox;
 	VBox vbox;
 	GridPane mainGridPane;
+	private final SaveUserInfo saveUserInfo;
 
-	public SettingsGUI(Window parent) {
+	public SettingsGUI(Window parent, SaveUserInfo saveUserInfo) {
 		super(parent);
+		this.saveUserInfo = saveUserInfo;
 		init();
 	}
 
@@ -128,7 +134,7 @@ public class SettingsGUI extends Component{
 			@Override
 			public void changed(ObservableValue<? extends String> observable,
 					String oldValue, String newValue) {
-				if(!(newValue.matches("[A-Za-z]*"))){
+				if(!(newValue.matches("[A-Za-zæøåÆØÅ]*"))){
 					firstNameTextField.setText(oldValue);
 				}
 				
@@ -158,7 +164,7 @@ public class SettingsGUI extends Component{
 			@Override
 			public void changed(ObservableValue<? extends String> observable,
 					String oldValue, String newValue) {
-				if(!(newValue.matches("[A-Za-z]*"))){
+				if(!(newValue.matches("[A-Za-zæøåÆØÅ]*"))){
 					lastNameTextField.setText(oldValue);
 				}
 				
@@ -277,7 +283,12 @@ public class SettingsGUI extends Component{
 			@Override
 			public void handle(ActionEvent arg0) {
 				
-				if(validateTextFields()){} 
+				if(validateTextFields()){
+					saveUserInfo.saveUserInfo(firstNameTextField.getText(), lastNameTextField.getText(), phoneTextField.getText(), emailTextField.getText());
+					if (passwordBox.isSelected()){
+						saveUserInfo.changePassword(passwordTextField.getText(), oldPassword.getText());
+					}
+				} 
 					//System.out.println("Lag bruker");
 				
 			}
@@ -293,6 +304,8 @@ public class SettingsGUI extends Component{
 			}
 	});
 
+		
+		
 		mainGridPane = new GridPane();
 		mainGridPane.setHgap(10);
 		mainGridPane.setVgap(10);
@@ -310,12 +323,37 @@ public class SettingsGUI extends Component{
 		mainGridPane.add(usernameLabel, 0, 4);
 		mainGridPane.add(usernameTextField, 1, 4);
 		mainGridPane.add(errorUsernameText, 2, 4);
-		mainGridPane.add(passwordLabel, 0, 5);
-		mainGridPane.add(passwordTextField, 1, 5);
-		mainGridPane.add(errorPasswordText, 2, 5);
-		mainGridPane.add(rePasswordLabel, 0, 6);
-		mainGridPane.add(rePasswordTextField, 1, 6);
-		mainGridPane.add(errorRePasswordText, 2, 6);
+		
+		passwordBox = new CheckBox();
+		passwordBox.setOnAction(e -> {
+			boolean selected = passwordBox.isSelected();
+			passwordTextField.setDisable(!selected);
+			rePasswordTextField.setDisable(!selected);
+			passwordLabel.setDisable(!selected);
+			rePasswordLabel.setDisable(!selected);
+			oldPassword.setDisable(!selected);
+			oldPasswordLabel.setDisable(!selected);
+		});
+		oldPassword = new PasswordField();
+		oldPasswordLabel = new Label("Gammelt passord:");
+		mainGridPane.add(new Label("Bytt passord"), 0, 5);
+		mainGridPane.add(passwordBox, 1, 5);
+		mainGridPane.add(oldPasswordLabel, 0, 6);
+		mainGridPane.add(oldPassword, 1, 6);
+		mainGridPane.add(passwordLabel, 0, 7);
+		mainGridPane.add(passwordTextField, 1, 7);
+		mainGridPane.add(errorPasswordText, 2, 7);
+		mainGridPane.add(rePasswordLabel, 0, 8);
+		mainGridPane.add(rePasswordTextField, 1, 8);
+		mainGridPane.add(errorRePasswordText, 2, 8);
+		
+		passwordTextField.setDisable(true);
+		rePasswordTextField.setDisable(true);
+		passwordLabel.setDisable(true);
+		rePasswordLabel.setDisable(true);
+		oldPassword.setDisable(true);
+		oldPasswordLabel.setDisable(true);
+		usernameTextField.setEditable(false);
 		
 		hbox = new HBox(20);
 		hbox.getChildren().add(createUserButton);
@@ -350,23 +388,34 @@ public class SettingsGUI extends Component{
 			isEmptyMessage += "Brukernavn ikke oppgitt. ";
 			errorUsernameText.setVisible(true);
 		}
-		if(passwordTextField.getText().isEmpty()){
-			isEmptyMessage += "Passord ikke oppgitt. ";
-			errorPasswordText.setVisible(true);
-		}
-		if(!passwordTextField.getText().equals(rePasswordTextField.getText())){
-			isEmptyMessage += "Passord stemmer ikke. ";
-			
-			errorRePasswordText.setVisible(true);
-			passwordTextField.clear();
-			rePasswordTextField.clear();
+		if (passwordBox.isSelected()){
+			if(passwordTextField.getText().isEmpty()){
+				isEmptyMessage += "Passord ikke oppgitt. ";
+				errorPasswordText.setVisible(true);
+			}
+			if(!passwordTextField.getText().equals(rePasswordTextField.getText())){
+				isEmptyMessage += "Passord stemmer ikke. ";
+				
+				errorRePasswordText.setVisible(true);
+				passwordTextField.clear();
+				rePasswordTextField.clear();
+			}
 		}
 
 		if(isEmptyMessage == "") return true;
 		
 		return false;
 			
-		}
+	}
+	
+	public void setUserInfo(String firstname, String lastname, String email, String phone, String username){
+		firstNameTextField.setText(firstname);
+		lastNameTextField.setText(lastname);
+		emailTextField.setText(email);
+		phoneTextField.setText(phone);
+		usernameTextField.setText(username);
+		
+	}
 	
 	private void getUserInfo(){
 		
@@ -384,5 +433,5 @@ public class SettingsGUI extends Component{
 		
 	}
 		
-	}
+}
 
