@@ -175,7 +175,7 @@ public class Program {
 				System.out.println("personLogin connection null");
 				info = PersonInformation.getPersonInformation(username, Person.hashPassword(password));
 			}
-			
+
 			String usernameDatabase = info.get("username");
 			String passwordDatabase = info.get("password");
 			String firstname = info.get("firstname"), lastname = info.get("lastname");
