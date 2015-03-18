@@ -8,6 +8,7 @@ import java.util.List;
 import windows.*;
 import classes.Calendar;
 import classes.Event;
+import classes.EventAppliance;
 import classes.Group;
 import classes.Message;
 import classes.Person;
@@ -151,7 +152,13 @@ public class Main extends Application implements ProgramListener{
 		}
 		
 	}
-	
+	public class UpdateAppliance{
+		
+		public void update(Event event, EventAppliance eventAppliance){
+			program.updateAppliance(event, eventAppliance);
+		}
+		
+	}
 	public class GoToEvent{
 		
 		public void goToEvent(int eventKey){
@@ -244,6 +251,7 @@ public class Main extends Application implements ProgramListener{
 		tabPane.setPrefHeight(1000);
 		home = new Tab("Hjem");
 		homeScreen  = new HomeScreen(new ChangeTab(), person,new AddNewEvent(), new AddGroupListener());
+		homeScreen.setEventApplianceCaller(new UpdateAppliance());
 		home.setContent(homeScreen);
 		tabPane.setPrefHeight(1000);
 		

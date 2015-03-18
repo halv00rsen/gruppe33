@@ -4,6 +4,7 @@ import gui.Component;
 import gui.Main.AddGroupListener;
 import gui.Main.AddNewEvent;
 import gui.Main.ChangeTab;
+import gui.Main.UpdateAppliance;
 import gui.Window;
 
 import java.time.LocalDate;
@@ -12,6 +13,7 @@ import java.util.ArrayList;
 import components.SideMenu.SideMenuInterface;
 import classes.Calendar;
 import classes.Event;
+import classes.EventAppliance;
 import classes.Group;
 import classes.Person;
 import classes.PersonCalendar;
@@ -36,6 +38,7 @@ public class SchedulingGUI extends Component{
     Applicants applicants;
 	private Button settings;
 	private AddNewEvent eventAdder;
+	private UpdateAppliance updateAppliance;
 	public SchedulingGUI(Window parent, ChangeTab tab, AddGroupListener l, Calendar... calendars ) {
 		super(parent);
 
@@ -91,6 +94,12 @@ public class SchedulingGUI extends Component{
 
 	public void setEventAdder(AddNewEvent eventAdder) {
 		this.eventAdder = eventAdder;
+		
+	}
+
+	public void setEventApplianceCaller(UpdateAppliance updateAppliance) {
+		this.updateAppliance = updateAppliance;
+		applicants.setEventApplianceCaller(updateAppliance);
 		
 	}
 

@@ -20,6 +20,7 @@ import gui.Main.AddGroupListener;
 import gui.Main.AddNewEvent;
 import gui.Main.AddPersonListener;
 import gui.Main.ChangeTab;
+import gui.Main.UpdateAppliance;
 public class HomeScreen extends Window{
 
 	private final ChangeTab tab;
@@ -30,6 +31,8 @@ public class HomeScreen extends Window{
 
 	private AddNewEvent eventAdder;
 	private AddGroupListener addPerson;
+
+	private UpdateAppliance updateApplianceCaller;
     
 	public HomeScreen(ChangeTab tab, Person person, AddNewEvent addNewEvent, AddGroupListener addGroup) {
 		this.eventAdder = addNewEvent;
@@ -47,12 +50,18 @@ public class HomeScreen extends Window{
 		schedulingGUI = new SchedulingGUI(this, tab, addPerson, cal);
 		schedulingGUI.changePerson(p);
 		schedulingGUI.setEventAdder(eventAdder);
+		
 		borderPane.setCenter(schedulingGUI);
 	}
 
 	public void highlightEvent(Event event) {
 		schedulingGUI.highlightEvent(event);
 		
+	}
+
+	public void setEventApplianceCaller(UpdateAppliance updateAppliance) {
+		this.updateApplianceCaller = updateAppliance;
+		schedulingGUI.setEventApplianceCaller(updateAppliance);
 	}
 
 
