@@ -125,7 +125,7 @@ public class ConnectionMySQL {
 
 	public static boolean createUser(String username, String firstName, String lastName, String password, String email, String phone, boolean isAdmin) { 
 		
-		String myStmt = "INSERT INTO person SET username = '" + username + "', firstName = '" + firstName + "', lastName = '" + lastName
+		String myStmt = "INSERT INTO Person SET username = '" + username + "', firstName = '" + firstName + "', lastName = '" + lastName
 				 + "', password = '" + password + "', email = '" + email + "', isAdmin = " + isAdmin;
 		if(!phone.isEmpty()) myStmt += ", phone = '" + phone + "'";
 		myStmt += ";";
@@ -227,7 +227,7 @@ public class ConnectionMySQL {
 		
 	}
 	
-	public static int createEvent(String eventName, String location, String start, String end, int priority, String lastChanged, int frequency, String info) {
+	public static int createEvent(String eventName, String location, String start, String end, int priority, int frequency, String info) {
 		
 		String myStmt = "INSERT INTO event set eventName = '" + eventName + "', start = '" + start + "', end = '" + end + "', lastChanged = now()" + ", priority = " + priority;
 		if(!location.isEmpty()) myStmt += ", location = '" + location + "'";
