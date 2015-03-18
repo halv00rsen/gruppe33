@@ -22,7 +22,7 @@ public class ConnectionMySQL {
 	private static boolean DEBUG = false;
 	private static String driver = "com.mysql.jdbc.Driver";
 	private static String url = "jdbc:mysql://localhost/";
-	private static String dbName = "calendar";
+	private static String dbName = "test";
 	private static String user = "root";
 	private static String password = "passord";
 		
@@ -80,7 +80,6 @@ public class ConnectionMySQL {
 		
 		try{
 			Map<String, String> info = new HashMap<String, String>();
-			System.out.println("funker");
 			ResultSet myRs = sendQuery("SELECT * FROM person WHERE username = '" + username + "';");
 			while (myRs.next()) {
 				
@@ -130,7 +129,6 @@ public class ConnectionMySQL {
 				 + "', password = '" + password + "', email = '" + email + "', isAdmin = " + isAdmin;
 		if(!phone.isEmpty()) myStmt += ", phone = '" + phone + "'";
 		myStmt += ";";
-		System.out.println(myStmt);
 		return sendStatement(myStmt);
 		
 	}
@@ -392,7 +390,6 @@ public class ConnectionMySQL {
 			ResultSet myRs = sendQuery("SELECT personGroup.groupid, groupName, parent " + 
 					"FROM personGroup, person, isMemberOF " + 
 					"WHERE personGroup.groupId = isMemberOF.groupId AND person.username = isMemberOf.username AND person.username = '" + username + "';");
-			System.out.println(myRs);
 			while (myRs.next()){
 				
 				HashMap<String, String> groups = new HashMap<String, String>();
@@ -482,20 +479,19 @@ public class ConnectionMySQL {
 		
 	}
 
-	public static Map<String, String> getAvailableRooms(String start, String end) {
+	public static ArrayList<String> getAvailableRooms(String start, String end) {
 		
 		try {
-			Map<String, String> availableRooms = new HashMap<String, String>();
+			ArrayList<String> availableRooms = new ArrayList<String>();
 			ResultSet myRs = sendQuery("SELECT roomNr, capacity FROM room " +
 					" WHERE roomNr NOT IN " + 
 					"(SELECT room.roomNr " + 
 					"FROM room, event, reserve " + 
 					"WHERE room.roomNr = reserve.roomNr AND event.eventId = reserve.eventId AND start < '" + end + "' AND end > '" + start + "') " +
 					"ORDER BY roomNr;");
-			System.out.println("ok");
 			
 			while (myRs.next()){
-				availableRooms.put(myRs.getString("roomNr"), myRs.getString("capacity"));
+				availableRooms.add(myRs.getString("roomNr"));
 			}
 			return availableRooms;
 		} catch (Exception e) {

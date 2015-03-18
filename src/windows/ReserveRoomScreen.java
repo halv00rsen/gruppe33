@@ -4,11 +4,13 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.ArrayList;
+import java.util.Map;
 
 import components.NumberField;
 import components.TimeField;
 import classes.Event;
 import classes.Room;
+import database.ConnectionMySQL;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
@@ -49,21 +51,18 @@ public class ReserveRoomScreen extends Window{
 	ListView<String> availableRooms;
 	ObservableList<String> items;
 	
-	ArrayList<Room> rooms;
-	
 	int fromHour;
 	int fromMinute;;
 
 	int toHour;
 	int toMinute;
 	
-	public ReserveRoomScreen(ArrayList<Room> rooms) {
+	public ReserveRoomScreen() {
 		fromTime = new TimeField(true);
 		toTime = new TimeField(false);
 		fromTime.setOtherTime(toTime);
 		toTime.setOtherTime(fromTime);
 		init();
-		this.rooms = rooms;
 	}
 	
 	
@@ -155,16 +154,10 @@ public class ReserveRoomScreen extends Window{
 	
 	private void reserveRoomMethod(ActionEvent e) {
 		String roomName = availableRooms.getSelectionModel().getSelectedItem();
-		for (Room room : rooms) {
-			if (room.getRoomName().equals(roomName)) {
-				Event event = new Event();
-				event.setEventName("Reservert møterom");
-				event.setStartTime(LocalDateTime.of(datePicker.getValue(), getLocalTime(fromTime)));
-				event.setEndTime(LocalDateTime.of(datePicker.getValue(), getLocalTime(toTime)));
-				room.getCalendar().addEvent(event);
-				//System.out.println("Rom reservert!");
-			}
-		}
+			Event event = new Event();
+			event.setEventName("Reservert møterom");
+			event.setStartTime(LocalDateTime.of(datePicker.getValue(), getLocalTime(fromTime)));
+			event.setEndTime(LocalDateTime.of(datePicker.getValue(), getLocalTime(toTime)));
 	}
 	
 	private LocalTime getLocalTime(TimeField timeField) {
@@ -172,20 +165,26 @@ public class ReserveRoomScreen extends Window{
 	}
 
 	private ListView<String> showAvailableRooms(LocalDateTime fromTime, LocalDateTime toTime) {
-		System.out.println(fromTime);
-		System.out.println(toTime);
-		ListView<String> availableRooms = new ListView<String>();
+		
+		String[] from = fromTime.toString().split("T");
+		String[] to = toTime.toString().split("T");
+		String start = from[0] + " " + from[1] + ":00";
+		String end = to[0] + " " + to[1] + ":00";
+		
+		ArrayList<String> availableRooms = ConnectionMySQL.getAvailableRooms(start, end);
+		ListView<String> availableRoomsListView = new ListView<String>();
 		ObservableList<String> items =FXCollections.observableArrayList ();
 		
-		for (Room room : rooms) {
-			if (room.getCalendar().isAvailable(fromTime, toTime)) {
-				items.add(room.getRoomName());
-			}
+		for (String room: availableRooms){
+			
+			items.add(room);
+			
 		}
-		availableRooms.setItems(items);
-		availableRooms.setMaxWidth(150);
-		availableRooms.setPrefHeight(75);
-		return availableRooms;
+		
+		availableRoomsListView.setItems(items);
+		availableRoomsListView.setMaxWidth(150);
+		availableRoomsListView.setPrefHeight(75);
+		return availableRoomsListView;
 	}
 	
 	
