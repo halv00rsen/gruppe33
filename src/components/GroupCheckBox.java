@@ -34,7 +34,7 @@ public class GroupCheckBox extends Component implements GetGroupListener{
 			grupperLabel.setText("Synlig grupper");
 			grupperLabel.setFont(Main.header1);
 			scrollPane.setContent(box);
-			scrollPane.setPrefSize(170, 80);
+			scrollPane.setPrefSize(300, 80);
 			items = FXCollections.observableArrayList();
 			elements.getChildren().addAll(grupperLabel,scrollPane);
 			this.getChildren().add(elements);
