@@ -23,62 +23,39 @@ import gui.Component;
 import gui.Main;
 
 public class UserInfoGUI extends Component{
-	ListView<String> grupper = new ListView<String>();
 	////EKSEMPEL UNDER
-	ObservableList<Group> eksempel = FXCollections.observableArrayList(
-            new Group("chocolate",(int)Math.random()*10000), 
-            new Group("salmon",(int)Math.random()*10000),
-            new Group("gold",(int)Math.random()*10000),
-            new Group("coral",(int)Math.random()*10000),
-            new Group("darkorchid",(int)Math.random()*10000),
-            new Group("darkgoldenrod",(int)Math.random()*10000),
-            new Group("lightsalmon",(int)Math.random()*10000),
-            new Group("black",(int)Math.random()*10000)
-            );
+	
 	private final GridPane pane;
-	private final Label title, navnLabel, brukernavnLabel, grupperLabel;
+	private final Label title, navnLabel, brukernavnLabel;
 	
 	private final Text navn, brukernavn;
-	public GroupCheckBox groupChechBox;
+	
 	
 //	private final ObservableList<String> items =FXCollections.observableArrayList ();
 
 	public UserInfoGUI(Pane parent) {
 		super(parent);
+		brukernavnLabel = new Label("Brukernavn:");
 		title = new Label("Brukerinformasjon:");
 		title.setFont(Main.header1);
 		title.setPadding(new Insets(10, 0, 0, 0));
 		pane = new GridPane();
-		pane.setHgap(10);
-		pane.setVgap(5);
-		
-		
-		groupChechBox = new GroupCheckBox();
-		groupChechBox.addGroups(eksempel);
-		
-		
+		pane.setHgap(0);
+		pane.setVgap(0);
 		navnLabel = new Label("Navn:");
-		brukernavnLabel = new Label("Brukernavn:");
-		grupperLabel = new Label("Grupper synlig:");
 		navn = new Text("");
 		brukernavn = new Text("");
 		pane.add(title, 0, 0);
 		pane.add(navn, 1, 1);
 		pane.add(brukernavn, 1, 2);
-		pane.add(groupChechBox, 3, 1);
-		GridPane.setRowSpan(groupChechBox, 3);
 		
 		pane.add(navnLabel, 0, 1);
 		pane.add(brukernavnLabel, 0, 2);
-		pane.add(grupperLabel, 3, 0);
 		
 		
 		VBox mainBox = new VBox(5);
 		mainBox.getChildren().addAll(pane);
 		this.getChildren().add(mainBox);
-	}
-	public GroupCheckBox getGroupChechBox(){
-		return this.groupChechBox;
 	}
 	public void changePerson(Person p){
 		
