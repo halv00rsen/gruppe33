@@ -27,9 +27,11 @@ import javafx.scene.text.Font;
 import gui.Component;
 import gui.GetPersonListener;
 import gui.Main;
+import gui.Main.AddGroupListener;
 import gui.Main.AddPersonListener;
+import gui.Main.GetGroupListener;
 
-public class GroupGUI extends Component implements GetPersonListener{
+public class GroupGUI extends Component implements GetPersonListener, GetGroupListener{
 
 //	private final TextField nameField;
 //	private final ListView<Group> groups;
@@ -44,9 +46,10 @@ public class GroupGUI extends Component implements GetPersonListener{
 	
 	private Group selectedGroup;
 	
-	public GroupGUI(Pane parent, AddPersonListener apl) {
+	public GroupGUI(Pane parent, AddPersonListener apl, AddGroupListener agl) {
 		super(parent);
 		apl.addListener(this);
+		agl.addListener(this);
 		selectedGroup = null;
 		
 		subGroups = new GroupList<Group>("Undergrupper", Fancy.Group, new FieldListener());
@@ -281,6 +284,15 @@ public class GroupGUI extends Component implements GetPersonListener{
 	public void updatePersons(List<Person> persons) {
 		// TODO Auto-generated method stub
 		this.persons.addChoices(persons);
+		
+	}
+
+	@Override
+	public void setGroups(List<Group> groups) {
+		// TODO Auto-generated method stub
+		groupItems.clear();
+		for (Group g: groups)
+			groupItems.add(g);
 		
 	}
 	

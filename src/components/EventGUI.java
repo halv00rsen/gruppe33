@@ -8,11 +8,15 @@ import java.util.List;
 import gui.Component;
 import gui.FxUtil;
 import gui.GetPersonListener;
+import gui.Main.AddGroupListener;
 import gui.Main.AddNewEvent;
 import gui.Main.AddPersonListener;
 import gui.Main.ChangeTab;
+import gui.Main.GetGroupListener;
 import classes.Appliance;
+import classes.Calendar;
 import classes.EventAppliance;
+import classes.Group;
 import classes.Person;
 import classes.Priority;
 import javafx.beans.value.ChangeListener;
@@ -39,7 +43,7 @@ import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 
-public class EventGUI extends Component implements GetPersonListener{
+public class EventGUI extends Component implements GetPersonListener, GetGroupListener{
 	
 	private final TimeField start, end;
 	private final NumberField freqText;
@@ -56,7 +60,8 @@ public class EventGUI extends Component implements GetPersonListener{
 	Button trash = new Button();
 	TextField purposeText = new TextField();
 	ComboBox romChoice = new ComboBox();
-	ComboBox calendarChoice = new ComboBox();
+	ComboBox<Calendar> calendarChoice = new ComboBox<Calendar>();
+	ObservableList<Calendar> calendarItems;
 //	TextField freqText = new TextField();
 	BorderPane pane = new BorderPane();
 	TextArea infoText = new TextArea();
@@ -74,11 +79,13 @@ public class EventGUI extends Component implements GetPersonListener{
 	
 	private classes.Event currentEvent;
 	
-	public EventGUI(Pane parent, AddNewEvent eventCall, ChangeTab changeTab, AddPersonListener l) {
+	public EventGUI(Pane parent, AddNewEvent eventCall, ChangeTab changeTab, AddPersonListener l, AddGroupListener gl) {
 		super(parent);
 		this.eventCall = eventCall;
 		this.changeTab = changeTab;
+		gl.addListener(this);
 		l.addListener(this);
+//		calendarItems = FXCollections.observableArrayList();
 		start = new TimeField(true);
 		end = new TimeField(false);
 		freqText = new NumberField();
@@ -143,6 +150,8 @@ public class EventGUI extends Component implements GetPersonListener{
 	private void save(ActionEvent e) {
 //		if (!start.isCorrectInput() || !end.isCorrectInput())
 //    		return;
+		if (calendarChoice.getSelectionModel().getSelectedIndex() == -1)
+			return;
     	LocalDate start = startDate.getValue(), end = endDate.getValue();
     	if (start == null || end == null)
     		return;
@@ -180,8 +189,10 @@ public class EventGUI extends Component implements GetPersonListener{
     	newevent.setInfo(infoText.getText());
     	newevent.setPriority(priority);
     	
+    	int index = calendarChoice.getSelectionModel().getSelectedIndex();
+    	Calendar calendar = calendarChoice.getItems().get(index);
     	if (currentEvent == null){
-    		eventCall.addEvent(newevent);
+    		eventCall.addEvent(newevent, calendar);
     	}else{
     		//skal sendes til server.
     		currentEvent.overrideEvent(newevent);
@@ -277,6 +288,7 @@ public class EventGUI extends Component implements GetPersonListener{
         Label calendarLabel = new Label();
         calendarLabel.setText("Kalender\t\t\t");
         FxUtil.autoCompleteComboBox(calendarChoice, FxUtil.AutoCompleteMode.CONTAINING);
+        calendarItems = calendarChoice.getItems();
         VBox calendarBox = new VBox(2);
         calendarBox.getChildren().add(calendarLabel);
         calendarBox.getChildren().add(calendarChoice);
@@ -615,5 +627,13 @@ public class EventGUI extends Component implements GetPersonListener{
 		// TODO Auto-generated method stub
 		for (Person p : persons)
         	comboPeople.add(p);
+	}
+
+	@Override
+	public void setGroups(List<Group> groups) {
+		calendarItems.clear();
+		for (Group g : groups){
+			calendarItems.add(g.getGroupCalendar());
+		}
 	}
 }

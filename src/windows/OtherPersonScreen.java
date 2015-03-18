@@ -17,6 +17,7 @@ import javafx.scene.layout.VBox;
 import components.SchedulingGUI;
 import gui.FxUtil;
 import gui.GetPersonListener;
+import gui.Main.AddGroupListener;
 import gui.Main.AddPersonListener;
 import gui.Main.ChangeTab;
 import gui.Window;
@@ -67,7 +68,7 @@ public class OtherPersonScreen extends Window implements GetPersonListener{
 			System.out.println("Hiodgjioerjgioe");
 	        mainBox.getChildren().remove(schedulingGUI);
 	        cal = new PersonCalendar(items.get(p));
-	        schedulingGUI = new SchedulingGUI(getThis(),tab,cal);
+	        schedulingGUI = new SchedulingGUI(getThis(),tab, null,cal);
 	        schedulingGUI.changePerson(items.get(p));
 	        mainBox.getChildren().add(schedulingGUI);
 		});
@@ -87,7 +88,7 @@ public class OtherPersonScreen extends Window implements GetPersonListener{
 		pane.add(chosePersonLabel, 0, 0);
 		pane.add(peopleComboBox, 1, 0);
 		pane.add(button, 2,0);
-		schedulingGUI = new SchedulingGUI(this, tab, cal);
+		schedulingGUI = new SchedulingGUI(this, tab,null,  cal);
 		
 		mainBox.getChildren().addAll(pane, schedulingGUI);
 		
@@ -112,7 +113,7 @@ public class OtherPersonScreen extends Window implements GetPersonListener{
 		Person p = items.get(index);
 		cal = new PersonCalendar(p);
 		mainBox.getChildren().remove(schedulingGUI);
-		schedulingGUI = new SchedulingGUI(this, tab,cal);
+		schedulingGUI = new SchedulingGUI(this, tab,null,cal);
 		schedulingGUI.changePerson(p);
 		mainBox.getChildren().add(schedulingGUI);
 		

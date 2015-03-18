@@ -405,6 +405,7 @@ public class ConnectionMySQL {
 		} catch (Exception e) {
 			if (DEBUG)
 				e.printStackTrace();
+			return null;
 		}
 
 		return allGroups;
