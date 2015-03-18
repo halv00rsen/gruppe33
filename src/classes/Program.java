@@ -223,7 +223,11 @@ public class Program {
 			String usernameDatabase = info.get("username");
 			String passwordDatabase = info.get("password");
 			String firstname = info.get("firstname"), lastname = info.get("lastname");
-			if (!Person.hashPassword(password).equals(passwordDatabase) || username != usernameDatabase){
+			System.out.println(usernameDatabase);
+			System.out.println(passwordDatabase);
+			System.out.println(username);
+			System.out.println(Person.hashPassword(password));
+			if (!Person.hashPassword(password).equals(passwordDatabase) || !username.equals(usernameDatabase)){
 				if (DEBUG){
 					System.out.println("Feil med passord");
 				}

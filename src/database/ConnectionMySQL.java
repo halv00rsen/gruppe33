@@ -85,8 +85,8 @@ public class ConnectionMySQL {
 				
 				info.put("username", myRs.getString("username"));
 				info.put("password", myRs.getString("password"));
-				info.put("firstName", myRs.getString("firstName"));
-				info.put("lastName", myRs.getString("lastName"));
+				info.put("firstname", myRs.getString("firstName"));
+				info.put("lastname", myRs.getString("lastName"));
 				info.put("email", myRs.getString("email"));
 				info.put("phone", myRs.getString("phone"));
 				info.put("isAdmin", myRs.getString("isAdmin"));
