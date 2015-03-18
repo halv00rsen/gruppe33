@@ -77,7 +77,8 @@ public class Main extends Application implements ProgramListener{
 		
 		public void showEvent(Event event){
 			tabPane.getSelectionModel().select(newEvent);
-			eventScreen.showEvent(event);
+			Calendar cal = program.getCalendarFor(event.getID());
+			eventScreen.showEvent(event, cal);
 		}
 		public void showEventInHomeScreen(Event event){
 			goToHomeScreen();
@@ -117,8 +118,8 @@ public class Main extends Application implements ProgramListener{
 			program.createGroup(name);
 		}
 		
-		public void deleteGroup(Group g){
-			
+		public void deleteGroup(int groupId){
+			program.deleteGroup(groupId);
 		}
 	}
 	
@@ -141,6 +142,12 @@ public class Main extends Application implements ProgramListener{
 		
 		public void addEvent(Event event, Calendar cal){
 			program.createEvent(event, cal);
+		}
+		
+		public void changeEvent(int eventId, Calendar old, Calendar newCal, Event newEvent){
+			System.out.println(old);
+			System.out.println(newCal);
+			program.changeEvent(eventId, old, newCal, newEvent);
 		}
 		
 	}

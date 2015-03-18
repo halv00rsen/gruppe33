@@ -193,11 +193,13 @@ public class EventGUI extends Component implements GetPersonListener, GetGroupLi
     	
     	int index = calendarChoice.getSelectionModel().getSelectedIndex();
     	Calendar calendar = calendarChoice.getItems().get(index);
+    	System.out.println(calendar);
     	if (currentEvent == null){
     		eventCall.addEvent(newevent, (calendar.type == TypeOfCalendar.Personal ? null: calendar) );
     	}else{
     		//skal sendes til server.
-    		currentEvent.overrideEvent(newevent);
+    		eventCall.changeEvent(currentEvent.getID(), currentCal, calendar, newevent);
+//    		currentEvent.overrideEvent(newevent);
     	}
    
     	trash();
@@ -569,11 +571,21 @@ public class EventGUI extends Component implements GetPersonListener, GetGroupLi
     	a.setLayoutY(y);
     	
     }
+    
+    private Calendar currentCal;
 
-	public void showEvent(classes.Event event) {
+	public void showEvent(classes.Event event, Calendar cal) {
 		trash();
 		if (event == null)
 			return;
+		currentCal = cal;
+		int calIndex = calendarItems.indexOf(cal);
+		if (calIndex == -1){
+//			currentCal = calendarChoice.getSelectionModel().getSelectedItem();
+			currentCal = null;
+		}else{
+			calendarChoice.getSelectionModel().select(calIndex);
+		}
 		currentEvent = event;
 		start.setTime(event.getStartTime().getHour(), event.getStartTime().getMinute());
 		end.setTime(event.getEndTime().getHour(), event.getEndTime().getMinute());

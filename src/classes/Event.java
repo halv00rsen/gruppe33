@@ -93,7 +93,6 @@ public class Event implements Comparable<Event>{
 			this.appliance.add(ec);
 		eventName = event.eventName;
 		location = event.location;
-		this.id = event.getID();
 		room = event.room;
 		startDate = event.startDate;
 		endDate = event.endDate;

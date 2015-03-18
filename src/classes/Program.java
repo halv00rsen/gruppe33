@@ -33,7 +33,7 @@ public class Program {
 		if (groupId == -1){
 			if (DEBUG){
 				System.out.println("Create group connection null");
-				currentPerson.getGroups().add(new Group(name, 1));
+				currentPerson.getGroups().add(new Group(name, (int) Math.random() * 10000));
 				updateGroups();
 			}
 			callMessage(Message.GroupNotCreated);
@@ -44,9 +44,85 @@ public class Program {
 		updateGroups();
 	}
 	
+	public void deleteGroup(int groupId){
+		if (ConnectionMySQL.deleteGroup(groupId)){
+			for (Group g : currentPerson.getGroups()){
+				if (g.id == groupId){
+					currentPerson.getGroups().remove(g);
+					break;
+				}
+			}
+			updateGroups();
+		}else if (DEBUG){
+			System.out.println("delete group connection false");
+			for (Group g : currentPerson.getGroups()){
+				if (g.id == groupId){
+					currentPerson.getGroups().remove(g);
+					break;
+				}
+			}
+		}
+	}
+	
+	public void changeEvent(int eventId, Calendar oldCal, Calendar newCal, Event event){
+		Event oldEvent = null;
+		for (Event e: oldCal.getEvents()){
+			if (e.getID() == eventId){
+				oldEvent = e;
+				break;
+			}
+		}
+		if (oldEvent == null){
+			System.out.println("change event er null");
+			return;
+		}
+		String[] from = event.getStartTime().toString().split("T");
+		String[] to = event.getEndTime().toString().split("T");
+		String start = from[0] + " " + from[1] + ":00";
+		String end = to[0] + " " + to[1] + ":00";
+		if (ConnectionMySQL.updateEvent("" + eventId, event.getEventName(), event.getLocation(), start, end, event.getPriority().pri, null
+				, event.getFreq(), event.getInfo())){
+			
+		}else{
+			if (DEBUG){
+				System.out.println("change event connection false");
+			}
+		}
+		if (oldCal != newCal){
+//			if (ConnectionMySQL.updateEvent(eventId, newEven, location, start, end, priority, lastChanged, frequency, info))
+			oldCal.removeEvent(oldEvent);
+			newCal.addEvent(oldEvent);
+		}
+		for (EventAppliance e : oldEvent.getAppliance()){
+			ConnectionMySQL.removeMembersFromEvent(eventId, e.person.username);
+		}
+		for (EventAppliance e : event.getAppliance()){
+			ConnectionMySQL.addMembersToEvent(eventId, e.person.username);
+		}
+		
+		oldEvent.overrideEvent(event);
+		
+		updateCalendars();
+	}
+	
 	private void updateGroups(){
 		for (ProgramListener l : listeners)
 			l.updateGroups(currentPerson.getGroups());
+	}
+	
+	public Calendar getCalendarFor(int eventId){
+		for (Calendar c : activeCalendars){
+			for (Event e : c.getEvents()){
+				if (e.getID() == eventId)
+					return c;
+			}
+		}
+		for (Calendar c : unactive){
+			for (Event e : c.getEvents()){
+				if (e.getID() == eventId)
+					return c;
+			}
+		}return null;
 	}
 	
 	public void createEvent(Event e, Calendar cal){
