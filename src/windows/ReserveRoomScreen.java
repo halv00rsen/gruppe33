@@ -172,6 +172,8 @@ public class ReserveRoomScreen extends Window{
 	}
 
 	private ListView<String> showAvailableRooms(LocalDateTime fromTime, LocalDateTime toTime) {
+		System.out.println(fromTime);
+		System.out.println(toTime);
 		ListView<String> availableRooms = new ListView<String>();
 		ObservableList<String> items =FXCollections.observableArrayList ();
 		
