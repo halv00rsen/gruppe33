@@ -37,7 +37,7 @@ public class Main extends Application implements ProgramListener{
 	public final static int SCREENHEIGHT = 650;
 	public final static int SCREENWIDTH = 1000;
 	public final static Pane root = new Pane();
-	public final static Font header1 = new Font("Verdana", 20);
+	public final static Font header1 = new Font("Helvetica", 15);
 	public final static Insets paddingInsets = new Insets(10, 0, 0, 0);
 	
 	private final Program program;

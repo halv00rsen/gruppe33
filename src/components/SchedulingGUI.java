@@ -11,9 +11,15 @@ import java.util.ArrayList;
 import components.SideMenu.SideMenuInterface;
 import classes.Calendar;
 import classes.Event;
+import classes.Group;
 import classes.Person;
 import classes.PersonCalendar;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
+import javafx.geometry.Insets;
+import javafx.geometry.Pos;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
@@ -23,20 +29,33 @@ public class SchedulingGUI extends Component{
     SideMenu menu;
     UserInfoGUI userInfo;
     
-    VBox calendarAndInfo;
+    public GroupCheckBox groupChechBox;
+    VBox interactiveElementsBox;
     HBox mainBox;
-    
+    ObservableList<Group> eksempel = FXCollections.observableArrayList(
+            new Group("chocolate",(int)Math.random()*10000), 
+            new Group("salmon",(int)Math.random()*10000),
+            new Group("gold",(int)Math.random()*10000),
+            new Group("coral",(int)Math.random()*10000),
+            new Group("darkorchid",(int)Math.random()*10000),
+            new Group("darkgoldenrod",(int)Math.random()*10000),
+            new Group("lightsalmon",(int)Math.random()*10000),
+            new Group("black",(int)Math.random()*10000)
+            );
 
 	private Button settings;
 	private AddNewEvent eventAdder;
 	public SchedulingGUI(Window parent, ChangeTab tab, Calendar... calendars ) {
 		super(parent);
-//		mainBox = new HBox(30);
-//		calendarAndInfo = new VBox(0);
-	
+
 		BorderPane borderPane = new BorderPane();
-//		settings.setOnAction(e -> main.requestSettingsWindow());
 		
+		interactiveElementsBox = new VBox(8);
+		interactiveElementsBox.setTranslateY(CalendarBase.headerHeight);
+		BorderPane.setMargin(interactiveElementsBox, new Insets(10));
+		groupChechBox = new GroupCheckBox(this);
+		groupChechBox.addGroups(eksempel);
+//		settings.setOnAction(e -> main.requestSettingsWindow());
 //		calendars[0].addEvent(DebugMain.getEvents());
 		calendargui = new CalendarGUI(this, LocalDate.now(), calendars);
 		ArrayList<Event> dagens = new ArrayList<Event>();
@@ -47,11 +66,13 @@ public class SchedulingGUI extends Component{
 		calendargui.addListener(menu);
 		menu.addListener(calendargui);
 		userInfo = new UserInfoGUI(this);
-		
+		Applicants applicants = new Applicants(this);
 //		calendarAndInfo.getChildren().addAll(userInfo, menu);
+		interactiveElementsBox.getChildren().addAll(groupChechBox,menu,applicants);
 		borderPane.setTop(userInfo);
 		borderPane.setCenter(calendargui);
-		borderPane.setRight(menu);
+		borderPane.setRight(interactiveElementsBox);
+		
 //		mainBox.getChildren().addAll(calendargui, calendarAndInfo);
 		this.getChildren().add(borderPane);
 	}

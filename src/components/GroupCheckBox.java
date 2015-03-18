@@ -1,5 +1,8 @@
 package components;
 
+import gui.Component;
+import gui.Main;
+
 import java.util.ArrayList;
 
 import classes.Group;
@@ -10,14 +13,26 @@ import javafx.scene.control.CheckBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 
-public class GroupCheckBox extends ScrollPane{
+public class GroupCheckBox extends Component{
 		VBox box = new VBox(5);
+		VBox elements;
+		Label grupperLabel;
+		ScrollPane scrollPane;
 		ObservableList<Group> items;
-		public GroupCheckBox(){
-			this.setContent(box);
-			this.setPrefSize(170, 80);
+		public GroupCheckBox(Pane parent){
+			super(parent);
+			scrollPane = new ScrollPane();
+			elements = new VBox(4);
+			grupperLabel = new Label();
+			grupperLabel.setText("Synlig grupper");
+			grupperLabel.setFont(Main.header1);
+			scrollPane.setContent(box);
+			scrollPane.setPrefSize(170, 80);
+			elements.getChildren().addAll(grupperLabel,scrollPane);
+			this.getChildren().add(elements);
 			
 		}
 		ArrayList<Group> activeGroups = new ArrayList<Group>();

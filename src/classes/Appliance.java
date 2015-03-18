@@ -1,9 +1,16 @@
 package classes;
 
 public enum Appliance {
-	Attending,
-	Not_Attending,
-	Maybe,
-	Late,
-	Not_Answered;
+	Attending("Kommer!"),
+	Not_Attending("Kommer ikke"),
+	Maybe("Kommer kanskje"),
+	Late("Kommer seint"),
+	Not_Answered("Venter på svar..");
+	String norsk;
+	Appliance(String string){
+		this.norsk = string;
+	}
+	public String toString(){
+		return norsk;
+	}
 }
