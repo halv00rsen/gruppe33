@@ -481,10 +481,10 @@ public class ConnectionMySQL {
 		
 	}
 
-	public static Map<String, String> getAvailableRooms(String start, String end) {
+	public static ArrayList<String> getAvailableRooms(String start, String end) {
 		
 		try {
-			Map<String, String> availableRooms = new HashMap<String, String>();
+			ArrayList<String> availableRooms = new ArrayList<String>();
 			ResultSet myRs = sendQuery("SELECT roomNr, capacity FROM room " +
 					" WHERE roomNr NOT IN " + 
 					"(SELECT room.roomNr " + 
@@ -494,7 +494,7 @@ public class ConnectionMySQL {
 			System.out.println("ok");
 			
 			while (myRs.next()){
-				availableRooms.put(myRs.getString("roomNr"), myRs.getString("capacity"));
+				availableRooms.add(myRs.getString("roomNr"));
 			}
 			return availableRooms;
 		} catch (Exception e) {

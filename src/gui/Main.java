@@ -225,7 +225,7 @@ public class Main extends Application implements ProgramListener{
 		newEvent.setContent(eventScreen);
 		
 		room = new Tab("Reserver Rom");
-		reserveRoomScreen = new ReserveRoomScreen(Program.getRooms());
+		reserveRoomScreen = new ReserveRoomScreen();
 		room.setContent(reserveRoomScreen);
 		
 		groups = new Tab("Grupper");

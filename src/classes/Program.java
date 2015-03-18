@@ -26,44 +26,13 @@ public class Program {
 		//opprett kobling med database og/eller socketprogram
 	}
 	
-	public void createEvent(Event e, Calendar... cal){
+	public void createEvent(Event event, Calendar... cal){
 		//add events to server
 //		for (Calendar cals: cal)
 //			cals.addEvent(event);
 //		callMessage(Message.EventAdded);
-		e.setMadeBy(currentPerson);
-		
-		if(e.getFreq() != null){
-			
-			if(e.getFreq()==0){
-				PersonInformation.requestCreateEvent(e,currentPerson);
-				
-			}else if(e.getFreq()>0 || e.isMonthlyRepeat()){
-				int i = e.getFreq();
-				Event lastEvent = e;
-				Event nextEvent;
-				while(true){
-					nextEvent = new Event();
-					nextEvent.overrideEvent(e); // må ha ny ID da...
-					if(e.isMonthlyRepeat()){
-						nextEvent.setStartTime(lastEvent.getStartTime().plusMonths(1));
-						nextEvent.setEndTime(lastEvent.getEndTime().plusMonths(1));	
-					}else{
-						nextEvent.setStartTime(lastEvent.getStartTime().plusDays(i));
-						nextEvent.setEndTime(lastEvent.getEndTime().plusDays(i));	
-					}
-					
-					nextEvent.setLastEventInSequence(lastEvent);
-					lastEvent.setNextEventInSequence(nextEvent);
-					PersonInformation.requestCreateEvent(lastEvent,currentPerson);
-					if(nextEvent.getStartDate().isAfter(e.getFreqDate())){
-						break;
-					}
-					lastEvent = nextEvent;
-				}
-			}
-		}
-		
+		currentPerson.getPersonalCalendar().addEvent(event);
+		event.setMadeBy(currentPerson);
 		updateCalendarListeners();
 		callMessage(Message.EventAdded);
 	}
@@ -199,7 +168,6 @@ public class Program {
 		}
 		if (username.toLowerCase().equals("admin") && password.toLowerCase().equals("admin")){
 			currentPerson = new Person("admin", "admin", "Ola", "Nordmann", true);
-			currentPerson.setOtherInfo("12345678", "olaNordmann@mail.com");
 		}else {
 			Map<String, String> info;
 			info = ConnectionMySQL.getUserInfo(username);
@@ -207,7 +175,7 @@ public class Program {
 				System.out.println("personLogin connection null");
 				info = PersonInformation.getPersonInformation(username, Person.hashPassword(password));
 			}
-
+			
 			String usernameDatabase = info.get("username");
 			String passwordDatabase = info.get("password");
 			String firstname = info.get("firstname"), lastname = info.get("lastname");
