@@ -52,15 +52,15 @@ public class Program {
 						nextEvent.setStartTime(lastEvent.getStartTime().plusDays(i));
 						nextEvent.setEndTime(lastEvent.getEndTime().plusDays(i));	
 					}
-					if(nextEvent.getStartDate().isAfter(e.getFreqDate())){
-						break;
-					}
+					
 					nextEvent.setLastEventInSequence(lastEvent);
 					lastEvent.setNextEventInSequence(nextEvent);
 					PersonInformation.requestCreateEvent(lastEvent,currentPerson);
+					if(nextEvent.getStartDate().isAfter(e.getFreqDate())){
+						break;
+					}
 					lastEvent = nextEvent;
 				}
-				PersonInformation.requestCreateEvent(nextEvent,currentPerson);
 			}
 		}
 		

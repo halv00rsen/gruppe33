@@ -84,11 +84,8 @@ public class Event implements Comparable<Event>{
 	
 	public void overrideEvent(Event event){
 		this.appliance.clear();
-		if(event.appliance != null){
-			for (EventAppliance ec: event.appliance)
-				this.appliance.add(ec);
-		}
-		
+		for (EventAppliance ec: event.appliance)
+			this.appliance.add(ec);
 		eventName = event.eventName;
 		location = event.location;
 		this.id = event.getID();

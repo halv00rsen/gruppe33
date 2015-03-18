@@ -156,7 +156,6 @@ public class EventGUI extends Component implements GetPersonListener{
     	LocalDateTime t1 = LocalDateTime.of(start, LocalTime.of(sh, sm)),
     			t2 = LocalDateTime.of(end, LocalTime.of(eh, em));
     	classes.Event newevent = new classes.Event(t1, t2, null);
-    	newevent.overrideEvent(currentEvent);
     	newevent.setEventName(purposeText.getText());
     	Picker splitStuff = split.getValue();
     	LocalDate freqEnd = repDate.getValue();
@@ -182,9 +181,9 @@ public class EventGUI extends Component implements GetPersonListener{
     	newevent.setPriority(priority);
     	
     	if (currentEvent == null){
-    		System.out.println("freq" + newevent.getFreq() + "månedlig" + newevent.isMonthlyRepeat());
     		eventCall.addEvent(newevent);
     	}else{
+    		//skal sendes til server.
     		currentEvent.overrideEvent(newevent);
     	}
    

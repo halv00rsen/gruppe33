@@ -8,7 +8,6 @@ import java.util.List;
 
 
 public abstract class Calendar {
-	
 	public final TypeOfCalendar type;
 	private final List<Event> events;
 	
