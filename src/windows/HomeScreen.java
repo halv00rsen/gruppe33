@@ -16,7 +16,9 @@ import classes.Person;
 import classes.PersonCalendar;
 import components.*;
 import gui.*;
+import gui.Main.AddGroupListener;
 import gui.Main.AddNewEvent;
+import gui.Main.AddPersonListener;
 import gui.Main.ChangeTab;
 public class HomeScreen extends Window{
 
@@ -27,11 +29,13 @@ public class HomeScreen extends Window{
     private PersonCalendar cal;
 
 	private AddNewEvent eventAdder;
+	private AddGroupListener addPerson;
     
-	public HomeScreen(ChangeTab tab, Person person, AddNewEvent addNewEvent) {
+	public HomeScreen(ChangeTab tab, Person person, AddNewEvent addNewEvent, AddGroupListener addGroup) {
 		this.eventAdder = addNewEvent;
 		this.p = person;
 		this.tab = tab;
+		this.addPerson = addGroup;
 		cal = new PersonCalendar(p);
 //		this.setStyle("-fx-color-background: #ff0044");
 		init();

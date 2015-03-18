@@ -37,12 +37,16 @@ public class Main extends Application implements ProgramListener{
 	public final static int SCREENHEIGHT = 650;
 	public final static int SCREENWIDTH = 1000;
 	public final static Pane root = new Pane();
-	public final static Font header1 = new Font("Verdana", 20);
+	public final static Font header1 = new Font("Helvetica", 15);
 	public final static Insets paddingInsets = new Insets(10, 0, 0, 0);
+	
 	private final Program program;
 	private final LoginScreen loginScreen;
 	private final List<GetPersonListener> personListeners;
+	private final List<GetGroupListener> groupListeners;
+	
 	public static Stage stage;
+	
 	private Window currentWindow;
 	private TabPane tabPane;
 	private HomeScreen homeScreen;
@@ -58,6 +62,7 @@ public class Main extends Application implements ProgramListener{
 
 		program = new Program();
 		personListeners = new ArrayList<GetPersonListener>();
+		groupListeners = new ArrayList<GetGroupListener>();
 		program.addListener(this);
 		loginScreen = new LoginScreen(new LoginCall());
 		openNewWindow(loginScreen);
@@ -99,6 +104,13 @@ public class Main extends Application implements ProgramListener{
 		
 		public void changePassword(String newPassword, String oldPassword){
 			program.changePasswordUser(oldPassword, newPassword);
+		}
+	}
+	
+	public class AddGroupListener{
+		
+		public void addListener(GetGroupListener l){
+			groupListeners.add(l);
 		}
 	}
 	
@@ -216,7 +228,7 @@ public class Main extends Application implements ProgramListener{
 		tabPane.setPrefWidth(1920);;
 		tabPane.setPrefHeight(1000);
 		home = new Tab("Hjem");
-		homeScreen  = new HomeScreen(new ChangeTab(), person,new AddNewEvent());
+		homeScreen  = new HomeScreen(new ChangeTab(), person,new AddNewEvent(), new AddGroupListener());
 		home.setContent(homeScreen);
 		tabPane.setPrefHeight(1000);
 		
@@ -315,9 +327,10 @@ public class Main extends Application implements ProgramListener{
 	}
 
 	@Override
-	public void updateGroups(Group... groups) {
+	public void updateGroups(List<Group> groups) {
 		// TODO Auto-generated method stub
-		
+		for (GetGroupListener l : groupListeners)
+			l.setGroups(groups);
 	}
 
 	@Override
@@ -388,6 +401,10 @@ public class Main extends Application implements ProgramListener{
 	public void updatePersonInformation(Person person) {
 		// TODO Auto-generated method stub
 		
+	}
+	
+	public interface GetGroupListener{
+		public void setGroups(List<Group> groups);
 	}
 	
 }

@@ -16,6 +16,7 @@ public class Program {
 	public final static boolean DEBUG = true;
 	private final List<ProgramListener> listeners;
 	private final List<Calendar> activeCalendars, unactive;
+	private final List<Person> allUsers;
 
 	private Person currentPerson;
 	
@@ -23,6 +24,7 @@ public class Program {
 		listeners = new ArrayList<ProgramListener>();
 		activeCalendars = new ArrayList<Calendar>();
 		unactive = new ArrayList<Calendar>();
+		allUsers = new ArrayList<Person>();
 		//opprett kobling med database og/eller socketprogram
 	}
 	
@@ -96,6 +98,7 @@ public class Program {
 	}
 	
 	private void sendOutPersons(){
+		allUsers.clear();
 		List<Person> list = new ArrayList<Person>();
 		List<HashMap<String, String>> info = ConnectionMySQL.getUsers();
 		if (info == null){
@@ -106,6 +109,9 @@ public class Program {
 				Person p1 = new Person(p.get("username"), null, p.get("firstname"), p.get("lastname"), false);
 				list.add(p1);
 			}
+		}
+		for (Person p : list){
+			allUsers.add(p);
 		}
 		for (ProgramListener l : listeners){
 			l.setAllPersons(list);
@@ -190,11 +196,49 @@ public class Program {
 			currentPerson = new Person(usernameDatabase, passwordDatabase, firstname, lastname, Boolean.getBoolean(info.get("isAdmin")));
 			currentPerson.setOtherInfo(info.get("phone"), info.get("email"));
 		}
+		
 		activeCalendars.add(currentPerson.getPersonalCalendar());
 		for (ProgramListener l : listeners)
 			l.loginSuccess(currentPerson);
+		
 		updateCalendarListeners();
 		sendOutPersons();
+		setGroupsCurrentUser();
+	}
+	
+	private void setGroupsCurrentUser(){
+		if (!isLoggedIn())
+			return;
+		List<Group> groups = new ArrayList<Group>();
+		List<HashMap<String, String>> dbGroups = ConnectionMySQL.getGroups(currentPerson.getUsername());
+		for (Map<String, String> g : dbGroups){
+			Group group = new Group(g.get("groupName"), Integer.parseInt(g.get("groupId")));
+			if (!g.get("parent").equals("null")){
+				group.setParent(Integer.parseInt(g.get("parent")));
+			}
+			List<String> users = ConnectionMySQL.getGroupMembers(group.id);
+			for (String user: users){
+				for (Person p : allUsers){
+					if (p.username.equals(user)){
+						group.addMembers(p);
+						break;
+					}
+				}
+			}
+			groups.add(group);
+		}
+		for (Group g1: groups){
+			for (Group g2 : groups){
+				if (g2.getParent() == g1.id){
+					g1.addSubGroups(g2);
+				}
+			}
+		}
+		for (ProgramListener l : listeners){
+			l.updateGroups(groups);
+		}
+//		groups.put("groupId", myRs.getString("groupId"));
+//		groups.put("groupName", myRs.getString("groupName"));
 	}
 	
 	public void changePasswordUser(String oldPassword, String newPassword){

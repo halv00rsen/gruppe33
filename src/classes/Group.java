@@ -6,6 +6,8 @@ import java.util.List;
 public class Group {
 	
 	public final int id;
+	
+	private int parent;
 	private String name;
 	private final List<Person> members;
 	private final Calendar groupCalendar;
@@ -20,6 +22,15 @@ public class Group {
 			if (p != null)
 				this.members.add(p);
 		subGroups = new ArrayList<Group>();
+		parent = -1;
+	}
+	
+	public int getParent(){
+		return parent;
+	}
+	
+	public void setParent(int parent){
+		this.parent = parent;
 	}
 
 	public String getName() {
