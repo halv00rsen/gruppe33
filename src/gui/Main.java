@@ -112,6 +112,14 @@ public class Main extends Application implements ProgramListener{
 		public void addListener(GetGroupListener l){
 			groupListeners.add(l);
 		}
+		
+		public void addNewGroup(String name){
+			program.createGroup(name);
+		}
+		
+		public void deleteGroup(Group g){
+			
+		}
 	}
 	
 	

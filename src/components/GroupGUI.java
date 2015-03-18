@@ -111,10 +111,7 @@ public class GroupGUI extends Component implements GetPersonListener, GetGroupLi
 			public void handle(ActionEvent event){
 				String name = groupName.getText();
 				if (!"".equals(name)){
-					Group g = new Group(name, 1);
-					groupItems.add(g);
-					groupList.getSelectionModel().select(g);
-					groupList.requestFocus();
+					agl.addNewGroup(name);
 					
 				}
 				addToggle.setSelected(false);
@@ -269,17 +266,6 @@ public class GroupGUI extends Component implements GetPersonListener, GetGroupLi
 		}
 	}
 	
-	
-	public static List<Group> getDebugGroups(){
-		List<Group> groups = new ArrayList<Group>();
-		groups.add(new Group("Tingekulla", 1));
-		groups.add(new Group("Tulleghjørnet", 2));
-		groups.add(new Group("Filmgjengen", 3));
-		groups.add(new Group("Vannsklie", 4));
-		groups.add(new Group("Monster", 5));
-		return groups;
-	}
-
 	@Override
 	public void updatePersons(List<Person> persons) {
 		// TODO Auto-generated method stub

@@ -28,6 +28,27 @@ public class Program {
 		//opprett kobling med database og/eller socketprogram
 	}
 	
+	public void createGroup(String name){
+		int groupId = ConnectionMySQL.createGroup(name, 0);
+		if (groupId == -1){
+			if (DEBUG){
+				System.out.println("Create group connection null");
+				currentPerson.getGroups().add(new Group(name, 1));
+				updateGroups();
+			}
+			callMessage(Message.GroupNotCreated);
+			return;
+		}else{
+			currentPerson.getGroups().add(new Group(name, groupId));
+		}
+		updateGroups();
+	}
+	
+	private void updateGroups(){
+		for (ProgramListener l : listeners)
+			l.updateGroups(currentPerson.getGroups());
+	}
+	
 	public void createEvent(Event e, Calendar cal){
 		//add events to server
 //		for (Calendar cals: cal)
@@ -98,6 +119,10 @@ public class Program {
 				System.out.println("Group not saved createEvent");
 			}
 		}
+		for (EventAppliance p : event.getAppliance()){
+			ConnectionMySQL.addMembersToEvent(eventId, p.person.username);
+		}
+		event.setId(eventId);
 		cal.addEvent(event);
 	}
 	
@@ -266,10 +291,10 @@ public class Program {
 		
 		updateCalendarListeners();
 		sendOutPersons();
-		setGroupsCurrentUser();
+		initGroupsCurrentUser();
 	}
 	
-	private void setGroupsCurrentUser(){
+	private void initGroupsCurrentUser(){
 		if (!isLoggedIn())
 			return;
 		List<Group> groups = new ArrayList<Group>();
@@ -303,6 +328,8 @@ public class Program {
 				}
 			}
 		}
+		for (Group g : groups)
+			currentPerson.addGroup(g);
 		for (ProgramListener l : listeners){
 			l.updateGroups(groups);
 		}
