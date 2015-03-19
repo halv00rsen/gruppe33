@@ -472,9 +472,18 @@ public class Main extends Application implements ProgramListener{
 		// TODO Auto-generated method stub
 		
 	}
+	public void groupAdded(boolean added){
+		for (GetGroupListener l : groupListeners)
+			l.groupAdded(added);
+	}
+	public void personAdded(boolean added){
+		for (GetPersonListener l : personListeners)
+			l.personAdded(added);
+	}
 	
 	public interface GetGroupListener{
 		public void setGroups(List<Group> groups);
+		public void groupAdded(boolean added);
 	}
 	
 }

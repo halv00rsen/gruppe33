@@ -734,4 +734,16 @@ public class EventGUI extends Component implements GetPersonListener, GetGroupLi
 		}
 		calendarChoice.getSelectionModel().selectFirst();
 	}
+
+	@Override
+	public void groupAdded(boolean added) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void personAdded(boolean added) {
+		// TODO Auto-generated method stub
+		
+	}
 }

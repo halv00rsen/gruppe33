@@ -121,4 +121,10 @@ public class OtherPersonScreen extends Window implements GetPersonListener{
 		mainBox.getChildren().add(schedulingGUI);
 		
 	}
+
+	@Override
+	public void personAdded(boolean added) {
+		// TODO Auto-generated method stub
+		
+	}
 }
