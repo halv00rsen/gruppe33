@@ -35,6 +35,7 @@ import javafx.scene.shape.Shape;
 import javafx.scene.text.Font;
 import javafx.util.Callback;
 import javafx.application.Application;
+import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
@@ -55,7 +56,7 @@ import classes.Appliance;
 public class Applicants extends Component implements CalendarGUIListener{
 	ObservableList<EventAppliance> items = FXCollections.observableArrayList ();
 	VBox elements;
-	Label grupperLabel;
+	Label mainLabel;
 	final Label label = new Label();
 	ListView<EventAppliance> listView;
 	Button btn1 = new Button("Meld ankomst");
@@ -76,9 +77,9 @@ public class Applicants extends Component implements CalendarGUIListener{
 //				new EventAppliance(new Person("lars123"," ","Lars","Jakobsen",false),Appliance.Attending)
 //				);
 		elements = new VBox(4);
-		grupperLabel = new Label();
-		grupperLabel.setText("Meldte ankomster");
-		grupperLabel.setFont(Main.header1);
+		mainLabel = new Label();
+		mainLabel.setText("Meldte ankomster");
+		mainLabel.setFont(Main.header1);
 		listView.setPrefSize(250, 80);
 		listView.setMaxSize(300, 80);
         
@@ -86,7 +87,7 @@ public class Applicants extends Component implements CalendarGUIListener{
 		Label l = new Label("Din melding:");
 		HBox hbox = new HBox(10);
 		hbox.getChildren().addAll(l,choiceBox,btn1);
-		elements.getChildren().addAll(grupperLabel,listView,hbox);
+		elements.getChildren().addAll(mainLabel,listView,hbox);
 		this.getChildren().addAll(elements);
 		btn1.setOnAction(e -> btnCalled(e));
 		
@@ -95,7 +96,6 @@ public class Applicants extends Component implements CalendarGUIListener{
 
         items.sort(null);
         listView.setItems(items);
-        
         listView.setCellFactory(new Callback<ListView<EventAppliance>, ListCell<EventAppliance>>() {
                 @Override 
                 public ListCell<EventAppliance> call(ListView<EventAppliance> list) {
@@ -103,7 +103,19 @@ public class Applicants extends Component implements CalendarGUIListener{
                 }
             }
         );
- 
+        this.elements.setDisable(true);
+        listView.getSelectionModel().selectedIndexProperty().addListener(new ChangeListener() {
+            @Override
+            public void changed(ObservableValue observable, Object oldvalue, Object newValue) {
+                Platform.runLater(new Runnable() {
+                    public void run() {
+                        listView.getSelectionModel().select(-1);
+
+                    }
+                });
+
+            }
+        });
     }
     
     private void btnCalled(ActionEvent e) {
@@ -169,9 +181,12 @@ public class Applicants extends Component implements CalendarGUIListener{
 	public void eventIsHighligthed(Event event) {
 		items.clear();
 		if(event == null){
+
+			this.elements.setDisable(true);
 			currentEvent = null;
 			return;
 		}else{
+			this.elements.setDisable(false);
 			currentEvent = event;
 			EventAppliance me = null;
 			for (EventAppliance e : event.getAppliance()){

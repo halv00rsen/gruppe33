@@ -43,11 +43,15 @@ public class GroupGUI extends Component implements GetPersonListener, GetGroupLi
 	
 	private final ListView<Group> groupList;
 	private final ObservableList<Group> groupItems;
+	private final AddPersonListener apl;
+	private final AddGroupListener agl;
 	
 	private Group selectedGroup;
 	
 	public GroupGUI(Pane parent, AddPersonListener apl, AddGroupListener agl) {
 		super(parent);
+		this.apl = apl;
+		this.agl = agl;
 		apl.addListener(this);
 		agl.addListener(this);
 		selectedGroup = null;
@@ -237,23 +241,26 @@ public class GroupGUI extends Component implements GetPersonListener, GetGroupLi
 		
 		public void addMember(Person p){
 			if (selectedGroup != null){
-				selectedGroup.addMembers(p);
+				apl.addPersonTo(selectedGroup, p);
 			}
 		}
 		
 		public void removeMember(Person p){
-			if (selectedGroup != null)
-				selectedGroup.removePerson(p);
+			if (selectedGroup != null){
+				apl.removePersonFrom(selectedGroup, p);
+			}
 		}
 		
 		public void addGroup(Group g){
-			if (selectedGroup != null)
-				selectedGroup.addSubGroups(g);
+			if (selectedGroup != null){
+				agl.addGroupTo(selectedGroup, g);
+			}
 		}
 		
 		public void removeGroup(Group g){
-			if (selectedGroup != null)
-				selectedGroup.removeSubGroup(g);
+			if (selectedGroup != null){
+				agl.removeGroupFrom(selectedGroup, g);
+			}
 		}
 	}
 	
