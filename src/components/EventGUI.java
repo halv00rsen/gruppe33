@@ -266,12 +266,12 @@ public class EventGUI extends Component implements GetPersonListener, GetGroupLi
     	
     	if (currentEvent == null){
     		eventCall.addEvent(newevent, (calendar.type == TypeOfCalendar.Personal ? null: calendar) );
-    		changeTab.showEventInHomeScreen(newevent);
+    		changeTab.showEventInHomeScreen(newevent.getID());
     	}else{
     		//skal sendes til server.
     		eventCall.changeEvent(currentEvent.getID(), currentCal, (calendar.type == TypeOfCalendar.Personal ? null: calendar) , newevent);
 //    		currentEvent.overrideEvent(newevent);
-    		changeTab.showEventInHomeScreen(currentEvent);
+    		changeTab.showEventInHomeScreen(currentEvent.getID());
     	}
    
     	trash();
@@ -742,5 +742,17 @@ public class EventGUI extends Component implements GetPersonListener, GetGroupLi
 			calendarItems.add(g.getGroupCalendar());
 		}
 		calendarChoice.getSelectionModel().selectFirst();
+	}
+
+	@Override
+	public void groupAdded(boolean added) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void personAdded(boolean added) {
+		// TODO Auto-generated method stub
+		
 	}
 }

@@ -84,9 +84,21 @@ public class Main extends Application implements ProgramListener{
 			Calendar cal = program.getCalendarFor(event.getID());
 			eventScreen.showEvent(event, cal);
 		}
-		public void showEventInHomeScreen(Event event){
+		public void showEventInHomeScreen(int eventId){
 			goToHomeScreen();
-			homeScreen.highlightEvent(event);
+			Calendar cal = program.getCalendarFor(eventId);
+			Event event = null;
+			if(cal != null){
+				for (int i = 0; i < cal.getEvents().size(); i++) {
+					if(cal.getEvents().get(i).getID() == eventId){
+						event = cal.getEvents().get(i);
+					}
+				}
+				if(event != null){
+					homeScreen.highlightEvent(event);
+				}
+			}
+			
 		}
 		public void deleteEvent(Event event){
 			program.deleteEvent(event);
@@ -213,10 +225,10 @@ public class Main extends Application implements ProgramListener{
 		
 		public void goToEvent(int eventKey){
 //			//Dette er bare for å gå direkte til homescreen uten å gå gjennom program. Kan endres på!
-//			ChangeTab hei = new ChangeTab();
+			ChangeTab hei = new ChangeTab();
 //			Event event = new Event();
-//			
-//			hei.showEventInHomeScreen(event);
+			
+			hei.showEventInHomeScreen(eventKey);
 		}
 	}
 	
@@ -231,7 +243,7 @@ public class Main extends Application implements ProgramListener{
 				@Override
 				public void handle(WindowEvent event) {
 					if(program.updateThread != null){
-						program.updateThread.cancel();
+//						program.updateThread.cancel();
 					}
 					program.logout();
 				}
@@ -484,9 +496,18 @@ public class Main extends Application implements ProgramListener{
 		// TODO Auto-generated method stub
 		
 	}
+	public void groupAdded(boolean added){
+		for (GetGroupListener l : groupListeners)
+			l.groupAdded(added);
+	}
+	public void personAdded(boolean added){
+		for (GetPersonListener l : personListeners)
+			l.personAdded(added);
+	}
 	
 	public interface GetGroupListener{
 		public void setGroups(List<Group> groups);
+		public void groupAdded(boolean added);
 	}
 
 	@Override

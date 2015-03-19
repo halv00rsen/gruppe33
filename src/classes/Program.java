@@ -57,14 +57,58 @@ public class Program {
 	        	ArrayList<HashMap<String, String>> email = ConnectionMySQL.getMessage(getCurrentUser().getUsername());
 		        if(email != null){
 	        		for (int i = 0; i < email.size(); i++) {
+=======
+//	    public void run() {
+//	    	mailInfo = new ArrayList<MailInfo>();
+//	        while(isLoggedin){
+//	        try {
+//				Thread.sleep(1000);
+//			} catch (InterruptedException e) {
+//			}
+//	        	
+//	        	ArrayList<HashMap<String, String>> email = ConnectionMySQL.getMessage(getCurrentUser().getUsername());
+//		        if(email != null){
+//	        		for (int i = 0; i < email.size(); i++) {
+//						String from = email.get(i).get("user_from");
+//						String to = email.get(i).get("user_to");
+//						String info = email.get(i).get("message");
+//						Message message = Message.Custom;
+////			        	callMessage(message.customMessage(info));
+//			        	MailInfo hei = new MailInfo("testmail", from, "00.00.00.00", info, 0);
+//			        	createMail(hei);
+//					}
+//		        }
+//	        	
+//	        }
+//	        System.out.println("BYE");
+
+		public void run() {
+			if(isLoggedin){
+				System.out.println("************************thread******************");
+		        Timeline timeline = new Timeline();
+		        timeline.setOnFinished( new EventHandler<ActionEvent>(){
+					@Override
+					public void handle(ActionEvent arg0) {
+						run();
+					}
+					
+				});
+		        KeyFrame wait = new KeyFrame(Duration.millis(5000));
+		    	timeline.getKeyFrames().add(wait);
+		    	
+		        ArrayList<HashMap<String, String>> email = ConnectionMySQL.getMessage(getCurrentUser().getUsername());
+			       if(email != null){
+		        	for (int i = 0; i < email.size(); i++) {
+>>>>>>> d3d8e27223c44107f1b68a3a4c7c643611132872
 						String from = email.get(i).get("user_from");
 						String to = email.get(i).get("user_to");
 						String info = email.get(i).get("message");
 						Message message = Message.Custom;
-//			        	callMessage(message.customMessage(info));
-			        	MailInfo hei = new MailInfo("testmail", from, "00.00.00.00", info, 0);
-			        	createMail(hei);
+				       	callMessage(message.customMessage(info));
+				       	MailInfo hei = new MailInfo("testmail", from, "00.00.00.00", info, 0);
+				       	createMail(hei);
 					}
+<<<<<<< HEAD
 		        }
 	        	
 	        }
@@ -96,13 +140,16 @@ public class Program {
 		       }
 		     timeline.play();
 
+			     timeline.play();
+			}
+			
+
 	    }
 	    
 
 		public void cancel(){
-	    	isLoggedin = false;
+	  //  	isLoggedin = false;
 	    }
-	}
 	public void createMail(MailInfo hei) {
 		for (ProgramListener l : listeners)
 			l.createMail(hei);
@@ -135,12 +182,66 @@ public class Program {
 		updateGroups();
 	}
 	
+	private void callAddedPerson(boolean added){
+		for (ProgramListener l : listeners)
+			l.personAdded(added);
+	}
+	
+	private void callAddedGroup(boolean added){
+		for (ProgramListener l : listeners)
+			l.groupAdded(added);
+	}
+	
 	public void addGroupTo(Group group, Group sub){
-		
+		if (group.getParent() == sub.id || sub.getParent() == group.id){
+			callAddedGroup(false);
+			return;
+		}
+		if (isIncest(sub, group.id)){
+			System.out.println("Is incest!!! :)))))");
+			callAddedGroup(false);
+			return;
+		}
+		group.addSubGroups(sub);
+		sub.setParent(group.id);
+		ConnectionMySQL.addParent(sub.id, group.id);
+		addSubEvents(group.getGroupCalendar().getEvents(), sub);
+		callAddedGroup(true);
+	}
+	
+	private boolean isIncest(Group sub, int origin){
+		for (Group g : sub.getSubGroups()){
+			if (g.id == origin || isIncest(g, origin))
+				return true;
+		}
+		return false;
 	}
 	
 	public void removeGroupFrom(Group group, Group sub){
-		
+		List<Event> events = group.getGroupCalendar().getEvents();
+		if (ConnectionMySQL.removeParent(sub.id, group.id)){
+			group.removeSubGroup(sub);
+			sub.setParent(0);
+			removeSubEvents(events, sub);
+		}
+	}
+	
+	private void addSubEvents(List<Event> events, Group group){
+		for (Event e : events){
+			group.getGroupCalendar().addEvent(e);
+			ConnectionMySQL.addGroupsToEvent(e.getID(), group.id);
+		}
+		for (Group g : group.getSubGroups())
+			addSubEvents(events, g);
+	}
+	
+	private void removeSubEvents(List<Event> events, Group group){
+		for (Event e : events){
+			group.getGroupCalendar().removeEvent(e);
+			ConnectionMySQL.removeGroupsFromEvent(e.getID(), group.id);
+		}
+		for (Group g : group.getSubGroups())
+			removeSubEvents(events, g);
 	}
 	
 	public void addPersonGroup(Group group, Person p){
@@ -150,7 +251,10 @@ public class Program {
 			for (Event e : events){
 				ConnectionMySQL.addMembersToEvent(e.getID(), p.username);
 			}
+			callAddedPerson(true);
+			return;
 		}
+		callAddedPerson(false);
 	}
 	
 	public void removePersonGroup(Group group, Person p){
@@ -239,7 +343,6 @@ public class Program {
 			newCal.addEvent(oldEvent);
 		}
 		for (EventAppliance e : oldEvent.getAppliance()){
-			ConnectionMySQL.sendMessage(getCurrentUser().getUsername(), e.person.username, "DETTE ER EN TEST");
 			ConnectionMySQL.removeMembersFromEvent(eventId, e.person.username);
 		}
 		if (event.getAppliance().isEmpty()){
@@ -249,9 +352,9 @@ public class Program {
 		for (EventAppliance e : event.getAppliance()){
 			ConnectionMySQL.addMembersToEvent(eventId, e.person.username);
 		}
-		
 		oldEvent.overrideEvent(event);
-		
+		ConnectionMySQL.sendMessage(getCurrentUser().getUsername(), getCurrentUser().getUsername(), "DETTE ER EN TEST");
+//		createMail(new MailInfo("HEIHIG","UOBEG","PUP","bpi",oldEvent.getID()));
 		updateCalendars();
 	}
 	
@@ -263,6 +366,7 @@ public class Program {
 	public Calendar getCalendarFor(int eventId){
 		for (Calendar c : activeCalendars){
 			for (Event e : c.getEvents()){
+				System.out.println(e.getID() + "");
 				if (e.getID() == eventId)
 					return c;
 			}
@@ -750,7 +854,9 @@ public class Program {
 			return;
 		currentPerson = null;
 		activeCalendars.clear();
-		updateThread.cancel();
+		if(updateThread != null){
+		//	updateThread.cancel();
+		}
 		for (ProgramListener l : listeners)
 			l.logout();
 		

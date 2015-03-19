@@ -300,5 +300,17 @@ public class GroupGUI extends Component implements GetPersonListener, GetGroupLi
 			groupItems.add(g);
 		
 	}
+
+	@Override
+	public void groupAdded(boolean added) {
+		// TODO Auto-generated method stub
+		subGroups.isAdded(added);
+	}
+
+	@Override
+	public void personAdded(boolean added) {
+		// TODO Auto-generated method stub
+		persons.isAdded(added);
+	}
 	
 }

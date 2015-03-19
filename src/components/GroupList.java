@@ -110,10 +110,11 @@ public class GroupList<Value> extends VBox{
 				int val = valueChooser.getSelectionModel().getSelectedIndex();
 				if (val == -1)
 					return;
-				Value selected = valueList.remove(val);
+				selected = valueList.remove(val);
 				if (selected == null)
 					return;
-				items.add(selected);
+				
+//				items.add(selected);
 //				valueChooser.getItems().clear();
 //				if (valueChooser.getItems().isEmpty()){
 //					//System.out.println("slettet!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
@@ -138,6 +139,14 @@ public class GroupList<Value> extends VBox{
 		getChildren().addAll(head, list, buttons, valueChooser, addButton);
 		
 	}
+	
+	public void isAdded(boolean added){
+		if (added && selected != null)
+			items.add(selected);
+		selected = null;
+	}
+	
+	private Value selected;
 	
 	 
 	static class ColorRectCell extends ListCell<String> {

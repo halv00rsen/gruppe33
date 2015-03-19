@@ -6,16 +6,18 @@ import gui.Main.GoToEvent;
 import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.scene.Cursor;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 
 public class MailBox extends Pane{
-	
+	String backupStyle;
 	private final int eventId;
-
+	String defaultStyle = "-fx-background-color: #FFFF99; -fx-border:3";
 	public MailBox(MailInfo info, GoToEvent goToEvent){
 		this.eventId = info.eventId;
+		System.out.println("EVENTID in mailbox" + eventId);
 		VBox box = new VBox(5);
 		Text header = new Text(info.header);
 		Text from = new Text("Fra: " + info.from);
@@ -24,30 +26,27 @@ public class MailBox extends Pane{
 		setPrefWidth(Main.getWidth() / 2);
 		box.getChildren().addAll(header, from, date, mail);
 		getChildren().add(box);
-		setStyle("-fx-background-color: #FFCC66; -fx-border:3");
-		setOnMouseEntered(new EventHandler<Event>(){
-
-			@Override
-			public void handle(Event event) {
-				setStyle("-fx-background-color: #FFE0A3");
-				setCursor(Cursor.HAND);
-			}
-			
-		});
+		setStyle(defaultStyle);
+		this.setOnMouseEntered(e -> hoverOn(e));
+		this.setOnMouseExited(e -> hoverOff(e));
 		setOnMouseClicked(new EventHandler<Event>(){
 			
 			@Override
 			public void handle(Event event){
+				defaultStyle = "-fx-background-color: #DDDDDD; -fx-border:3";
+				backupStyle = "-fx-background-color: #DDDDDD; -fx-border:3";
+				setStyle("-fx-background-color: #DDDDDD; -fx-border:3");
 				goToEvent.goToEvent(eventId);
 			}
 		});
-		setOnMouseExited(new EventHandler<Event>(){
-			
-			@Override
-			public void handle(Event event){
-				setStyle("-fx-background-color: #FFCC66");
-				setCursor(Cursor.DEFAULT);
-			}
-		});
+		
+	}
+	protected void hoverOn(MouseEvent e) {
+		backupStyle = this.getStyle();
+		this.setStyle("-fx-background-color: #FFFF33; -fx-border:3");
+		setCursor(Cursor.HAND);
+	}
+	protected void hoverOff(MouseEvent e) {
+		this.setStyle(backupStyle);
 	}
 }
