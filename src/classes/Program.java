@@ -8,6 +8,14 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import components.CalendarBase;
+import javafx.animation.KeyFrame;
+import javafx.animation.KeyValue;
+import javafx.animation.Timeline;
+import javafx.concurrent.Task;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
+import javafx.util.Duration;
 import classes.Calendar.TypeOfCalendar;
 import database.ConnectionMySQL;
 import database.CreateUser;
@@ -19,9 +27,9 @@ public class Program {
 	private final List<ProgramListener> listeners;
 	private final List<Calendar> activeCalendars, unactive;
 	private final List<Person> allUsers;
-
+	public UpdateThread updateThread;
 	private Person currentPerson;
-	
+	ArrayList<MailInfo> mailInfo;
 	public Program(){
 		listeners = new ArrayList<ProgramListener>();
 		activeCalendars = new ArrayList<Calendar>();
@@ -29,7 +37,78 @@ public class Program {
 		allUsers = new ArrayList<Person>();
 		//opprett kobling med database og/eller socketprogram
 	}
-	
+	public class UpdateThread{
+		public boolean isLoggedin;
+		
+	    public UpdateThread() {
+	    	isLoggedin = true;
+	    	mailInfo = new ArrayList<MailInfo>();
+	    }
+
+<<<<<<< HEAD
+	    public void run() {
+	    	mailInfo = new ArrayList<MailInfo>();
+	        while(isLoggedin){
+	        try {
+				Thread.sleep(1000);
+			} catch (InterruptedException e) {
+			}
+	        	
+	        	ArrayList<HashMap<String, String>> email = ConnectionMySQL.getMessage(getCurrentUser().getUsername());
+		        if(email != null){
+	        		for (int i = 0; i < email.size(); i++) {
+						String from = email.get(i).get("user_from");
+						String to = email.get(i).get("user_to");
+						String info = email.get(i).get("message");
+						Message message = Message.Custom;
+//			        	callMessage(message.customMessage(info));
+			        	MailInfo hei = new MailInfo("testmail", from, "00.00.00.00", info, 0);
+			        	createMail(hei);
+					}
+		        }
+	        	
+	        }
+	        System.out.println("BYE");
+=======
+
+		public void run() {
+	        Timeline timeline = new Timeline();
+	        timeline.setOnFinished( new EventHandler<ActionEvent>(){
+				@Override
+				public void handle(ActionEvent arg0) {
+					run();
+				}
+				
+			});
+	        KeyFrame wait = new KeyFrame(Duration.millis(5000));
+	    	timeline.getKeyFrames().add(wait);
+	    	
+	        ArrayList<HashMap<String, String>> email = ConnectionMySQL.getMessage(getCurrentUser().getUsername());
+		       if(email != null){
+	        	for (int i = 0; i < email.size(); i++) {
+					String from = email.get(i).get("user_from");
+					String to = email.get(i).get("user_to");
+					String info = email.get(i).get("message");
+					Message message = Message.Custom;
+			       	callMessage(message.customMessage(info));
+			       	MailInfo hei = new MailInfo("testmail", from, "00.00.00.00", info, 0);
+			       	createMail(hei);
+				}
+		       }
+		     timeline.play();
+>>>>>>> fc2c6f376f3b9a27274f56431cfb92b201f18b3d
+	    }
+	    
+
+		public void cancel(){
+	    	isLoggedin = false;
+	    }
+	}
+	public void createMail(MailInfo hei) {
+		for (ProgramListener l : listeners)
+			l.createMail(hei);
+		
+	}
 	public Person getCurrentUser(){
 		return currentPerson;
 	}
@@ -173,8 +252,10 @@ public class Program {
 		updateGroups();
 		updateCalendars();
 	}
-	public void setHideEvent(int eventId, String username, boolean isHidden){
-		ConnectionMySQL.hideEvent(eventId,username,isHidden);
+	public void setHideEvent(Event event, Person person, boolean isHidden){
+		ConnectionMySQL.hideEvent(event.getID(),person.getUsername(),isHidden);
+		Calendar c = getCalendarFor(event.getID());
+		c.removeEvent(event);
 		updateCalendars();
 	}
 	public void changeEvent(int eventId, Calendar oldCal, Calendar newCal, Event event){
@@ -199,10 +280,12 @@ public class Program {
 		String[] to = event.getEndTime().toString().split("T");
 		String start = from[0] + " " + from[1] + ":00";
 		String end = to[0] + " " + to[1] + ":00";
-		if (ConnectionMySQL.updateEvent("" + eventId, event.getEventName(), event.getLocation(), start, end, event.getPriority().pri, null
-				, event.getFreq(), event.getInfo())){
+		if (ConnectionMySQL.updateEvent("" + eventId, event.getEventName(), event.getLocation(), start, end, event.getPriority().pri, null, event.getFreq(), event.getInfo())){
 			
+			
+			//
 		}else{
+			
 			if (DEBUG){
 				System.out.println("change event connection false");
 			}
@@ -214,6 +297,7 @@ public class Program {
 			newCal.addEvent(oldEvent);
 		}
 		for (EventAppliance e : oldEvent.getAppliance()){
+			ConnectionMySQL.sendMessage(getCurrentUser().getUsername(), e.person.username, "DETTE ER EN TEST");
 			ConnectionMySQL.removeMembersFromEvent(eventId, e.person.username);
 		}
 		if (event.getAppliance().isEmpty()){
@@ -308,8 +392,14 @@ public class Program {
 		String end = to[0] + " " + to[1] + ":00";
 		int eventId = ConnectionMySQL.createEvent(event.getEventName(), event.getLocation(), start, end, event.getPriority().pri
 				, event.getFreq(), event.getInfo());
-		System.out.println("ok");
-		//ConnectionMySQL.reserveRoom(eventId, event.getRoom().getRoomNr());
+		if(event.getRoom() != null){
+			if(event.getRoom().getRoomNr() != 0){
+				
+				ConnectionMySQL.reserveRoom(eventId, event.getRoom().getRoomNr());
+			
+			}
+		}
+		
 		
 		if (eventId == -1){
 			if (DEBUG){
@@ -479,9 +569,11 @@ public class Program {
 	public void personLogin(String username, String password){
 		if (username == null || password == null || isLoggedIn()){
 			loginFailListeners();
+			
 			activeCalendars.add(currentPerson.getPersonalCalendar());
 			for (ProgramListener l : listeners)
 				l.loginSuccess(currentPerson);
+				
 			updateCalendarListeners();
 			return;
 		}
@@ -513,6 +605,9 @@ public class Program {
 			}
 			currentPerson = new Person(usernameDatabase, passwordDatabase, firstname, lastname, Boolean.getBoolean(info.get("isAdmin")));
 			currentPerson.setOtherInfo(info.get("phone"), info.get("email"));
+			
+			updateThread = new UpdateThread();
+			updateThread.run();
 		}
 		
 		activeCalendars.add(currentPerson.getPersonalCalendar());
@@ -713,8 +808,10 @@ public class Program {
 			return;
 		currentPerson = null;
 		activeCalendars.clear();
+		updateThread.cancel();
 		for (ProgramListener l : listeners)
 			l.logout();
+		
 	}
 	
 	public void addListener(ProgramListener l){

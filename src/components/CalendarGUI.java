@@ -112,7 +112,6 @@ public class CalendarGUI extends Component implements SideMenuInterface{
 		return events;
 	}
 	public void updateCalendars(Calendar... calendars){
-		
 		this.calendars = calendars;
 		month.setNewCalendarList(calendars);
 		month.generateCalendars();

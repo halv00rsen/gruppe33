@@ -165,7 +165,7 @@ public class LoginGUI extends Component{
 			@Override
 			public void handle(ActionEvent arg0) {
 		
-				System.out.println(ConnectionMySQL.removeParent(2, 4));
+				System.out.println(ConnectionMySQL.getMessage("Ola123"));
 				validateEmail();
 				
 			}

@@ -21,9 +21,9 @@ public class ConnectionMySQL {
 	
 	private static boolean DEBUG = false;
 	private static String driver = "com.mysql.jdbc.Driver";
-	private static String url = "jdbc:mysql://localhost/";
-	private static String dbName = "test";
-	private static String user = "root";
+	private static String url = "jdbc:mysql://mysql.stud.ntnu.no/";
+	private static String dbName = "simendw_calendar";
+	private static String user = "simendw_gruppe33";
 	private static String password = "passord";
 		
 	private static ResultSet sendQuery(String query) {
@@ -100,7 +100,6 @@ public class ConnectionMySQL {
 		}
 		
 	}
-	
 	public static ArrayList<HashMap<String, String>> getUsers(){
 		
 		ArrayList<HashMap<String, String>> allUsers = new ArrayList<HashMap<String, String>>();
@@ -125,7 +124,7 @@ public class ConnectionMySQL {
 
 	public static boolean createUser(String username, String firstName, String lastName, String password, String email, String phone, boolean isAdmin) { 
 		
-		String myStmt = "INSERT INTO Person SET username = '" + username + "', firstName = '" + firstName + "', lastName = '" + lastName
+		String myStmt = "INSERT INTO person SET username = '" + username + "', firstName = '" + firstName + "', lastName = '" + lastName
 				 + "', password = '" + password + "', email = '" + email + "', isAdmin = " + isAdmin;
 		if(!phone.isEmpty()) myStmt += ", phone = '" + phone + "'";
 		myStmt += ";";
@@ -385,7 +384,6 @@ public class ConnectionMySQL {
 		return sendStatement(myStmt);
 	}
 	
-	
 	public static ArrayList<String> getGroupMembers(int groupId){
 		
 		ArrayList<String> group = new ArrayList<String>();
@@ -547,4 +545,35 @@ public class ConnectionMySQL {
 		return sendStatement(myStmt);
 		
 	}
+	
+	public static boolean sendMessage(String username_from, String username_to, String message){
+		
+		String myStmt = "INSERT INTO Message VALUES(NULL, '" + message + "', '" + username_from + "', '" + username_to + "');";
+		return sendStatement(myStmt);
+	}
+	
+	public static ArrayList<HashMap<String, String>> getMessage(String username){
+		
+		ArrayList<HashMap<String, String>> allMessages = new ArrayList<HashMap<String, String>>();
+		try {
+			ResultSet myRs = sendQuery("SELECT username_from, message FROM message WHERE username_to = '" + username + "';");
+			while (myRs.next()){
+				
+				HashMap<String, String> messages = new HashMap<String, String>();
+				messages.put("username_from", myRs.getString("username_from"));
+				messages.put("message", myRs.getString("message"));
+				allMessages.add(messages);
+				
+			}
+		} catch (Exception e) {
+			if (DEBUG)
+				e.printStackTrace();
+			return null;
+		}
+		String myStmt = "DELETE FROM Message WHERE username_to = '" + username + "';";
+		sendStatement(myStmt);
+		return allMessages;
+		
+	}
+	
 }

@@ -1,5 +1,6 @@
 package components;
 
+import classes.MailInfo;
 import gui.Main;
 import gui.Main.GoToEvent;
 import javafx.event.Event;
@@ -8,7 +9,6 @@ import javafx.scene.Cursor;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
-import components.Inbox.MailInfo;
 
 public class MailBox extends Pane{
 	

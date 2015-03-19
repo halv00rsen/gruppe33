@@ -3,6 +3,7 @@ package components;
 import java.util.ArrayList;
 import java.util.List;
 
+import classes.MailInfo;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.ScrollPane.ScrollBarPolicy;
 import javafx.scene.layout.Pane;
@@ -29,17 +30,17 @@ public class Inbox extends Component{
 		scroll.setPrefViewportHeight(Main.SCREENHEIGHT - 300);
 		scroll.setVbarPolicy(ScrollBarPolicy.ALWAYS);
 		getChildren().add(scroll);
-		addMail(new MailInfo("Invitasjon til event", "Jon Jonsen", "23.2.2015", "Du er invitert til en ny event klokken 12.", 1));
-		addMail(new MailInfo("Invitasjon til event", "Jon Jonsen", "23.2.2015", "Du er invitert til en ny event klokken 12.", 1));
-		addMail(new MailInfo("Invitasjon til event", "Jon Jonsen", "23.2.2015", "Du er invitert til en ny event klokken 12.", 1));
-		addMail(new MailInfo("Invitasjon til event", "Jon Jonsen", "23.2.2015", "Du er invitert til en ny event klokken 12.", 1));
-		addMail(new MailInfo("Invitasjon til event", "Jon Jonsen", "23.2.2015", "Du er invitert til en ny event klokken 12.", 1));
-		addMail(new MailInfo("Invitasjon til event", "Jon Jonsen", "23.2.2015", "Du er invitert til en ny event klokken 12.", 1));
-		addMail(new MailInfo("Invitasjon til event", "Jon Jonsen", "23.2.2015", "Du er invitert til en ny event klokken 12.", 1));
-		addMail(new MailInfo("Invitasjon til event", "Jon Jonsen", "23.2.2015", "Du er invitert til en ny event klokken 12.", 1));
-		addMail(new MailInfo("Invitasjon til event", "Jon Jonsen", "23.2.2015", "Du er invitert til en ny event klokken 12.", 1));
-		addMail(new MailInfo("Invitasjon til event", "Jon Jonsen", "23.2.2015", "Du er invitert til en ny event klokken 12.", 1));
-		addMail(new MailInfo("Invitasjon til event", "Jon Jonsen", "23.2.2015", "Du er invitert til en ny event klokken 12.", 1));
+//		addMail(new MailInfo("Invitasjon til event", "Jon Jonsen", "23.2.2015", "Du er invitert til en ny event klokken 12.", 1));
+//		addMail(new MailInfo("Invitasjon til event", "Jon Jonsen", "23.2.2015", "Du er invitert til en ny event klokken 12.", 1));
+//		addMail(new MailInfo("Invitasjon til event", "Jon Jonsen", "23.2.2015", "Du er invitert til en ny event klokken 12.", 1));
+//		addMail(new MailInfo("Invitasjon til event", "Jon Jonsen", "23.2.2015", "Du er invitert til en ny event klokken 12.", 1));
+//		addMail(new MailInfo("Invitasjon til event", "Jon Jonsen", "23.2.2015", "Du er invitert til en ny event klokken 12.", 1));
+//		addMail(new MailInfo("Invitasjon til event", "Jon Jonsen", "23.2.2015", "Du er invitert til en ny event klokken 12.", 1));
+//		addMail(new MailInfo("Invitasjon til event", "Jon Jonsen", "23.2.2015", "Du er invitert til en ny event klokken 12.", 1));
+//		addMail(new MailInfo("Invitasjon til event", "Jon Jonsen", "23.2.2015", "Du er invitert til en ny event klokken 12.", 1));
+//		addMail(new MailInfo("Invitasjon til event", "Jon Jonsen", "23.2.2015", "Du er invitert til en ny event klokken 12.", 1));
+//		addMail(new MailInfo("Invitasjon til event", "Jon Jonsen", "23.2.2015", "Du er invitert til en ny event klokken 12.", 1));
+//		addMail(new MailInfo("Invitasjon til event", "Jon Jonsen", "23.2.2015", "Du er invitert til en ny event klokken 12.", 1));
 		
 		scroll.setLayoutX(100);
 	}
@@ -57,18 +58,6 @@ public class Inbox extends Component{
 		}
 	}
 	
-	public class MailInfo{
-		
-		public final String header, from, date, status;
-		public final int eventId;
-		
-		public MailInfo(String header, String from, String date, String status, int eventId){
-			this.header = header;
-			this.from = from;
-			this.date = date;
-			this.status = status;
-			this.eventId = eventId;
-		}
-	}
+	
 
 }

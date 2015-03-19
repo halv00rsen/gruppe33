@@ -13,7 +13,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import components.CalendarGUI.CalendarGUIListener;
+import classes.Appliance;
 import classes.Event;
+import classes.EventAppliance;
 import classes.Person;
 import classes.Priority;
 import javafx.beans.value.ChangeListener;
@@ -162,7 +164,7 @@ public class SideMenu extends Component implements CalendarGUIListener{
 		Button btnYes = new Button("Ja");
 		Button btnNo = new Button("Nei");
 		HBox b = new HBox(10,btnYes,btnNo);
-		Text t = new Text("Er du sikker på at du vil fjerne eventen fra din kalender og ved dette melde avkomst fra arrangementet? Denne handlingen kan ikke reverseres!");
+		Text t = new Text("Er du sikker på at du vil fjerne arrangementet fra din kalender og ved dette melde avkomst? Denne handlingen kan ikke reverseres!");
 		TextFlow textFlow = new TextFlow(t);
         textFlow.setMaxWidth(300);
         textFlow.setPadding(new Insets(30));
@@ -193,8 +195,8 @@ public class SideMenu extends Component implements CalendarGUIListener{
 			public void handle(ActionEvent event) {
 				secondStage.close();
 				Main.root.setDisable(false);
+				mainMethods.updateAppliance(list.getSelectionModel().getSelectedItem(), new EventAppliance(mainMethods.getCurrentUser(),Appliance.Not_Attending));
 				mainMethods.getEventHider().hideEvent(list.getSelectionModel().getSelectedItem(), mainMethods.getCurrentUser());
-				
 			}
 		});
 	}
@@ -203,10 +205,48 @@ public class SideMenu extends Component implements CalendarGUIListener{
 		Event event = list.getSelectionModel().getSelectedItem();
 		if (event == null)
 			return;
-		mainMethods.getChangeTab().deleteEvent(event);
-		items.remove(event);
-		editEvent.setDisable(true);
-		deleteEvent.setDisable(true);
+		Button btnYes = new Button("Ja");
+		Button btnNo = new Button("Nei");
+		HBox b = new HBox(10,btnYes,btnNo);
+		Text t = new Text("Er du sikker på at du vil slette dette arrangementet og sende varsling til alle de inviterte?");
+		TextFlow textFlow = new TextFlow(t);
+        textFlow.setMaxWidth(300);
+        textFlow.setPadding(new Insets(30));
+        Pane p = new Pane();
+		p.setMaxWidth(500);
+		b.setAlignment(Pos.BASELINE_CENTER);
+		VBox v = new VBox(20,textFlow,b);
+		p.getChildren().addAll(v);
+        Scene secondScene = new Scene(p, 300, 200);
+        Main.root.setDisable(true);
+        Stage secondStage = new Stage();
+        secondStage.setTitle("Varsel");
+        secondStage.setScene(secondScene);
+        secondStage.show();
+        btnNo.requestFocus();
+        
+        btnNo.setOnAction(new EventHandler<ActionEvent>() {
+			
+			@Override
+			public void handle(ActionEvent e) {
+				secondStage.close();
+				Main.root.setDisable(false);
+			}
+		});
+        btnYes.setOnAction(new EventHandler<ActionEvent>() {
+			
+			@Override
+			public void handle(ActionEvent e) {
+				secondStage.close();
+				Main.root.setDisable(false);
+				mainMethods.getChangeTab().deleteEvent(event);
+				items.remove(event);
+				editEvent.setDisable(true);
+				deleteEvent.setDisable(true);
+				
+			}
+		});
+		
 //		if(list.getSelectionModel().getSelectedIndex() == -1) {
 //			
 //		}
@@ -290,9 +330,10 @@ public class SideMenu extends Component implements CalendarGUIListener{
 //		changeEvent(event);
 //		list.requestFocus();
 		if (event == null){
+			
+			list.getSelectionModel().select(-1);
 			return;
 		}
-		event.getID();
 		
 		for (int i = 0; i< events.size(); i++) {
 			if(event.getID() == events.get(i).getID()){

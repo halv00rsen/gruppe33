@@ -10,6 +10,7 @@ import classes.Calendar;
 import classes.Event;
 import classes.EventAppliance;
 import classes.Group;
+import classes.MailInfo;
 import classes.Message;
 import classes.Person;
 import classes.Program;
@@ -20,6 +21,7 @@ import javafx.application.Application;
 import javafx.beans.value.ObservableNumberValue;
 import javafx.event.EventHandler;
 import javafx.stage.Stage;
+import javafx.stage.WindowEvent;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
@@ -178,7 +180,7 @@ public class Main extends Application implements ProgramListener{
 	public class EventHider{
 		public void hideEvent(Event event, Person person){
 			//kan bare kjøres en gang
-			program.setHideEvent(event.getID(), person.getUsername(), true);
+			program.setHideEvent(event, person, true);
 		}
 	}
 	public class SchedulingGuiMethods{
@@ -224,7 +226,17 @@ public class Main extends Application implements ProgramListener{
 //			DebugMain debuglauncher = new DebugMain(root, this);
 			stage = primaryStage;
 			Scene scene = new Scene(root,SCREENWIDTH,SCREENHEIGHT);
-			
+			stage.setOnCloseRequest(new EventHandler<WindowEvent>() {
+
+				@Override
+				public void handle(WindowEvent event) {
+					if(program.updateThread != null){
+						program.updateThread.cancel();
+					}
+					program.logout();
+				}
+				
+			});
 			stage.setFullScreen(false);
 			stage.setTitle("xKal");
 			primaryStage.setScene(scene);
@@ -484,6 +496,12 @@ public class Main extends Application implements ProgramListener{
 	public interface GetGroupListener{
 		public void setGroups(List<Group> groups);
 		public void groupAdded(boolean added);
+	}
+
+	@Override
+	public void createMail(MailInfo mailInfo) {
+		inboxScreen.createMail(mailInfo);
+		
 	}
 	
 }

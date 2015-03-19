@@ -18,4 +18,5 @@ public interface ProgramListener {
 	public void updatePersonInformation(Person person);
 	public void groupAdded(boolean added);
 	public void personAdded(boolean added);
+	public void createMail(MailInfo mailInfo);
 }

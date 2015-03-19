@@ -30,12 +30,14 @@ public class CalendarMonthDay extends CalendarDay{
 		eventsHash = new HashMap<Integer, EventBox>();
 		for (int i = 0; i < events.size(); i++) {
 			Event thisEvent = events.get(i);
-			
-			EventBox eventBox = new EventBoxMonth(thisEvent,calGui,this);
+//			if(! thisEvent.isHidden()){
+				EventBox eventBox = new EventBoxMonth(thisEvent,calGui,this);
 				
+				
+				this.getChildren().add(eventBox);		
+				eventsHash.put(thisEvent.getID(), eventBox);
+//			}
 			
-			this.getChildren().add(eventBox);		
-			eventsHash.put(thisEvent.getID(), eventBox);
 			
 		}
 		

@@ -11,6 +11,7 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 
 import components.SideMenu.SideMenuInterface;
+import classes.Appliance;
 import classes.Calendar;
 import classes.Event;
 import classes.EventAppliance;
@@ -38,7 +39,7 @@ public class SchedulingGUI extends Component{
     Applicants applicants;
 	private Button settings;
 	private AddNewEvent eventAdder;
-	private SchedulingGuiMethods mainMethods;
+	public SchedulingGuiMethods mainMethods;
 	public SchedulingGUI(Window parent, SchedulingGuiMethods mainMethods, Calendar... calendars ) {
 		super(parent);
 		this.mainMethods = mainMethods;
@@ -78,7 +79,10 @@ public class SchedulingGUI extends Component{
 
 	public void updateCalendars(Calendar... calendars){
 		calendargui.updateCalendars(calendars);
-		
+
+		menu.eventIsHighligthed(calendargui.highlightedEvent);
+		menu.dayIsHighligthed(calendargui.highlightedDate,calendargui.getEventsByDay(calendargui.highlightedDate));
+		applicants.eventIsHighligthed(calendargui.highlightedEvent);
 	}
 	public void highlightEvent(Event event){
 		calendargui.highlightEvent(event,true);

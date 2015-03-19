@@ -58,6 +58,8 @@ public class EventGUI extends Component implements GetPersonListener, GetGroupLi
 	Label repeatTo = new Label();
     Label every = new Label();
     Label day = new Label();
+    
+    int roomNr = 0;
 
 	Button avaibleRoomsBtn = new Button();
 	Button save = new Button();
@@ -161,6 +163,17 @@ public class EventGUI extends Component implements GetPersonListener, GetGroupLi
         	
         	
         });
+        romChoice.getSelectionModel().selectedItemProperty().addListener(new  
+        		ChangeListener<String>() 
+        		{
+        		public void changed(ObservableValue<? extends String> observable,String  
+        		oldValue,String newValue) 
+        		{
+        			if(newValue != null){
+        				roomNr = Integer.parseInt(newValue);
+        			}
+        		}   
+        		});
      
 	}
 	
@@ -242,12 +255,12 @@ public class EventGUI extends Component implements GetPersonListener, GetGroupLi
     		}
     	}
     	newevent.addAppliance(persons);
-    	
-    	if(romChoice.getValue() != null){
-    		System.out.println(romChoice.getValue());
-    		newevent.setRoom(new Room(Integer.parseInt(romChoice.getValue())));
+    	if (roomNr != 0){
+    		
+        	newevent.setRoom(new Room(roomNr));
     		
     	}
+    	
     	newevent.setInfo(infoText.getText());
     	newevent.setPriority(priority);
     	
@@ -685,11 +698,7 @@ public class EventGUI extends Component implements GetPersonListener, GetGroupLi
 			freqText.setText("" + freq);
 		}
 		purposeText.setText(event.getEventName());
-		if (event.getRoom() != null){
-			
-		}
-			//////Må fikses på
-			////romChoice.set(event.getRoom().getRoomName());
+
 		infoText.setText(event.getInfo());
 		startDate.setValue(event.getStartDate());
 		endDate.setValue(event.getEndDate());
