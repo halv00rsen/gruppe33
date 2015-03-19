@@ -47,6 +47,7 @@ public class Program {
 
 
 		public void run() {
+			System.out.println("************************thread******************");
 	        Timeline timeline = new Timeline();
 	        timeline.setOnFinished( new EventHandler<ActionEvent>(){
 				@Override
