@@ -343,7 +343,7 @@ public class ConnectionMySQL {
 	
 	public static boolean addMembersToEvent(int eventId, String username) {
 		
-		String myStmt = "INSERT INTO isInvitedTo set eventId = " + eventId + ", username = '" + username + "';";
+		String myStmt = "INSERT INTO isInvitedTo set eventId = " + eventId + ", username = '" + username + "', alarmid = null;";
 		return sendStatement(myStmt);
 	}
 	

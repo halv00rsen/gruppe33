@@ -124,7 +124,7 @@ public class Person {
 	
 	public String toString(){
 		if (toStringName)
-			return firstname + lastname;
+			return firstname + " " + lastname;
 		return username;
 	}
 	

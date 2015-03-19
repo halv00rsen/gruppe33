@@ -297,7 +297,7 @@ public class Program {
 			list = PersonInformation.getPeople();
 		}else{
 			for (Map<String, String> p : info){
-				Person p1 = new Person(p.get("username"), null, p.get("firstname"), p.get("lastname"), false);
+				Person p1 = new Person(p.get("username"), null, p.get("firstName"), p.get("lastName"), false);
 				list.add(p1);
 			}
 		}
@@ -414,7 +414,7 @@ public class Program {
 		else{
 			for (Map<String, String> g : dbGroups){
 				Group group = new Group(g.get("groupName"), Integer.parseInt(g.get("groupId")));
-				if (!g.get("parent").equals("null")){
+				if (g.get("parent") != null){
 					group.setParent(Integer.parseInt(g.get("parent")));
 				}
 				List<String> users = ConnectionMySQL.getGroupMembers(group.id);
