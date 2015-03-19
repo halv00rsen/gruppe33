@@ -251,6 +251,9 @@ public class Program {
 		String end = to[0] + " " + to[1] + ":00";
 		int eventId = ConnectionMySQL.createEvent(event.getEventName(), event.getLocation(), start, end, event.getPriority().pri
 				, event.getFreq(), event.getInfo());
+		System.out.println("ok");
+		//ConnectionMySQL.reserveRoom(eventId, event.getRoom().getRoomNr());
+		
 		if (eventId == -1){
 			if (DEBUG){
 				cal.addEvent(event);
@@ -675,13 +678,5 @@ public class Program {
 		return isLoggedIn() && currentPerson.admin;
 	}
 	
-	public static ArrayList<Room> getRooms() {
-		Room r1 = new Room(0, "Det gule");
-		Room r2 = new Room(1, "Det andre");
-		
-		ArrayList<Room> list = new ArrayList<Room>(); 
-		list.addAll(Arrays.asList(r1, r2));
-		return list;
-		
-	}
+
 }

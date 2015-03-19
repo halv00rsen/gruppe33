@@ -21,6 +21,7 @@ import classes.Person;
 import classes.PersonCalendar;
 import classes.Priority;
 import classes.Calendar.TypeOfCalendar;
+import classes.Room;
 import database.ConnectionMySQL;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
@@ -138,6 +139,7 @@ public class EventGUI extends Component implements GetPersonListener, GetGroupLi
         addAction();
         this.getChildren().add(pane);
 		
+		romChoice.setEditable(false);
         romChoice.setOnMouseClicked(new EventHandler<MouseEvent>(){
 
 			@Override
@@ -151,7 +153,7 @@ public class EventGUI extends Component implements GetPersonListener, GetGroupLi
 				}
 				else{
 					
-					
+					System.out.println("velg verdier");
 					
 				}
 				
@@ -240,6 +242,12 @@ public class EventGUI extends Component implements GetPersonListener, GetGroupLi
     		}
     	}
     	newevent.addAppliance(persons);
+    	
+    	if(romChoice.getValue() != null){
+    		System.out.println(romChoice.getValue());
+    		newevent.setRoom(new Room(Integer.parseInt(romChoice.getValue())));
+    		
+    	}
     	newevent.setInfo(infoText.getText());
     	newevent.setPriority(priority);
     	
