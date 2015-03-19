@@ -426,10 +426,10 @@ public class Program {
 		for (ProgramListener l : listeners)
 			l.loginSuccess(currentPerson);
 		
-		updateCalendarListeners();
 		sendOutPersons();
 		List<Integer> ev = initGroupsCurrentUser();
 		getEventsFromServer(ev);
+		updateCalendarListeners();
 	}
 	
 	private void getEventsFromServer(List<Integer> taken){
@@ -440,8 +440,9 @@ public class Program {
 		}
 		for (Map<String, String> ev: userEvents){
 			int id = Integer.parseInt(ev.get("eventId"));
-			if (contains(id, taken))
+			if (contains(id, taken)){
 				continue;
+			}
 			Event event = convertEventServer(ev);
 			currentPerson.getPersonalCalendar().addEvent(event);
 		}
@@ -522,22 +523,25 @@ public class Program {
 		event.setEventName(e.get("eventName"));
 		event.setLocation(e.get("location"));
 		String[] stringStart = e.get("start").split(" "),
-				stringEnd = e.get("end").split(" "),
-				stringSeen = e.get("lastSeen").split(" ");
+				stringEnd = e.get("end").split(" ");
+//				stringSeen = e.get("lastSeen").split(" ");
 		String[] dateStart = stringStart[0].split("-"),
-				clockStart = stringStart[1].split(".");
+				clockStart = stringStart[1].split(":");
 		String[] dateEnd = stringEnd[0].split("-"),
-				clockEnd = stringEnd[1].split(".");
+				clockEnd = stringEnd[1].split(":");
+		
 		event.setStartTime(LocalDateTime.of(Integer.parseInt(dateStart[0]), Integer.parseInt(dateStart[1]), 
 				Integer.parseInt(dateStart[2]), Integer.parseInt(clockStart[0]), Integer.parseInt(clockStart[1])));
 		event.setEndTime(LocalDateTime.of(Integer.parseInt(dateEnd[0]), Integer.parseInt(dateEnd[1]), Integer.parseInt(dateEnd[2]), 
 				Integer.parseInt(clockEnd[0]), Integer.parseInt(clockEnd[1])));
 		event.setPriority(Priority.getPriority(Integer.parseInt(e.get("priority"))));
 		int freq = Integer.parseInt(e.get("frequency"));
-		String[] freqEnd = e.get("freqDate").split(" ");
-		String[] freqDate = freqEnd[0].split("-"),
-				freqClock = freqEnd[1].split(".");
-		event.setFreq(freq, freq == -1, LocalDate.of(Integer.parseInt(freqDate[0]), Integer.parseInt(freqDate[1]), Integer.parseInt(freqDate[2])));
+		if (e.get("freqDate") != null){
+			String[] freqEnd = e.get("freqDate").split(" ");
+			String[] freqDate = freqEnd[0].split("-"),
+					freqClock = freqEnd[1].split(":");
+			event.setFreq(freq, freq == -1, LocalDate.of(Integer.parseInt(freqDate[0]), Integer.parseInt(freqDate[1]), Integer.parseInt(freqDate[2])));
+		}
 		event.setInfo(e.get("info"));
 		
 //		String creator = ConnectionMySQL.getEventCreator(event.getID());

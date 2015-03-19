@@ -251,10 +251,9 @@ public class ConnectionMySQL {
 	
 	public static int createEvent(String eventName, String location, String start, String end, int priority, int frequency, String info) {
 		
-		String myStmt = "INSERT INTO event set eventName = '" + eventName + "', start = '" + start + "', end = '" + end + "', lastChanged = now()" + ", priority = " + priority;
+		String myStmt = "INSERT INTO event set eventName = '" + eventName + "', start = '" + start + "', end = '" + end + "', frequency = " + frequency + ", lastChanged = now()" + ", priority = " + priority;
 		if(!location.isEmpty()) myStmt += ", location = '" + location + "'";
-		if(frequency != 0) myStmt += ", frequency = " + frequency;
-		if(!location.isEmpty()) myStmt += ", info = '" + info + "'";
+		if(!info.isEmpty()) myStmt += ", info = '" + info + "'";
 		myStmt += ";";
 		if(!sendStatement(myStmt)) return -1;
 		try {
