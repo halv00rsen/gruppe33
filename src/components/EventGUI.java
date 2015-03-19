@@ -142,10 +142,16 @@ public class EventGUI extends Component implements GetPersonListener, GetGroupLi
 
 			@Override
 			public void handle(MouseEvent event) {
-				if(startDate.getValue() != null && endDate.getValue() != null && endDate.getValue() != null && endDate.getValue() != null){
+				if(startDate.getValue() != null && endDate.getValue() != null && endDate.getValue() != null && endDate.getValue() != null
+						&& startDate.getValue().equals(endDate.getValue())){
 					
 					romChoice = showAvailableRooms(LocalDateTime.of(startDate.getValue(), LocalTime.of(start.getHour(), start.getMinutes())), 
 							LocalDateTime.of(endDate.getValue(), LocalTime.of(end.getHour(), start.getMinutes())));
+					
+				}
+				else{
+					
+					
 					
 				}
 				
