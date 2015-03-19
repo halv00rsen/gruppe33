@@ -164,7 +164,7 @@ public class ConnectionMySQL {
 				events.put("eventId", myRs.getString("eventId"));
 				events.put("eventName", myRs.getString("eventName"));
 				events.put("location", myRs.getString("location"));
-				events.put("start", myRs.getString("end"));
+				events.put("start", myRs.getString("start"));
 				events.put("end", myRs.getString("end"));
 				events.put("priority", myRs.getString("priority"));
 				events.put("lastChanged", myRs.getString("lastChanged"));

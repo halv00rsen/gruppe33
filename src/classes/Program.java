@@ -446,6 +446,11 @@ public class Program {
 			Event event = convertEventServer(ev);
 			currentPerson.getPersonalCalendar().addEvent(event);
 		}
+		for(Event e : currentPerson.getPersonalCalendar().getEvents()){
+			
+			System.out.println(e.debugString());
+			
+		}
 	}
 	
 	private boolean contains(int id, List<Integer> l){
