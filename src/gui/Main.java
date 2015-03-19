@@ -178,7 +178,7 @@ public class Main extends Application implements ProgramListener{
 	public class EventHider{
 		public void hideEvent(Event event, Person person){
 			//kan bare kjøres en gang
-			program.setHideEvent(event.getID(), person.getUsername(), true);
+			program.setHideEvent(event, person, true);
 		}
 	}
 	public class SchedulingGuiMethods{

@@ -11,6 +11,7 @@ import javafx.geometry.Insets;
 import javafx.scene.control.Label;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
@@ -38,14 +39,15 @@ public class EventBoxWeek extends EventBox{
 	public EventBoxWeek(Event event,CalendarGUI calGui,CalendarDay calday){
 		super(event,calGui,calday);
 		strokething = new Pane();
-		strokething.setStyle("-fx-background-color: #00FFF0");
+//		strokething.setStyle("-fx-background-color: #00FFF0");
 			base = new BorderPane();
 				base.setPadding(new Insets(5));
 				strokething.getChildren().add(base);
-				clock = new Label();
-					base.setRight(clock);
-				nameLabel = new Label();
-					base.setLeft(nameLabel);
+				VBox toplabels = new VBox();
+					base.setTop(nameLabel);
+					base.setTop(clock);
+					clock.setTranslateY(-16);
+					
 				body = new VBox(1);
 					base.setBottom(body);
 			if(event != null){
@@ -71,13 +73,37 @@ public class EventBoxWeek extends EventBox{
 		}
 		this.getChildren().add(strokething);
 		this.toFront();
+		strokething.setStyle("-fx-border-color: black");
+		if(! isChangeable){
+			HBox b = new HBox(4);
+			for (int i = 0; i < 20; i++) {
+				Pane haha = new Pane();
+				haha.setMinWidth(1);
+				haha.setMinHeight(this.getMinHeight());
+				haha.setStyle("-fx-background-color: #999999");
+				strokething.setStyle("-fx-border-color: #999999");
+				b.getChildren().add(haha);
+			}
+			this.getChildren().add(b);
+		}
 		strokething.toFront();
 		this.setMouseTransparent(false);
 		strokething.setPrefHeight(this.getHeight());
 		strokething.setPrefWidth(this.getWidth());
 		strokething.setMinHeight(this.getMinHeight());
 		strokething.setMinWidth(this.getMinWidth());
-		strokething.setStyle("-fx-border-color: black");
+		base.setPrefHeight(this.getHeight());
+		base.setPrefWidth(this.getWidth());
+		base.setMinHeight(this.getMinHeight());
+		base.setMinWidth(this.getMinWidth());
+		base.setMaxHeight(this.getHeight());
+		base.setMaxWidth(this.getWidth());
+		toplabels.setPrefHeight(this.getHeight());
+		toplabels.setPrefWidth(this.getWidth());
+		toplabels.setMinHeight(this.getMinHeight());
+		toplabels.setMinWidth(this.getMinWidth());
+		toplabels.setMaxHeight(this.getHeight());
+		toplabels.setMaxWidth(this.getWidth());
 	}
 	public void addToOverlapp(int i) {
 		overlap +=i;

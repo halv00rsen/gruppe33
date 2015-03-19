@@ -181,7 +181,6 @@ public class Applicants extends Component implements CalendarGUIListener{
 	public void eventIsHighligthed(Event event) {
 		items.clear();
 		if(event == null){
-
 			this.elements.setDisable(true);
 			currentEvent = null;
 			return;

@@ -19,7 +19,7 @@ public class Program {
 	private final List<ProgramListener> listeners;
 	private final List<Calendar> activeCalendars, unactive;
 	private final List<Person> allUsers;
-
+	UpdateThread updateThread;
 	private Person currentPerson;
 	
 	public Program(){
@@ -28,6 +28,26 @@ public class Program {
 		unactive = new ArrayList<Calendar>();
 		allUsers = new ArrayList<Person>();
 		//opprett kobling med database og/eller socketprogram
+	}
+	public class UpdateThread extends Thread {
+		boolean isLoggedin;
+	    UpdateThread() {
+	    	isLoggedin = true;
+	    }
+
+	    public void run() {
+	    	System.out.println("*********************");
+	        while(isLoggedin){
+	        	callMessage(Message.EventAdded);
+	        	try {
+					Thread.sleep(15000);
+				} catch (InterruptedException e) {
+				}
+	        }
+	    }
+	    public void cancel(){
+	    	isLoggedin = false;
+	    }
 	}
 	public Person getCurrentUser(){
 		return currentPerson;
@@ -93,8 +113,10 @@ public class Program {
 		updateGroups();
 		updateCalendars();
 	}
-	public void setHideEvent(int eventId, String username, boolean isHidden){
-		ConnectionMySQL.hideEvent(eventId,username,isHidden);
+	public void setHideEvent(Event event, Person person, boolean isHidden){
+		ConnectionMySQL.hideEvent(event.getID(),person.getUsername(),isHidden);
+		Calendar c = getCalendarFor(event.getID());
+		c.removeEvent(event);
 		updateCalendars();
 	}
 	public void changeEvent(int eventId, Calendar oldCal, Calendar newCal, Event event){
@@ -396,6 +418,8 @@ public class Program {
 			activeCalendars.add(currentPerson.getPersonalCalendar());
 			for (ProgramListener l : listeners)
 				l.loginSuccess(currentPerson);
+//				updateThread = new UpdateThread();
+//				updateThread.start();
 			updateCalendarListeners();
 			return;
 		}
@@ -627,8 +651,10 @@ public class Program {
 			return;
 		currentPerson = null;
 		activeCalendars.clear();
+		updateThread.cancel();
 		for (ProgramListener l : listeners)
 			l.logout();
+		
 	}
 	
 	public void addListener(ProgramListener l){

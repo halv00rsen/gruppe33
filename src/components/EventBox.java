@@ -15,6 +15,7 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
+import javafx.scene.text.Font;
 import classes.Event;
 import classes.Priority;
 import classes.TimeMethods;
@@ -30,22 +31,30 @@ public abstract class EventBox extends Pane{
 	CalendarDay calday;
 	LocalDateTime startTime;
 	LocalDateTime endTime;
-	protected Label clock;
-	protected Label nameLabel;
+	protected Label clock = new Label();
+	protected Label nameLabel = new Label();
 	boolean isHighLighted = false;
+	boolean isChangeable = true;
 	protected CalendarGUI calGui;
 	public EventBox(Event event,CalendarGUI calGui,CalendarDay calday){
+		
 		this.calday = calday;
 		this.calGui = calGui;
 		if(event != null){
+			if(!event.getMadeBy().getUsername().equals(calGui.sch.mainMethods.getCurrentUser().getUsername())){
+				isChangeable = false;
+			}
 			this.event = event;
 			this.priority = event.getPriority();
 			startTime = event.getStartTime();
 			endTime = event.getEndTime();
 			this.event = event;
-//			nameLabel.setText(event.getEventName());
-//			clock.setText(startTime.getHour() +":" + startTime.getMinute() + "-" + endTime.getHour() +":" + endTime.getMinute());			
-			
+			if(event.getEventName()!=null){
+				nameLabel.setText(event.getEventName());
+				nameLabel.setFont(new Font("Arial", 10));
+			}
+			clock.setText(startTime.getHour() +":" + startTime.getMinute() + "-" + endTime.getHour() +":" + endTime.getMinute());			
+			clock.setFont(new Font("Arial", 10));
 			
 		}
 		

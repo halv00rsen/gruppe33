@@ -116,7 +116,7 @@ public class Event implements Comparable<Event>{
 	public void setMadeBy(Person p){
 		madeBy = p;
 		//DEBUGFELT vvvvvvvvv
-			madeBy = PersonInformation.getPeople().get(1);
+//			madeBy = PersonInformation.getPeople().get(1);
 		//DEBUGFELT ^^^^^^^^^
 		appliance.add(new EventAppliance(p, Appliance.Not_Answered));
 	}
@@ -250,5 +250,6 @@ public class Event implements Comparable<Event>{
 			return 1;
 		}
 	}
+
 	
 }
