@@ -4,6 +4,7 @@ import gui.Component;
 import gui.Main;
 import gui.Main.AddGroupListener;
 import gui.Main.GetGroupListener;
+import gui.Main.SchedulingGuiMethods;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -29,9 +30,11 @@ public class GroupCheckBox extends Component implements GetGroupListener{
 		ScrollPane scrollPane;
 		private final ObservableList<Group> items;
 		private final AddGroupListener l;
-		public GroupCheckBox(Pane parent, AddGroupListener l){
+		private SchedulingGuiMethods mainMethods;
+		public GroupCheckBox(Pane parent, SchedulingGuiMethods mainMethods){
 			super(parent);
-			this.l = l;
+			System.out.println(mainMethods);
+			this.l = mainMethods.getAddGroupListener();
 			scrollPane = new ScrollPane();
 			elements = new VBox(4);
 			grupperLabel = new Label();

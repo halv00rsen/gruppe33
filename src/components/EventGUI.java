@@ -601,7 +601,6 @@ public class EventGUI extends Component implements GetPersonListener, GetGroupLi
 
 	public void showEvent(classes.Event event, Calendar cal) {
 		trash();
-		System.out.println("Show event: " + cal);
 		if (event == null)
 			return;
 		currentCal = cal;

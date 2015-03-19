@@ -27,7 +27,9 @@ public class Program {
 		allUsers = new ArrayList<Person>();
 		//opprett kobling med database og/eller socketprogram
 	}
-	
+	public Person getCurrentUser(){
+		return currentPerson;
+	}
 	public void createGroup(String name){
 		int groupId = ConnectionMySQL.createGroup(name, 0);
 		if (groupId == -1){
@@ -84,7 +86,10 @@ public class Program {
 		updateGroups();
 		updateCalendars();
 	}
-	
+	public void setHideEvent(int eventId, String username, boolean isHidden){
+		ConnectionMySQL.hideEvent(eventId,username,isHidden);
+		updateCalendars();
+	}
 	public void changeEvent(int eventId, Calendar oldCal, Calendar newCal, Event event){
 		Event oldEvent = null;
 		if (newCal == null){

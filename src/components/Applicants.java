@@ -9,7 +9,7 @@ import classes.EventAppliance;
 import classes.Person;
 import gui.Component;
 import gui.Main;
-import gui.Main.UpdateAppliance;
+import gui.Main.SchedulingGuiMethods;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
@@ -63,8 +63,8 @@ public class Applicants extends Component implements CalendarGUIListener{
 	ChoiceBox<Appliance> choiceBox = new ChoiceBox<Appliance>();
 	ObservableList<Appliance> listAppliance = FXCollections.observableArrayList(Appliance.values());
 	private Person currentUser;
-	private UpdateAppliance updateAppliance;
 	Event currentEvent = null;
+	private SchedulingGuiMethods mainMethods;
 	public Applicants(Pane parent){
 		super(parent);
 		listView = new ListView<EventAppliance>();
@@ -120,7 +120,7 @@ public class Applicants extends Component implements CalendarGUIListener{
     
     private void btnCalled(ActionEvent e) {
     	if(currentEvent != null){
-    		updateAppliance.update(currentEvent, new EventAppliance(currentUser, choiceBox.getSelectionModel().getSelectedItem()));
+    		mainMethods.updateAppliance(currentEvent, new EventAppliance(currentUser, choiceBox.getSelectionModel().getSelectedItem()));
     		for (EventAppliance c : items){
     			if(c.getPerson().getUsername().equals(currentUser.username)){
     				c.setAppliance(choiceBox.getSelectionModel().getSelectedItem());
@@ -208,12 +208,11 @@ public class Applicants extends Component implements CalendarGUIListener{
 		
 	}
 
-	public void setEventApplianceCaller(UpdateAppliance updateAppliance) {
-		this.updateAppliance = updateAppliance;
 		
-	}
-	public void updateAppliance(Event event, EventAppliance eventAppliance){
-		updateAppliance.update(event, eventAppliance);
+
+	public void setMainMethods(SchedulingGuiMethods mainMethods) {
+		this.mainMethods = mainMethods;
+		
 	}
     
 	

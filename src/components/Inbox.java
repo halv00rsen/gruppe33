@@ -39,6 +39,8 @@ public class Inbox extends Component{
 		addMail(new MailInfo("Invitasjon til event", "Jon Jonsen", "23.2.2015", "Du er invitert til en ny event klokken 12.", 1));
 		addMail(new MailInfo("Invitasjon til event", "Jon Jonsen", "23.2.2015", "Du er invitert til en ny event klokken 12.", 1));
 		addMail(new MailInfo("Invitasjon til event", "Jon Jonsen", "23.2.2015", "Du er invitert til en ny event klokken 12.", 1));
+		addMail(new MailInfo("Invitasjon til event", "Jon Jonsen", "23.2.2015", "Du er invitert til en ny event klokken 12.", 1));
+		
 		scroll.setLayoutX(100);
 	}
 	
