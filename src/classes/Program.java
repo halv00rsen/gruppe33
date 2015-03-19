@@ -275,7 +275,6 @@ public class Program {
 			newCal.addEvent(oldEvent);
 		}
 		for (EventAppliance e : oldEvent.getAppliance()){
-			ConnectionMySQL.sendMessage(getCurrentUser().getUsername(), e.person.username, "DETTE ER EN TEST");
 			ConnectionMySQL.removeMembersFromEvent(eventId, e.person.username);
 		}
 		if (event.getAppliance().isEmpty()){
@@ -285,9 +284,9 @@ public class Program {
 		for (EventAppliance e : event.getAppliance()){
 			ConnectionMySQL.addMembersToEvent(eventId, e.person.username);
 		}
-		
 		oldEvent.overrideEvent(event);
-		
+		ConnectionMySQL.sendMessage(getCurrentUser().getUsername(), getCurrentUser().getUsername(), "DETTE ER EN TEST");
+//		createMail(new MailInfo("HEIHIG","UOBEG","PUP","bpi",oldEvent.getID()));
 		updateCalendars();
 	}
 	
@@ -299,6 +298,7 @@ public class Program {
 	public Calendar getCalendarFor(int eventId){
 		for (Calendar c : activeCalendars){
 			for (Event e : c.getEvents()){
+				System.out.println(e.getID() + "");
 				if (e.getID() == eventId)
 					return c;
 			}
