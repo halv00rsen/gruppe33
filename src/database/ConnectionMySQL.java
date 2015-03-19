@@ -100,7 +100,6 @@ public class ConnectionMySQL {
 		}
 		
 	}
-	
 	public static ArrayList<HashMap<String, String>> getUsers(){
 		
 		ArrayList<HashMap<String, String>> allUsers = new ArrayList<HashMap<String, String>>();

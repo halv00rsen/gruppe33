@@ -20,6 +20,7 @@ import javafx.application.Application;
 import javafx.beans.value.ObservableNumberValue;
 import javafx.event.EventHandler;
 import javafx.stage.Stage;
+import javafx.stage.WindowEvent;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
@@ -224,7 +225,15 @@ public class Main extends Application implements ProgramListener{
 //			DebugMain debuglauncher = new DebugMain(root, this);
 			stage = primaryStage;
 			Scene scene = new Scene(root,SCREENWIDTH,SCREENHEIGHT);
-			
+			stage.setOnCloseRequest(new EventHandler<WindowEvent>() {
+
+				@Override
+				public void handle(WindowEvent event) {
+					program.updateThread.cancel();
+					program.logout();
+				}
+				
+			});
 			stage.setFullScreen(false);
 			stage.setTitle("xKal");
 			primaryStage.setScene(scene);

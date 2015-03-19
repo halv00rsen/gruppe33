@@ -19,7 +19,7 @@ public class Program {
 	private final List<ProgramListener> listeners;
 	private final List<Calendar> activeCalendars, unactive;
 	private final List<Person> allUsers;
-	UpdateThread updateThread;
+	public UpdateThread updateThread;
 	private Person currentPerson;
 	
 	public Program(){
@@ -36,14 +36,18 @@ public class Program {
 	    }
 
 	    public void run() {
-	    	System.out.println("*********************");
+	    	
 	        while(isLoggedin){
-	        	callMessage(Message.EventAdded);
-	        	try {
-					Thread.sleep(15000);
-				} catch (InterruptedException e) {
-				}
+	        try {
+				Thread.sleep(1000);
+			} catch (InterruptedException e) {
+			}
+//	        	ConnectionMySQL.getMessage()
+	        	Message message = Message.Custom;
+	        	callMessage(message.customMessage(""));
+	        	
 	        }
+	        System.out.println("BYE");
 	    }
 	    public void cancel(){
 	    	isLoggedin = false;
@@ -415,11 +419,11 @@ public class Program {
 	public void personLogin(String username, String password){
 		if (username == null || password == null || isLoggedIn()){
 			loginFailListeners();
+			
 			activeCalendars.add(currentPerson.getPersonalCalendar());
 			for (ProgramListener l : listeners)
 				l.loginSuccess(currentPerson);
-//				updateThread = new UpdateThread();
-//				updateThread.start();
+				
 			updateCalendarListeners();
 			return;
 		}
@@ -451,6 +455,8 @@ public class Program {
 			}
 			currentPerson = new Person(usernameDatabase, passwordDatabase, firstname, lastname, Boolean.getBoolean(info.get("isAdmin")));
 			currentPerson.setOtherInfo(info.get("phone"), info.get("email"));
+			updateThread = new UpdateThread();
+			updateThread.start();
 		}
 		
 		activeCalendars.add(currentPerson.getPersonalCalendar());
