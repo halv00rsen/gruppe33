@@ -303,7 +303,7 @@ public class Program {
 		}else{
 			for (Map<String, String> p : info){
 
-				Person p1 = new Person(p.get("username"), null, p.get("firstname"), p.get("lastname"), false);
+				Person p1 = new Person(p.get("username"), null, p.get("firstName"), p.get("lastName"), false);
 				if (!p1.username.equals(currentPerson.username))
 					list.add(p1);
 			}
