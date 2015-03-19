@@ -29,6 +29,17 @@ public enum Priority{
 		circle.setStroke(color);
 		active = false;
 	}
+	
+	public static Priority getPriority(int pri){
+		if (pri == 0)
+			return Priority.NOT_IMPORTANT;
+		else if (pri == 1)
+			return Priority.IMPORTANT;
+		else if (pri == 2)
+			return Priority.VERY_IMPORTANT;
+		return null;
+	}
+	
 	public Pane getVisualization(){
 		return pane;
 	}

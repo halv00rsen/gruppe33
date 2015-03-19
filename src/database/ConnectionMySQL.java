@@ -156,7 +156,7 @@ public class ConnectionMySQL {
 		ArrayList<HashMap<String, String>> allEvents = new ArrayList<HashMap<String, String>>();
 		
 		try {
-			ResultSet myRs = sendQuery("SELECT event.eventId, eventName, location, start, end, priority, lastChanged, frequency, info, alarmId, lastSeen, appliance, isHidden " + 
+			ResultSet myRs = sendQuery("SELECT event.eventId, eventName, location, start, end, freqToDate, priority, lastChanged, frequency, info, alarmId, lastSeen, appliance, isHidden " + 
 					"FROM event, isInvitedTo, person " + 
 					"WHERE event.eventId = isInvitedTo.eventId AND person.username = isInvitedTo.username AND person.username = '" + username + "';");
 			while (myRs.next()){
@@ -170,6 +170,7 @@ public class ConnectionMySQL {
 				events.put("lastChanged", myRs.getString("lastChanged"));
 				events.put("frequency", myRs.getString("frequency"));
 				events.put("info", myRs.getString("info"));
+				events.put("freqDate", myRs.getString("freqToDate"));
 				events.put("alarmId", myRs.getString("alarmId"));
 				events.put("lastSeen", myRs.getString("lastSeen"));
 				events.put("appliance", myRs.getString("appliance"));
@@ -190,7 +191,7 @@ public class ConnectionMySQL {
 		
 		ArrayList<HashMap<String, String>> allEvents = new ArrayList<HashMap<String, String>>();
 		try {
-			ResultSet myRs = sendQuery("SELECT event.eventId, eventName, location, start, end, priority, lastChanged, frequency, info, alarmId, lastSeen, appliance, isHidden " + 
+			ResultSet myRs = sendQuery("SELECT event.eventId, eventName, location, start, freqToDate, end, priority, lastChanged, frequency, info, alarmId, lastSeen, appliance, isHidden " + 
 					"FROM event, groupInvitation, personGroup " + 
 					"WHERE event.eventId = groupInvitation.eventId AND personGroup.groupId = groupInvitation.groupId AND personGroup.groupId = '" + groupId + "';");
 			while (myRs.next()){
@@ -202,6 +203,7 @@ public class ConnectionMySQL {
 				events.put("end", myRs.getString("end"));
 				events.put("priority", myRs.getString("priority"));
 				events.put("lastChanged", myRs.getString("lastChanged"));
+				events.put("freqDate", myRs.getString("freqToDate"));
 				events.put("frequency", myRs.getString("frequency"));
 				events.put("info", myRs.getString("info"));
 				events.put("alarmId", myRs.getString("alarmId"));
