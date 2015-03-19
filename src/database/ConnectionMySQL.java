@@ -75,6 +75,8 @@ public class ConnectionMySQL {
 			return myConn;
 			
 		} catch (Exception e) {
+			if (DEBUG)
+				e.printStackTrace();
 			return null;
 		}
 	}
