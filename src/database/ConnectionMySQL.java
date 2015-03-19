@@ -1,8 +1,11 @@
 package database;
-import java.sql.*;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
+import java.sql.DriverManager;
+import java.sql.Connection;
+import java.sql.Statement;
+import java.sql.ResultSet;
 
 /*noen forskjeller fra xkal-scheme.sql, ny versjon på drive
  * personGroup / group
