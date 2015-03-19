@@ -35,6 +35,7 @@ public class Program {
 				System.out.println("Create group connection null");
 				Group group = new Group(name, (int)( Math.random() * 10000));
 				currentPerson.getGroups().add(group);
+				group.addMembers(currentPerson);
 				activeCalendars.add(group.getGroupCalendar());
 				updateGroups();
 			}
@@ -43,6 +44,7 @@ public class Program {
 		}else{
 			Group group = new Group(name, groupId);
 			currentPerson.getGroups().add(group);
+			group.addMembers(currentPerson);
 			ConnectionMySQL.addMembersToGroup(groupId, currentPerson.username);
 			activeCalendars.add(group.getGroupCalendar());
 		}
@@ -61,6 +63,9 @@ public class Program {
 					currentPerson.getGroups().remove(g);
 					activeCalendars.remove(g.getGroupCalendar());
 					unactive.remove(g.getGroupCalendar());
+					for (Event e : g.getGroupCalendar().getEvents()){
+						ConnectionMySQL.deleteEvent(e.getID());
+					}
 					break;
 				}
 			}
@@ -297,8 +302,10 @@ public class Program {
 			list = PersonInformation.getPeople();
 		}else{
 			for (Map<String, String> p : info){
-				Person p1 = new Person(p.get("username"), null, p.get("firstName"), p.get("lastName"), false);
-				list.add(p1);
+
+				Person p1 = new Person(p.get("username"), null, p.get("firstname"), p.get("lastname"), false);
+				if (!p1.username.equals(currentPerson.username))
+					list.add(p1);
 			}
 		}
 		for (Person p : list){
