@@ -406,8 +406,8 @@ public class ConnectionMySQL {
 		ArrayList<HashMap<String, String>> allGroups = new ArrayList<HashMap<String, String>>();
 		try {
 			ResultSet myRs = sendQuery("SELECT personGroup.groupid, groupName, parent " + 
-					"FROM personGroup, person, isMemberOF " + 
-					"WHERE personGroup.groupId = isMemberOF.groupId AND person.username = isMemberOf.username AND person.username = '" + username + "';");
+					"FROM personGroup, person, isMemberOf " + 
+					"WHERE personGroup.groupId = isMemberOf.groupId AND person.username = isMemberOf.username AND person.username = '" + username + "';");
 			while (myRs.next()){
 				
 				HashMap<String, String> groups = new HashMap<String, String>();

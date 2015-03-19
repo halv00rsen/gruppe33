@@ -45,8 +45,8 @@ public class Program {
 	    	mailInfo = new ArrayList<MailInfo>();
 	    }
 
-<<<<<<< HEAD
-	    public void run() {
+
+/*	    public void run() {
 	    	mailInfo = new ArrayList<MailInfo>();
 	        while(isLoggedin){
 	        try {
@@ -69,8 +69,7 @@ public class Program {
 	        	
 	        }
 	        System.out.println("BYE");
-=======
-
+*/
 		public void run() {
 	        Timeline timeline = new Timeline();
 	        timeline.setOnFinished( new EventHandler<ActionEvent>(){
@@ -96,7 +95,7 @@ public class Program {
 				}
 		       }
 		     timeline.play();
->>>>>>> fc2c6f376f3b9a27274f56431cfb92b201f18b3d
+
 	    }
 	    
 
