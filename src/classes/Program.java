@@ -1,5 +1,7 @@
 package classes;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -51,6 +53,11 @@ public class Program {
 			activeCalendars.add(group.getGroupCalendar());
 		}
 		updateGroups();
+	}
+	
+	public void addPersonGroup(Group group, Person p){
+		group.addMembers(p);
+		ConnectionMySQL.addMembersToGroup(group.id, p.username);
 	}
 	
 	public void deleteGroup(int groupId){
@@ -321,7 +328,8 @@ public class Program {
 			list = PersonInformation.getPeople();
 		}else{
 			for (Map<String, String> p : info){
-				Person p1 = new Person(p.get("username"), null, p.get("firstname"), p.get("lastname"), false);
+
+				Person p1 = new Person(p.get("username"), null, p.get("firstName"), p.get("lastName"), false);
 				if (!p1.username.equals(currentPerson.username))
 					list.add(p1);
 			}
@@ -332,6 +340,7 @@ public class Program {
 		for (ProgramListener l : listeners){
 			l.setAllPersons(list);
 		}
+		allUsers.add(currentPerson);
 	}
 	
 	
@@ -402,7 +411,11 @@ public class Program {
 			String usernameDatabase = info.get("username");
 			String passwordDatabase = info.get("password");
 			String firstname = info.get("firstname"), lastname = info.get("lastname");
-			if (!Person.hashPassword(password).equals(passwordDatabase) || username != usernameDatabase){
+			System.out.println(usernameDatabase);
+			System.out.println(passwordDatabase);
+			System.out.println(username);
+			System.out.println(Person.hashPassword(password));
+			if (!Person.hashPassword(password).equals(passwordDatabase) || !username.equals(usernameDatabase)){
 				if (DEBUG){
 					System.out.println("Feil med passord");
 				}
@@ -418,14 +431,45 @@ public class Program {
 		for (ProgramListener l : listeners)
 			l.loginSuccess(currentPerson);
 		
-		updateCalendarListeners();
 		sendOutPersons();
-		initGroupsCurrentUser();
+		List<Integer> ev = initGroupsCurrentUser();
+		getEventsFromServer(ev);
+		updateCalendarListeners();
 	}
 	
-	private void initGroupsCurrentUser(){
-		if (!isLoggedIn())
+	private void getEventsFromServer(List<Integer> taken){
+		List<HashMap<String, String>> userEvents = ConnectionMySQL.getEvents(currentPerson.username);
+		if (userEvents == null){
+			System.out.println("get events from server connection null");
 			return;
+		}
+		for (Map<String, String> ev: userEvents){
+			int id = Integer.parseInt(ev.get("eventId"));
+			if (contains(id, taken)){
+				continue;
+			}
+			Event event = convertEventServer(ev);
+			currentPerson.getPersonalCalendar().addEvent(event);
+		}
+		for(Event e : currentPerson.getPersonalCalendar().getEvents()){
+			
+			System.out.println(e.debugString());
+			
+		}
+	}
+	
+	private boolean contains(int id, List<Integer> l){
+		for (Integer i : l){
+			if (id == i)
+				return true;
+		}
+		return false;
+	}
+	
+	private List<Integer> initGroupsCurrentUser(){
+		if (!isLoggedIn())
+			return null;
+		List<Integer> eventIds = new ArrayList<Integer>();
 		List<Group> groups = new ArrayList<Group>();
 		List<HashMap<String, String>> dbGroups = ConnectionMySQL.getGroups(currentPerson.getUsername());
 		if (dbGroups == null){
@@ -435,7 +479,7 @@ public class Program {
 		else{
 			for (Map<String, String> g : dbGroups){
 				Group group = new Group(g.get("groupName"), Integer.parseInt(g.get("groupId")));
-				if (!g.get("parent").equals("null")){
+				if (g.get("parent") != null){
 					group.setParent(Integer.parseInt(g.get("parent")));
 				}
 				List<String> users = ConnectionMySQL.getGroupMembers(group.id);
@@ -446,6 +490,12 @@ public class Program {
 							break;
 						}
 					}
+				}
+				List<HashMap<String, String>> events = ConnectionMySQL.getEventsForGroup(group.id);
+				for (Map<String, String> e: events){
+					Event event = convertEventServer(e);
+					group.getGroupCalendar().addEvent(event);
+					eventIds.add(event.getID());
 				}
 				groups.add(group);
 			}
@@ -464,8 +514,73 @@ public class Program {
 		for (ProgramListener l : listeners){
 			l.updateGroups(groups);
 		}
+		return eventIds;
 //		groups.put("groupId", myRs.getString("groupId"));
 //		groups.put("groupName", myRs.getString("groupName"));
+	}
+	
+	private Person getPerson(String username){
+		for (Person p: allUsers){
+			if (p.username.equals(username))
+				return p;
+		}
+		return null;
+	}
+	
+	private Event convertEventServer(Map<String, String> e){
+		Event event = new Event();
+		event.setId(Integer.parseInt(e.get("eventId")));
+		event.setEventName(e.get("eventName"));
+		event.setLocation(e.get("location"));
+		String[] stringStart = e.get("start").split(" "),
+				stringEnd = e.get("end").split(" ");
+//				stringSeen = e.get("lastSeen").split(" ");
+		String[] dateStart = stringStart[0].split("-"),
+				clockStart = stringStart[1].split(":");
+		String[] dateEnd = stringEnd[0].split("-"),
+				clockEnd = stringEnd[1].split(":");
+		
+		event.setStartTime(LocalDateTime.of(Integer.parseInt(dateStart[0]), Integer.parseInt(dateStart[1]), 
+				Integer.parseInt(dateStart[2]), Integer.parseInt(clockStart[0]), Integer.parseInt(clockStart[1])));
+		event.setEndTime(LocalDateTime.of(Integer.parseInt(dateEnd[0]), Integer.parseInt(dateEnd[1]), Integer.parseInt(dateEnd[2]), 
+				Integer.parseInt(clockEnd[0]), Integer.parseInt(clockEnd[1])));
+		event.setPriority(Priority.getPriority(Integer.parseInt(e.get("priority"))));
+		int freq = Integer.parseInt(e.get("frequency"));
+		if (e.get("freqDate") != null){
+			String[] freqEnd = e.get("freqDate").split(" ");
+			String[] freqDate = freqEnd[0].split("-"),
+					freqClock = freqEnd[1].split(":");
+			event.setFreq(freq, freq == -1, LocalDate.of(Integer.parseInt(freqDate[0]), Integer.parseInt(freqDate[1]), Integer.parseInt(freqDate[2])));
+		}
+		event.setInfo(e.get("info"));
+		
+//		String creator = ConnectionMySQL.getEventCreator(event.getID());
+		
+		List<HashMap<String, String>> applicants = ConnectionMySQL.getAppliances(event.getID());
+		for (Map<String, String> a: applicants){
+			String username = a.get("username");
+			String appliance = a.get("appliance");
+			Appliance app = null;
+			if (appliance.equals("Waiting"))
+				app = Appliance.Not_Answered;
+			else if (appliance.equals("Attending"))
+				app = Appliance.Attending;
+			else if (appliance.equals("Not_Attending"))
+				app = Appliance.Not_Attending;
+			else if (appliance.equals("Maybe"))
+				app = Appliance.Maybe;
+			else
+				app = Appliance.Late;
+			Person p = getPerson(username);
+			if (p != null)
+				event.getAppliance().add(new EventAppliance(getPerson(username), app));
+		}
+//		events.put("lastChanged", myRs.getString("lastChanged"));
+//		events.put("alarmId", myRs.getString("alarmId"));
+//		events.put("lastSeen", myRs.getString("lastSeen"));
+//		events.put("appliance", myRs.getString("appliance"));
+//		events.put("isHidden", myRs.getString("isHidden"));
+		return event;
 	}
 	
 	public void changePasswordUser(String oldPassword, String newPassword){

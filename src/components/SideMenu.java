@@ -241,6 +241,10 @@ public class SideMenu extends Component implements CalendarGUIListener{
 		}
 //		changeEvent(event);
 //		list.requestFocus();
+		if (event == null){
+			System.out.println("event is higligjgjd is null");
+			return;
+		}
 		event.getID();
 		
 		for (int i = 0; i< events.size(); i++) {
