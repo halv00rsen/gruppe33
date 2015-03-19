@@ -381,7 +381,7 @@ public class ConnectionMySQL {
 	
 	public static boolean removeGroupsFromEvent(int eventId, int groupId) {
 		
-		String myStmt = "DELETE FROM groupInvitation WHERE eventId = " + eventId + " AND groupId = '" + groupId + "';";
+		String myStmt = "DELETE FROM groupInvitation WHERE eventId = " + eventId + " AND groupId = " + groupId + ";";
 		return sendStatement(myStmt);
 	}
 	
@@ -426,6 +426,20 @@ public class ConnectionMySQL {
 		}
 
 		return allGroups;
+	}
+	
+	public static boolean addParent(int groupId, int parent){
+		
+		String myStmt = "UPDATE personGroup set parent = " + parent + " WHERE groupId = " + groupId + ";";
+		return sendStatement(myStmt);
+		
+	}
+	
+	public static boolean removeParent(int groupId, int parent){
+		
+		String myStmt = "UPDATE personGroup set parent = null WHERE groupId = " + groupId + ";";
+		return sendStatement(myStmt);
+		
 	}
 	
 	public static int createGroup(String groupName, int parent) {
