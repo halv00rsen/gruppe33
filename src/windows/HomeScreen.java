@@ -20,36 +20,26 @@ import gui.Main.AddGroupListener;
 import gui.Main.AddNewEvent;
 import gui.Main.AddPersonListener;
 import gui.Main.ChangeTab;
-import gui.Main.UpdateAppliance;
+import gui.Main.SchedulingGuiMethods;
 public class HomeScreen extends Window{
 
-	private final ChangeTab tab;
     
     public SchedulingGUI schedulingGUI;
-    private Person p;
     private PersonCalendar cal;
 
-	private AddNewEvent eventAdder;
-	private AddGroupListener addPerson;
 
-	private UpdateAppliance updateApplianceCaller;
-    
-	public HomeScreen(ChangeTab tab, Person person, AddNewEvent addNewEvent, AddGroupListener addGroup) {
-		this.eventAdder = addNewEvent;
-		this.p = person;
-		this.tab = tab;
-		this.addPerson = addGroup;
-		cal = new PersonCalendar(p);
-//		this.setStyle("-fx-color-background: #ff0044");
+	private SchedulingGuiMethods mainMethods;
+    //ChangeTab tab, Person person, AddNewEvent addNewEvent, AddGroupListener addGroup
+	public HomeScreen(SchedulingGuiMethods mainMethods) {
+		cal = new PersonCalendar(mainMethods.getCurrentUser());
+		this.mainMethods = mainMethods;
 		init();
 		
 	}
 
 	@Override
 	public void init() {
-		schedulingGUI = new SchedulingGUI(this, tab, addPerson, cal);
-		schedulingGUI.changePerson(p);
-		schedulingGUI.setEventAdder(eventAdder);
+		schedulingGUI = new SchedulingGUI(this, mainMethods, cal);
 		
 		borderPane.setCenter(schedulingGUI);
 	}
@@ -59,10 +49,6 @@ public class HomeScreen extends Window{
 		
 	}
 
-	public void setEventApplianceCaller(UpdateAppliance updateAppliance) {
-		this.updateApplianceCaller = updateAppliance;
-		schedulingGUI.setEventApplianceCaller(updateAppliance);
-	}
 
 
 }

@@ -115,7 +115,9 @@ public class Event implements Comparable<Event>{
 		madeBy = p;
 		appliance.add(new EventAppliance(p, Appliance.Not_Answered));
 	}
-
+	public Person getMadeBy(Person p){
+		return this.madeBy;
+	}
 	public String getEventName() {
 		return eventName;
 	}

@@ -175,13 +175,38 @@ public class Main extends Application implements ProgramListener{
 		}
 		
 	}
-	public class UpdateAppliance{
+	public class EventHider{
+		public void hideEvent(Event event, Person person){
+			//kan bare kjøres en gang
+			program.setHideEvent(event.getID(), person.getUsername(), true);
+		}
+	}
+	public class SchedulingGuiMethods{
 		
-		public void update(Event event, EventAppliance eventAppliance){
-			program.updateAppliance(event, eventAppliance);
+		public Person getCurrentUser(){
+			return program.getCurrentUser();
+		}
+		public EventHider getEventHider(){
+			return new Main.EventHider();
+		}
+		public ChangeTab getChangeTab(){
+			return new Main.ChangeTab();
+		}
+		public AddGroupListener getAddGroupListener(){
+			return new Main.AddGroupListener();
+		}
+		public AddPersonListener getAddPersonListener(){
+			return new Main.AddPersonListener();
 		}
 		
+		public AddNewEvent getAddNewEvent(){
+			return new Main.AddNewEvent();
+		}
+		public void updateAppliance(Event event, EventAppliance eventAppliance){
+			program.updateAppliance(event, eventAppliance);
+		}
 	}
+		
 	public class GoToEvent{
 		
 		public void goToEvent(int eventKey){
@@ -273,8 +298,7 @@ public class Main extends Application implements ProgramListener{
 		tabPane.setPrefWidth(1920);;
 		tabPane.setPrefHeight(1000);
 		home = new Tab("Hjem");
-		homeScreen  = new HomeScreen(new ChangeTab(), person,new AddNewEvent(), new AddGroupListener());
-		homeScreen.setEventApplianceCaller(new UpdateAppliance());
+		homeScreen  = new HomeScreen(new SchedulingGuiMethods());
 		home.setContent(homeScreen);
 		tabPane.setPrefHeight(1000);
 		
@@ -291,7 +315,7 @@ public class Main extends Application implements ProgramListener{
 		
 		
 		persons = new Tab("Personer");
-		otherPersonScreen = new OtherPersonScreen(new AddPersonListener(), new ChangeTab());
+		otherPersonScreen = new OtherPersonScreen(new SchedulingGuiMethods());
 		persons.setContent(otherPersonScreen);
 		
 		

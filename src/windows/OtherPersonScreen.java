@@ -20,6 +20,7 @@ import gui.GetPersonListener;
 import gui.Main.AddGroupListener;
 import gui.Main.AddPersonListener;
 import gui.Main.ChangeTab;
+import gui.Main.SchedulingGuiMethods;
 import gui.Window;
 
 public class OtherPersonScreen extends Window implements GetPersonListener{
@@ -34,11 +35,13 @@ public class OtherPersonScreen extends Window implements GetPersonListener{
 	
 	private final ChangeTab tab;
 	private ObservableList<Person> items;
+	SchedulingGuiMethods mainMethods;
 	
-	
-	public OtherPersonScreen(AddPersonListener l, ChangeTab tab) {
-		l.addListener(this);
-		this.tab = tab;
+	public OtherPersonScreen(SchedulingGuiMethods mainMethods) {
+		this.mainMethods = mainMethods;
+		mainMethods.getAddPersonListener().addListener(this);
+		
+		this.tab = mainMethods.getChangeTab();
 		init();
 	}
 	
@@ -68,7 +71,7 @@ public class OtherPersonScreen extends Window implements GetPersonListener{
 			System.out.println("Hiodgjioerjgioe");
 	        mainBox.getChildren().remove(schedulingGUI);
 	        cal = new PersonCalendar(items.get(p));
-	        schedulingGUI = new SchedulingGUI(getThis(),tab, null,cal);
+	        schedulingGUI = new SchedulingGUI(this,mainMethods,cal);
 	        schedulingGUI.changePerson(items.get(p));
 	        mainBox.getChildren().add(schedulingGUI);
 		});
@@ -88,7 +91,7 @@ public class OtherPersonScreen extends Window implements GetPersonListener{
 		pane.add(chosePersonLabel, 0, 0);
 		pane.add(peopleComboBox, 1, 0);
 		pane.add(button, 2,0);
-		schedulingGUI = new SchedulingGUI(this, tab,null,  cal);
+		schedulingGUI = new SchedulingGUI(this, mainMethods,  cal);
 		
 		mainBox.getChildren().addAll(pane, schedulingGUI);
 		
@@ -113,7 +116,7 @@ public class OtherPersonScreen extends Window implements GetPersonListener{
 		Person p = items.get(index);
 		cal = new PersonCalendar(p);
 		mainBox.getChildren().remove(schedulingGUI);
-		schedulingGUI = new SchedulingGUI(this, tab,null,cal);
+		schedulingGUI = new SchedulingGUI(this, mainMethods,cal);
 		schedulingGUI.changePerson(p);
 		mainBox.getChildren().add(schedulingGUI);
 		

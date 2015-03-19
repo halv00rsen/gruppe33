@@ -222,12 +222,11 @@ public class ConnectionMySQL {
 		
 	}
 	
-	public static String getEventCreator(int eventId, String username){
+	public static String getEventCreator(int eventId){
 		
-		String myStmt = "SELECT username from madeBy WHERE eventId = (" + eventId + " AND username = '" + username + "');";
 		String owner = null;
 		try {
-			ResultSet myRs = sendQuery("SELECT username from madeBy WHERE eventId = (" + eventId + " AND username = '" + username + "');");
+			ResultSet myRs = sendQuery("SELECT username from madeBy WHERE eventId = " + eventId + ";");
 			while (myRs.next()){
 				
 				owner = myRs.getString("username");
