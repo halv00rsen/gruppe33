@@ -43,6 +43,7 @@ public class Program {
 		}else{
 			Group group = new Group(name, groupId);
 			currentPerson.getGroups().add(group);
+			ConnectionMySQL.addMembersToGroup(groupId, currentPerson.username);
 			activeCalendars.add(group.getGroupCalendar());
 		}
 		updateGroups();
