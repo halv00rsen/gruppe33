@@ -220,6 +220,26 @@ public class ConnectionMySQL {
 		
 	}
 	
+	public static String getEventCreator(int eventId, String username){
+		
+		String myStmt = "SELECT username from madeBy WHERE eventId = (" + eventId + " AND username = '" + username + "');";
+		String owner = null;
+		try {
+			ResultSet myRs = sendQuery("SELECT username from madeBy WHERE eventId = (" + eventId + " AND username = '" + username + "');");
+			while (myRs.next()){
+				
+				owner = myRs.getString("username");
+				
+			}
+		} catch (Exception e) {
+			if (DEBUG)
+				e.printStackTrace();
+		}
+
+		return owner;
+		
+	}
+	
 	public static boolean setEventCreator(int eventId, String username){
 		
 		String myStmt = "INSERT INTO madeBy VALUES(" + eventId + ", '" + username + "');";

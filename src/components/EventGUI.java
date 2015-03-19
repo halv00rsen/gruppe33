@@ -21,6 +21,7 @@ import classes.Person;
 import classes.PersonCalendar;
 import classes.Priority;
 import classes.Calendar.TypeOfCalendar;
+import database.ConnectionMySQL;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
@@ -38,6 +39,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
@@ -61,7 +63,7 @@ public class EventGUI extends Component implements GetPersonListener, GetGroupLi
 	Button cancel = new Button();
 	Button trash = new Button();
 	TextField purposeText = new TextField();
-	ComboBox romChoice = new ComboBox();
+	ComboBox<String> romChoice = new ComboBox();
 	ComboBox<Calendar> calendarChoice = new ComboBox<Calendar>();
 	ObservableList<Calendar> calendarItems;
 //	TextField freqText = new TextField();
@@ -77,6 +79,8 @@ public class EventGUI extends Component implements GetPersonListener, GetGroupLi
 	private Priority priority;
 	private ComboBox<Person> searchPeople;
 	private ObservableList<Person> comboPeople, listPeople;
+	private ObservableList<String> items;
+	
 	private ListView<Person> invited = new ListView<Person>();
 	
 	private classes.Event currentEvent;
@@ -101,6 +105,8 @@ public class EventGUI extends Component implements GetPersonListener, GetGroupLi
 					startDate.setValue(LocalDate.now());
 				if (endDate.getValue() != null){
 					if (startDate.getValue().isAfter(endDate.getValue())){
+						romChoice = showAvailableRooms(LocalDateTime.of(startDate.getValue(), LocalTime.of(start.getHour(), start.getMinutes())), 
+								LocalDateTime.of(endDate.getValue(), LocalTime.of(end.getHour(), start.getMinutes())));
 						endDate.setValue(startDate.getValue());
 					}
 				}else
@@ -133,7 +139,42 @@ public class EventGUI extends Component implements GetPersonListener, GetGroupLi
 		addElements();
         addAction();
         this.getChildren().add(pane);
-		// TODO Auto-generated constructor stub
+		
+        romChoice.setOnMouseClicked(new EventHandler<MouseEvent>(){
+
+			@Override
+			public void handle(MouseEvent event) {
+				
+				romChoice = showAvailableRooms(LocalDateTime.of(startDate.getValue(), LocalTime.of(start.getHour(), start.getMinutes())), 
+						LocalDateTime.of(endDate.getValue(), LocalTime.of(end.getHour(), start.getMinutes())));
+				
+			}
+        	
+        	
+        });
+     
+	}
+	
+	private ComboBox<String> showAvailableRooms(LocalDateTime fromTime, LocalDateTime toTime) {
+		
+		String[] from = fromTime.toString().split("T");
+		String[] to = toTime.toString().split("T");
+		String start = from[0] + " " + from[1] + ":00";
+		String end = to[0] + " " + to[1] + ":00";
+		
+		ArrayList<String> availableRooms = ConnectionMySQL.getAvailableRooms(start, end);
+		ListView<String> availableRoomsListView = new ListView<String>();
+		ObservableList<String> items =FXCollections.observableArrayList ();
+		
+		for (String room: availableRooms){
+			
+			items.add(room);
+			
+		}
+		
+		romChoice.setItems(items);
+		romChoice.setPrefHeight(20);
+		return romChoice;
 	}
 	
     private void addAction() {
