@@ -29,9 +29,11 @@ public class Program {
 		allUsers = new ArrayList<Person>();
 		//opprett kobling med database og/eller socketprogram
 	}
+	
 	public Person getCurrentUser(){
 		return currentPerson;
 	}
+	
 	public void createGroup(String name){
 		int groupId = ConnectionMySQL.createGroup(name, 0);
 		if (groupId == -1){
@@ -55,9 +57,30 @@ public class Program {
 		updateGroups();
 	}
 	
+	public void addGroupTo(Group group, Group sub){
+		
+	}
+	
+	public void removeGroupFrom(Group group, Group sub){
+		
+	}
+	
 	public void addPersonGroup(Group group, Person p){
-		group.addMembers(p);
-		ConnectionMySQL.addMembersToGroup(group.id, p.username);
+		if (ConnectionMySQL.addMembersToGroup(group.id, p.username)){
+			group.addMembers(p);
+			List<Event> events = group.getGroupCalendar().getEvents();
+			for (Event e : events){
+				ConnectionMySQL.addMembersToEvent(e.getID(), p.username);
+			}
+		}
+	}
+	
+	public void removePersonGroup(Group group, Person p){
+		if (ConnectionMySQL.removeMembersFromGroup(group.id, p.username)){
+			group.removePerson(p);
+			for (Event e : group.getGroupCalendar().getEvents())
+				ConnectionMySQL.removeMembersFromEvent(e.getID(), p.username);
+		}
 	}
 	
 	public void deleteGroup(int groupId){
@@ -267,9 +290,12 @@ public class Program {
 		//remove event from database/server
 		Calendar cal = getCalendarFor(event.getID());
 		cal.removeEvent(event);
-		ConnectionMySQL.deleteEvent(event.getID());
+		if (ConnectionMySQL.deleteEvent(event.getID()))
+			callMessage(Message.EventDeleted);
+		else
+			callMessage(Message.EventNotDeleted);
+			
 		updateCalendarListeners();
-		callMessage(Message.EventDeleted);
 //		for (Calendar cal: cals)
 //			cal.removeEvent(event);
 //		callMessage(Message.EventDeleted);
