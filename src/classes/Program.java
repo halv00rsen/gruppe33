@@ -260,9 +260,11 @@ public class Program {
 	public void updateAppliance(Event event, EventAppliance eventAppliance){
 		ConnectionMySQL.setAppliance(event.getID(), eventAppliance.getPerson().getUsername(), eventAppliance.getAppliance().getStateName());
 	}
-	public void deleteEvent(Event event, Calendar...cals){
+	public void deleteEvent(Event event){
 		//remove event from database/server
-		currentPerson.getPersonalCalendar().removeEvent(event);
+		Calendar cal = getCalendarFor(event.getID());
+		cal.removeEvent(event);
+		ConnectionMySQL.deleteEvent(event.getID());
 		updateCalendarListeners();
 		callMessage(Message.EventDeleted);
 //		for (Calendar cal: cals)
