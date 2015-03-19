@@ -119,4 +119,9 @@ public class GroupCheckBox extends Component implements GetGroupListener{
 			box.getChildren().clear();
 			addGroups(groups);
 		}
+		@Override
+		public void groupAdded(boolean added) {
+			// TODO Auto-generated method stub
+			
+		}
 	}

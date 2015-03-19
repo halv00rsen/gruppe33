@@ -114,12 +114,66 @@ public class Program {
 		updateGroups();
 	}
 	
+	private void callAddedPerson(boolean added){
+		for (ProgramListener l : listeners)
+			l.personAdded(added);
+	}
+	
+	private void callAddedGroup(boolean added){
+		for (ProgramListener l : listeners)
+			l.groupAdded(added);
+	}
+	
 	public void addGroupTo(Group group, Group sub){
-		
+		if (group.getParent() == sub.id || sub.getParent() == group.id){
+			callAddedGroup(false);
+			return;
+		}
+		if (isIncest(sub, group.id)){
+			System.out.println("Is incest!!! :)))))");
+			callAddedGroup(false);
+			return;
+		}
+		group.addSubGroups(sub);
+		sub.setParent(group.id);
+		ConnectionMySQL.addParent(sub.id, group.id);
+		addSubEvents(group.getGroupCalendar().getEvents(), sub);
+		callAddedGroup(true);
+	}
+	
+	private boolean isIncest(Group sub, int origin){
+		for (Group g : sub.getSubGroups()){
+			if (g.id == origin || isIncest(g, origin))
+				return true;
+		}
+		return false;
 	}
 	
 	public void removeGroupFrom(Group group, Group sub){
-		
+		List<Event> events = group.getGroupCalendar().getEvents();
+		if (ConnectionMySQL.removeParent(sub.id, group.id)){
+			group.removeSubGroup(sub);
+			sub.setParent(0);
+			removeSubEvents(events, sub);
+		}
+	}
+	
+	private void addSubEvents(List<Event> events, Group group){
+		for (Event e : events){
+			group.getGroupCalendar().addEvent(e);
+			ConnectionMySQL.addGroupsToEvent(e.getID(), group.id);
+		}
+		for (Group g : group.getSubGroups())
+			addSubEvents(events, g);
+	}
+	
+	private void removeSubEvents(List<Event> events, Group group){
+		for (Event e : events){
+			group.getGroupCalendar().removeEvent(e);
+			ConnectionMySQL.removeGroupsFromEvent(e.getID(), group.id);
+		}
+		for (Group g : group.getSubGroups())
+			removeSubEvents(events, g);
 	}
 	
 	public void addPersonGroup(Group group, Person p){
@@ -129,7 +183,10 @@ public class Program {
 			for (Event e : events){
 				ConnectionMySQL.addMembersToEvent(e.getID(), p.username);
 			}
+			callAddedPerson(true);
+			return;
 		}
+		callAddedPerson(false);
 	}
 	
 	public void removePersonGroup(Group group, Person p){
