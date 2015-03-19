@@ -85,8 +85,8 @@ public class ConnectionMySQL {
 				
 				info.put("username", myRs.getString("username"));
 				info.put("password", myRs.getString("password"));
-				info.put("firstName", myRs.getString("firstName"));
-				info.put("lastName", myRs.getString("lastName"));
+				info.put("firstname", myRs.getString("firstName"));
+				info.put("lastname", myRs.getString("lastName"));
 				info.put("email", myRs.getString("email"));
 				info.put("phone", myRs.getString("phone"));
 				info.put("isAdmin", myRs.getString("isAdmin"));
@@ -222,6 +222,26 @@ public class ConnectionMySQL {
 		
 	}
 	
+	public static String getEventCreator(int eventId, String username){
+		
+		String myStmt = "SELECT username from madeBy WHERE eventId = (" + eventId + " AND username = '" + username + "');";
+		String owner = null;
+		try {
+			ResultSet myRs = sendQuery("SELECT username from madeBy WHERE eventId = (" + eventId + " AND username = '" + username + "');");
+			while (myRs.next()){
+				
+				owner = myRs.getString("username");
+				
+			}
+		} catch (Exception e) {
+			if (DEBUG)
+				e.printStackTrace();
+		}
+
+		return owner;
+		
+	}
+	
 	public static boolean setEventCreator(int eventId, String username){
 		
 		String myStmt = "INSERT INTO madeBy VALUES(" + eventId + ", '" + username + "');";
@@ -231,10 +251,9 @@ public class ConnectionMySQL {
 	
 	public static int createEvent(String eventName, String location, String start, String end, int priority, int frequency, String info) {
 		
-		String myStmt = "INSERT INTO event set eventName = '" + eventName + "', start = '" + start + "', end = '" + end + "', lastChanged = now()" + ", priority = " + priority;
+		String myStmt = "INSERT INTO event set eventName = '" + eventName + "', start = '" + start + "', end = '" + end + "', frequency = " + frequency + ", lastChanged = now()" + ", priority = " + priority;
 		if(!location.isEmpty()) myStmt += ", location = '" + location + "'";
-		if(frequency != 0) myStmt += ", frequency = " + frequency;
-		if(!location.isEmpty()) myStmt += ", info = '" + info + "'";
+		if(!info.isEmpty()) myStmt += ", info = '" + info + "'";
 		myStmt += ";";
 		if(!sendStatement(myStmt)) return -1;
 		try {
@@ -345,7 +364,7 @@ public class ConnectionMySQL {
 	
 	public static boolean addMembersToEvent(int eventId, String username) {
 		
-		String myStmt = "INSERT INTO isInvitedTo set eventId = " + eventId + ", username = '" + username + "';";
+		String myStmt = "INSERT INTO isInvitedTo set eventId = " + eventId + ", username = '" + username + "', alarmid = null;";
 		return sendStatement(myStmt);
 	}
 	

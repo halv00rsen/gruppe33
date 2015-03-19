@@ -19,6 +19,7 @@ import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.scene.control.Button;
+import javafx.scene.control.ComboBox;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
@@ -48,6 +49,7 @@ public class ReserveRoomScreen extends Window{
 	Button reserveRoomButton;
 	ToggleButton seeAvailableToggle;
 	
+	ComboBox romChoice = new ComboBox();
 	ListView<String> availableRooms;
 	ObservableList<String> items;
 	
@@ -103,7 +105,7 @@ public class ReserveRoomScreen extends Window{
 						if(gridPane.getChildren().contains(wrongFormatLabel)) {
 							gridPane.getChildren().remove(wrongFormatLabel);
 						}
-						availableRooms = showAvailableRooms(LocalDateTime.of(datePicker.getValue(), LocalTime.of(sh, sm)), 
+						romChoice = showAvailableRooms(LocalDateTime.of(datePicker.getValue(), LocalTime.of(sh, sm)), 
 								LocalDateTime.of(datePicker.getValue(), LocalTime.of(th, tm)));
 						gridPane.add(availableRooms, 1, 3);
 						
@@ -145,6 +147,7 @@ public class ReserveRoomScreen extends Window{
 		gridPane.add(fromTimeLabel, 0, 1);
 		gridPane.add(timeBox, 1, 1);
 		gridPane.add(seeAvailableToggle, 1, 2);
+		gridPane.add(romChoice, 2, 2);
 		
 		mainBox = new VBox(20);
 		mainBox.getChildren().addAll(title, gridPane);
@@ -164,7 +167,7 @@ public class ReserveRoomScreen extends Window{
 		return LocalTime.of(timeField.getHour(), timeField.getMinutes());
 	}
 
-	private ListView<String> showAvailableRooms(LocalDateTime fromTime, LocalDateTime toTime) {
+	private ComboBox<String> showAvailableRooms(LocalDateTime fromTime, LocalDateTime toTime) {
 		
 		String[] from = fromTime.toString().split("T");
 		String[] to = toTime.toString().split("T");
@@ -181,10 +184,10 @@ public class ReserveRoomScreen extends Window{
 			
 		}
 		
-		availableRoomsListView.setItems(items);
-		availableRoomsListView.setMaxWidth(150);
-		availableRoomsListView.setPrefHeight(75);
-		return availableRoomsListView;
+		romChoice.setItems(items);
+		romChoice.setMaxWidth(150);
+		romChoice.setPrefHeight(75);
+		return romChoice;
 	}
 	
 	
