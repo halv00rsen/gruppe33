@@ -251,8 +251,11 @@ public class Program {
 		String end = to[0] + " " + to[1] + ":00";
 		int eventId = ConnectionMySQL.createEvent(event.getEventName(), event.getLocation(), start, end, event.getPriority().pri
 				, event.getFreq(), event.getInfo());
-		System.out.println("ok");
-		//ConnectionMySQL.reserveRoom(eventId, event.getRoom().getRoomNr());
+		if(event.getRoom().getRoomNr() != 0){
+			
+		ConnectionMySQL.reserveRoom(eventId, event.getRoom().getRoomNr());
+		
+		}
 		
 		if (eventId == -1){
 			if (DEBUG){

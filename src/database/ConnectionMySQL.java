@@ -385,7 +385,6 @@ public class ConnectionMySQL {
 		return sendStatement(myStmt);
 	}
 	
-	
 	public static ArrayList<String> getGroupMembers(int groupId){
 		
 		ArrayList<String> group = new ArrayList<String>();
@@ -547,4 +546,34 @@ public class ConnectionMySQL {
 		return sendStatement(myStmt);
 		
 	}
+	
+	public static boolean sendMessage(String username_from, String username_to, String message){
+		
+		String myStmt = "INSERT INTO Message VALUES(NULL, '" + message + "', '" + username_from + "', '" + username_to + "');";
+		return sendStatement(myStmt);
+	}
+	
+	public ArrayList<HashMap<String, String>> getMessage(String username){
+		
+		ArrayList<HashMap<String, String>> allMessages = new ArrayList<HashMap<String, String>>();
+		try {
+			ResultSet myRs = sendQuery("SELECT username_from, message FROM message WHERE user_to = '" + username + "';");
+			while (myRs.next()){
+				
+				HashMap<String, String> messages = new HashMap<String, String>();
+				messages.put("user_from", myRs.getString("user_from"));
+				messages.put("message", myRs.getString("message"));
+				allMessages.add(messages);
+				
+			}
+		} catch (Exception e) {
+			if (DEBUG)
+				e.printStackTrace();
+			return null;
+		}
+
+		return allMessages;
+		
+	}
+	
 }
