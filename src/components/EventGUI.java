@@ -21,6 +21,7 @@ import classes.Person;
 import classes.PersonCalendar;
 import classes.Priority;
 import classes.Calendar.TypeOfCalendar;
+import classes.Room;
 import database.ConnectionMySQL;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
@@ -57,6 +58,8 @@ public class EventGUI extends Component implements GetPersonListener, GetGroupLi
 	Label repeatTo = new Label();
     Label every = new Label();
     Label day = new Label();
+    
+    int roomNr = 0;
 
 	Button avaibleRoomsBtn = new Button();
 	Button save = new Button();
@@ -138,6 +141,7 @@ public class EventGUI extends Component implements GetPersonListener, GetGroupLi
         addAction();
         this.getChildren().add(pane);
 		
+		romChoice.setEditable(false);
         romChoice.setOnMouseClicked(new EventHandler<MouseEvent>(){
 
 			@Override
@@ -151,7 +155,7 @@ public class EventGUI extends Component implements GetPersonListener, GetGroupLi
 				}
 				else{
 					
-					
+					System.out.println("velg verdier");
 					
 				}
 				
@@ -159,6 +163,17 @@ public class EventGUI extends Component implements GetPersonListener, GetGroupLi
         	
         	
         });
+        romChoice.getSelectionModel().selectedItemProperty().addListener(new  
+        		ChangeListener<String>() 
+        		{
+        		public void changed(ObservableValue<? extends String> observable,String  
+        		oldValue,String newValue) 
+        		{
+        			if(newValue != null){
+        				roomNr = Integer.parseInt(newValue);
+        			}
+        		}   
+        		});
      
 	}
 	
@@ -240,6 +255,12 @@ public class EventGUI extends Component implements GetPersonListener, GetGroupLi
     		}
     	}
     	newevent.addAppliance(persons);
+    	if (roomNr != 0){
+    		
+        	newevent.setRoom(new Room(roomNr));
+    		
+    	}
+    	
     	newevent.setInfo(infoText.getText());
     	newevent.setPriority(priority);
     	
@@ -677,11 +698,7 @@ public class EventGUI extends Component implements GetPersonListener, GetGroupLi
 			freqText.setText("" + freq);
 		}
 		purposeText.setText(event.getEventName());
-		if (event.getRoom() != null){
-			
-		}
-			//////Må fikses på
-			////romChoice.set(event.getRoom().getRoomName());
+
 		infoText.setText(event.getInfo());
 		startDate.setValue(event.getStartDate());
 		endDate.setValue(event.getEndDate());

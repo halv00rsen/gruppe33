@@ -53,9 +53,11 @@ public class Program {
 	    	isLoggedin = false;
 	    }
 	}
+	
 	public Person getCurrentUser(){
 		return currentPerson;
 	}
+	
 	public void createGroup(String name){
 		int groupId = ConnectionMySQL.createGroup(name, 0);
 		if (groupId == -1){
@@ -79,9 +81,30 @@ public class Program {
 		updateGroups();
 	}
 	
+	public void addGroupTo(Group group, Group sub){
+		
+	}
+	
+	public void removeGroupFrom(Group group, Group sub){
+		
+	}
+	
 	public void addPersonGroup(Group group, Person p){
-		group.addMembers(p);
-		ConnectionMySQL.addMembersToGroup(group.id, p.username);
+		if (ConnectionMySQL.addMembersToGroup(group.id, p.username)){
+			group.addMembers(p);
+			List<Event> events = group.getGroupCalendar().getEvents();
+			for (Event e : events){
+				ConnectionMySQL.addMembersToEvent(e.getID(), p.username);
+			}
+		}
+	}
+	
+	public void removePersonGroup(Group group, Person p){
+		if (ConnectionMySQL.removeMembersFromGroup(group.id, p.username)){
+			group.removePerson(p);
+			for (Event e : group.getGroupCalendar().getEvents())
+				ConnectionMySQL.removeMembersFromEvent(e.getID(), p.username);
+		}
 	}
 	
 	public void deleteGroup(int groupId){
@@ -254,6 +277,12 @@ public class Program {
 		String end = to[0] + " " + to[1] + ":00";
 		int eventId = ConnectionMySQL.createEvent(event.getEventName(), event.getLocation(), start, end, event.getPriority().pri
 				, event.getFreq(), event.getInfo());
+		if(event.getRoom().getRoomNr() != 0){
+			
+		ConnectionMySQL.reserveRoom(eventId, event.getRoom().getRoomNr());
+		
+		}
+		
 		if (eventId == -1){
 			if (DEBUG){
 				cal.addEvent(event);
@@ -290,9 +319,12 @@ public class Program {
 		//remove event from database/server
 		Calendar cal = getCalendarFor(event.getID());
 		cal.removeEvent(event);
-		ConnectionMySQL.deleteEvent(event.getID());
+		if (ConnectionMySQL.deleteEvent(event.getID()))
+			callMessage(Message.EventDeleted);
+		else
+			callMessage(Message.EventNotDeleted);
+			
 		updateCalendarListeners();
-		callMessage(Message.EventDeleted);
 //		for (Calendar cal: cals)
 //			cal.removeEvent(event);
 //		callMessage(Message.EventDeleted);
@@ -681,13 +713,5 @@ public class Program {
 		return isLoggedIn() && currentPerson.admin;
 	}
 	
-	public static ArrayList<Room> getRooms() {
-		Room r1 = new Room(0, "Det gule");
-		Room r2 = new Room(1, "Det andre");
-		
-		ArrayList<Room> list = new ArrayList<Room>(); 
-		list.addAll(Arrays.asList(r1, r2));
-		return list;
-		
-	}
+
 }

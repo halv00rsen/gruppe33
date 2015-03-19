@@ -156,7 +156,7 @@ public class ReserveRoomScreen extends Window{
 	}
 	
 	private void reserveRoomMethod(ActionEvent e) {
-		String roomName = availableRooms.getSelectionModel().getSelectedItem();
+		String roomName = availableRooms.getSelectionModel().getSelectedItem().toString();
 			Event event = new Event();
 			event.setEventName("Reservert møterom");
 			event.setStartTime(LocalDateTime.of(datePicker.getValue(), getLocalTime(fromTime)));

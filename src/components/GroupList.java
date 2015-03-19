@@ -163,6 +163,7 @@ public class GroupList<Value> extends VBox{
 	}
 	
 	public void addChoices(List<Value> choices){
+		clearChoices();
 		for (Value v : choices){
 			valueChooser.getItems().add(v);
 //			this.choices.add(v);

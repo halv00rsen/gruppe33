@@ -313,12 +313,6 @@ public class SideMenu extends Component implements CalendarGUIListener{
 		
 		fromTimeData.setText(formattedStartTime);
 		toTimeData.setText(formattedEndTime);
-		try {
-			locationData.setText(event.getRoom().getRoomName());
-		}
-		catch(Exception e) {
-			locationData.setText("Rom ikke valgt");
-		}
 		
 		infoData.setText(event.getInfo());
 		priorityData.setText("" + event.getPriority());

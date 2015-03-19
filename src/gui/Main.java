@@ -118,11 +118,11 @@ public class Main extends Application implements ProgramListener{
 		}
 		
 		public void addGroupTo(Group group, Group subGroup){
-			
+			program.addGroupTo(group, subGroup);
 		}
 		
 		public void removeGroupFrom(Group group, Group subGroup){
-			
+			program.removeGroupFrom(group, subGroup);
 		}
 		
 		public void addNewGroup(String name){
@@ -150,11 +150,11 @@ public class Main extends Application implements ProgramListener{
 		}
 		
 		public void addPersonTo(Group group, Person p){
-			
+			program.addPersonGroup(group, p);
 		}
 		
 		public void removePersonFrom(Group group, Person p){
-			
+			program.removePersonGroup(group, p);
 		}
 	}
 	

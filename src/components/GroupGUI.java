@@ -234,7 +234,13 @@ public class GroupGUI extends Component implements GetPersonListener, GetGroupLi
 			return;
 		persons.setValues(selectedGroup.getMembers());
 		subGroups.setValues(selectedGroup.getSubGroups());
-		
+		List<Group> fancy = new ArrayList<Group>();
+		for (Group g : allGroups){
+			if (selectedGroup != g){
+				fancy.add(g);
+			}
+		}
+		subGroups.addChoices(fancy);
 	}
 	
 	class FieldListener{
@@ -282,10 +288,13 @@ public class GroupGUI extends Component implements GetPersonListener, GetGroupLi
 		this.persons.addChoices(persons);
 		
 	}
+	
+	private List<Group> allGroups;
 
 	@Override
 	public void setGroups(List<Group> groups) {
 		// TODO Auto-generated method stub
+		allGroups = groups;
 		groupItems.clear();
 		for (Group g: groups)
 			groupItems.add(g);
