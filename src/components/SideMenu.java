@@ -3,6 +3,7 @@ package components;
 import gui.Component;
 import gui.Main;
 import gui.Main.ChangeTab;
+import gui.Main.SchedulingGuiMethods;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -11,6 +12,7 @@ import java.util.List;
 
 import components.CalendarGUI.CalendarGUIListener;
 import classes.Event;
+import classes.Person;
 import classes.Priority;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
@@ -32,7 +34,6 @@ import javafx.scene.text.Text;
 
 public class SideMenu extends Component implements CalendarGUIListener{
 
-	private final ChangeTab changeTab;
 	private final ListView<Event> list;
 	private final ObservableList<Event> items;
 	private final HBox listAndInformation;
@@ -45,10 +46,12 @@ public class SideMenu extends Component implements CalendarGUIListener{
 	ArrayList<Event> events = new ArrayList<Event>();
 	private final Text fromTimeData, toTimeData, locationData, infoData, priorityData;
 	private ArrayList<SideMenuInterface> listeners = new ArrayList<SideMenuInterface>();
+	private Person currentUser;
+	private SchedulingGuiMethods mainMethods;
 	
-	public SideMenu(Pane parent, List<Event> events, ChangeTab changeTab) {
+	public SideMenu(Pane parent, List<Event> events, SchedulingGuiMethods mainMethods) {
 		super(parent);
-		this.changeTab = changeTab;
+		this.mainMethods = mainMethods;
 		title = new Label("Arrangementinfo");
 		title.setFont(Main.header1);
 		title.setPadding(new Insets(10, 0, 0, 0));
@@ -142,7 +145,7 @@ public class SideMenu extends Component implements CalendarGUIListener{
 		Event event = list.getSelectionModel().getSelectedItem();
 		if (event == null)
 			return;
-		changeTab.deleteEvent(event);
+		mainMethods.getChangeTab().deleteEvent(event);
 		items.remove(event);
 //		if(list.getSelectionModel().getSelectedIndex() == -1) {
 //			
@@ -156,7 +159,10 @@ public class SideMenu extends Component implements CalendarGUIListener{
 		Event event = list.getSelectionModel().getSelectedItem();
 		if (event == null)
 			return;
-		changeTab.showEvent(event);
+		if(! event.getMadeBy().equals(currentUser)){
+			return;
+		}
+		mainMethods.getChangeTab().showEvent(event);
 	}
 
 
@@ -226,6 +232,13 @@ public class SideMenu extends Component implements CalendarGUIListener{
 	
 	@Override
 	public void eventIsHighligthed(Event event) {
+		if(! event.getMadeBy().equals(currentUser)){
+			editEvent.setDisable(true);
+			deleteEvent.setDisable(true);
+		}else{
+			editEvent.setDisable(false);
+			deleteEvent.setDisable(false);
+		}
 //		changeEvent(event);
 //		list.requestFocus();
 		if (event == null){
@@ -247,6 +260,9 @@ public class SideMenu extends Component implements CalendarGUIListener{
 	}
 	public void addListener(SideMenuInterface obj){
 		this.listeners.add(obj);
+	}
+	public void changeCurrentUser(Person p){
+		this.currentUser = p;
 	}
 	public void alertListenersAboutEventChange(Event event){
 		for (SideMenuInterface listener : this.listeners) {

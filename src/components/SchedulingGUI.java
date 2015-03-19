@@ -4,7 +4,7 @@ import gui.Component;
 import gui.Main.AddGroupListener;
 import gui.Main.AddNewEvent;
 import gui.Main.ChangeTab;
-import gui.Main.UpdateAppliance;
+import gui.Main.SchedulingGuiMethods;
 import gui.Window;
 
 import java.time.LocalDate;
@@ -38,16 +38,16 @@ public class SchedulingGUI extends Component{
     Applicants applicants;
 	private Button settings;
 	private AddNewEvent eventAdder;
-	private UpdateAppliance updateAppliance;
-	public SchedulingGUI(Window parent, ChangeTab tab, AddGroupListener l, Calendar... calendars ) {
+	private SchedulingGuiMethods mainMethods;
+	public SchedulingGUI(Window parent, SchedulingGuiMethods mainMethods, Calendar... calendars ) {
 		super(parent);
-
+		this.mainMethods = mainMethods;
 		BorderPane borderPane = new BorderPane();
 		
 		interactiveElementsBox = new VBox(8);
 		interactiveElementsBox.setTranslateY(CalendarBase.headerHeight);
 		BorderPane.setMargin(interactiveElementsBox, new Insets(10));
-		groupChechBox = new GroupCheckBox(this, l);
+		groupChechBox = new GroupCheckBox(this, mainMethods);
 
 		applicants = new Applicants(this);
 //		settings.setOnAction(e -> main.requestSettingsWindow());
@@ -57,7 +57,7 @@ public class SchedulingGUI extends Component{
 		for (int i = 0; i < calendars.length; i++) {
 			dagens.addAll(calendars[i].getEventsByDay(LocalDate.now()));
 		}
-		menu = new SideMenu(this, dagens, tab);
+		menu = new SideMenu(this, dagens, mainMethods);
 		calendargui.addListener(menu);
 		calendargui.addListener(applicants);
 		menu.addListener(calendargui);
@@ -67,7 +67,7 @@ public class SchedulingGUI extends Component{
 		borderPane.setTop(userInfo);
 		borderPane.setCenter(calendargui);
 		borderPane.setRight(interactiveElementsBox);
-		
+		applicants.setMainMethods(mainMethods);
 //		mainBox.getChildren().addAll(calendargui, calendarAndInfo);
 		this.getChildren().add(borderPane);
 	}
@@ -97,10 +97,7 @@ public class SchedulingGUI extends Component{
 		
 	}
 
-	public void setEventApplianceCaller(UpdateAppliance updateAppliance) {
-		this.updateAppliance = updateAppliance;
-		applicants.setEventApplianceCaller(updateAppliance);
 		
-	}
+		
 
 }
