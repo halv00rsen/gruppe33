@@ -70,30 +70,34 @@ public class Program {
 //	        System.out.println("BYE");
 
 		public void run() {
-	        Timeline timeline = new Timeline();
-	        timeline.setOnFinished( new EventHandler<ActionEvent>(){
-				@Override
-				public void handle(ActionEvent arg0) {
-					run();
-				}
-				
-			});
-	        KeyFrame wait = new KeyFrame(Duration.millis(5000));
-	    	timeline.getKeyFrames().add(wait);
-	    	
-	        ArrayList<HashMap<String, String>> email = ConnectionMySQL.getMessage(getCurrentUser().getUsername());
-		       if(email != null){
-	        	for (int i = 0; i < email.size(); i++) {
-					String from = email.get(i).get("user_from");
-					String to = email.get(i).get("user_to");
-					String info = email.get(i).get("message");
-					Message message = Message.Custom;
-			       	callMessage(message.customMessage(info));
-			       	MailInfo hei = new MailInfo("testmail", from, "00.00.00.00", info, 0);
-			       	createMail(hei);
-				}
-		       }
-		     timeline.play();
+			if(isLoggedin){
+				System.out.println("************************thread******************");
+		        Timeline timeline = new Timeline();
+		        timeline.setOnFinished( new EventHandler<ActionEvent>(){
+					@Override
+					public void handle(ActionEvent arg0) {
+						run();
+					}
+					
+				});
+		        KeyFrame wait = new KeyFrame(Duration.millis(5000));
+		    	timeline.getKeyFrames().add(wait);
+		    	
+		        ArrayList<HashMap<String, String>> email = ConnectionMySQL.getMessage(getCurrentUser().getUsername());
+			       if(email != null){
+		        	for (int i = 0; i < email.size(); i++) {
+						String from = email.get(i).get("user_from");
+						String to = email.get(i).get("user_to");
+						String info = email.get(i).get("message");
+						Message message = Message.Custom;
+				       	callMessage(message.customMessage(info));
+				       	MailInfo hei = new MailInfo("testmail", from, "00.00.00.00", info, 0);
+				       	createMail(hei);
+					}
+			       }
+			     timeline.play();
+			}
+			
 	    }
 	    
 
@@ -805,7 +809,9 @@ public class Program {
 			return;
 		currentPerson = null;
 		activeCalendars.clear();
-		updateThread.cancel();
+		if(updateThread != null){
+			updateThread.cancel();
+		}
 		for (ProgramListener l : listeners)
 			l.logout();
 		
