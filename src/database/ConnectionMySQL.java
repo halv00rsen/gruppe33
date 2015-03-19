@@ -553,15 +553,16 @@ public class ConnectionMySQL {
 		return sendStatement(myStmt);
 	}
 	
-	public ArrayList<HashMap<String, String>> getMessage(String username){
+	
+	public static ArrayList<HashMap<String, String>> getMessage(String username){
 		
 		ArrayList<HashMap<String, String>> allMessages = new ArrayList<HashMap<String, String>>();
 		try {
-			ResultSet myRs = sendQuery("SELECT username_from, message FROM message WHERE user_to = '" + username + "';");
+			ResultSet myRs = sendQuery("SELECT username_from, message FROM message WHERE username_to = '" + username + "';");
 			while (myRs.next()){
 				
 				HashMap<String, String> messages = new HashMap<String, String>();
-				messages.put("user_from", myRs.getString("user_from"));
+				messages.put("username_from", myRs.getString("username_from"));
 				messages.put("message", myRs.getString("message"));
 				allMessages.add(messages);
 				
@@ -571,7 +572,8 @@ public class ConnectionMySQL {
 				e.printStackTrace();
 			return null;
 		}
-
+		String myStmt = "DELETE FROM Message WHERE username_to = '" + username + "';";
+		sendStatement(myStmt);
 		return allMessages;
 		
 	}
