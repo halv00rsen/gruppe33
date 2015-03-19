@@ -549,7 +549,13 @@ public class Program {
 		}
 		event.setInfo(e.get("info"));
 		
-//		String creator = ConnectionMySQL.getEventCreator(event.getID());
+		String creator = ConnectionMySQL.getEventCreator(event.getID());
+		for (Person p : allUsers){
+			if (p.username.equals(creator)){
+				event.setMadeBy(p);
+				break;
+			}
+		}
 		
 		List<HashMap<String, String>> applicants = ConnectionMySQL.getAppliances(event.getID());
 		for (Map<String, String> a: applicants){
