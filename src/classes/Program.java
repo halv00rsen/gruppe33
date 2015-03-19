@@ -45,6 +45,31 @@ public class Program {
 	    	mailInfo = new ArrayList<MailInfo>();
 	    }
 
+<<<<<<< HEAD
+	    public void run() {
+	    	mailInfo = new ArrayList<MailInfo>();
+	        while(isLoggedin){
+	        try {
+				Thread.sleep(1000);
+			} catch (InterruptedException e) {
+			}
+	        	
+	        	ArrayList<HashMap<String, String>> email = ConnectionMySQL.getMessage(getCurrentUser().getUsername());
+		        if(email != null){
+	        		for (int i = 0; i < email.size(); i++) {
+						String from = email.get(i).get("user_from");
+						String to = email.get(i).get("user_to");
+						String info = email.get(i).get("message");
+						Message message = Message.Custom;
+//			        	callMessage(message.customMessage(info));
+			        	MailInfo hei = new MailInfo("testmail", from, "00.00.00.00", info, 0);
+			        	createMail(hei);
+					}
+		        }
+	        	
+	        }
+	        System.out.println("BYE");
+=======
 
 		public void run() {
 			System.out.println("************************thread******************");
@@ -72,6 +97,7 @@ public class Program {
 				}
 		       }
 		     timeline.play();
+>>>>>>> fc2c6f376f3b9a27274f56431cfb92b201f18b3d
 	    }
 	    
 
