@@ -17,7 +17,7 @@ public class Event implements Comparable<Event>{
 	private LocalDate endDate;
 	private LocalDateTime startTime;
 	private LocalDateTime endTime;
-	private Integer freq;
+	private int freq;
 	private Priority priority;
 	private String info;
 	private LocalDate freqEnd;
