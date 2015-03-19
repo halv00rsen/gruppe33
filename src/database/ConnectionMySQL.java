@@ -552,7 +552,7 @@ public class ConnectionMySQL {
 		return sendStatement(myStmt);
 	}
 	
-	public ArrayList<HashMap<String, String>> getMessage(String username){
+	public static ArrayList<HashMap<String, String>> getMessage(String username){
 		
 		ArrayList<HashMap<String, String>> allMessages = new ArrayList<HashMap<String, String>>();
 		try {

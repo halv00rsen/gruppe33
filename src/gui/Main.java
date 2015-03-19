@@ -10,6 +10,7 @@ import classes.Calendar;
 import classes.Event;
 import classes.EventAppliance;
 import classes.Group;
+import classes.MailInfo;
 import classes.Message;
 import classes.Person;
 import classes.Program;
@@ -484,6 +485,12 @@ public class Main extends Application implements ProgramListener{
 	
 	public interface GetGroupListener{
 		public void setGroups(List<Group> groups);
+	}
+
+	@Override
+	public void createMail(MailInfo mailInfo) {
+		inboxScreen.createMail(mailInfo);
+		
 	}
 	
 }

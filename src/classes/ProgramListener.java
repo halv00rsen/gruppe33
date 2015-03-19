@@ -16,4 +16,5 @@ public interface ProgramListener {
 	public void updateCalendar(Calendar[] cal);
 	public void setAllPersons(List<Person> persons);
 	public void updatePersonInformation(Person person);
+	public void createMail(MailInfo mailInfo);
 }

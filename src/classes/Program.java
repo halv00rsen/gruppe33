@@ -21,7 +21,7 @@ public class Program {
 	private final List<Person> allUsers;
 	public UpdateThread updateThread;
 	private Person currentPerson;
-	
+	ArrayList<MailInfo> mailInfo;
 	public Program(){
 		listeners = new ArrayList<ProgramListener>();
 		activeCalendars = new ArrayList<Calendar>();
@@ -36,24 +36,39 @@ public class Program {
 	    }
 
 	    public void run() {
-	    	
+	    	mailInfo = new ArrayList<MailInfo>();
 	        while(isLoggedin){
 	        try {
 				Thread.sleep(1000);
 			} catch (InterruptedException e) {
 			}
-//	        	ConnectionMySQL.getMessage()
-	        	Message message = Message.Custom;
-	        	callMessage(message.customMessage(""));
+	        
+	        	ArrayList<HashMap<String, String>> email = ConnectionMySQL.getMessage(getCurrentUser().getUsername());
+	        	for (int i = 0; i < email.size(); i++) {
+					String from = email.get(i).get("user_from");
+					String to = email.get(i).get("user_to");
+					String info = email.get(i).get("message");
+					Message message = Message.Custom;
+		        	callMessage(message.customMessage(info));
+		        	MailInfo hei = new MailInfo("testmail", from, "00.00.00.00", info, 0);
+		        	createMail(hei);
+				}
+	        	
 	        	
 	        }
 	        System.out.println("BYE");
 	    }
-	    public void cancel(){
+	    
+
+		public void cancel(){
 	    	isLoggedin = false;
 	    }
 	}
-	
+	public void createMail(MailInfo hei) {
+		for (ProgramListener l : listeners)
+			l.createMail(hei);
+		
+	}
 	public Person getCurrentUser(){
 		return currentPerson;
 	}
@@ -168,9 +183,8 @@ public class Program {
 		String[] to = event.getEndTime().toString().split("T");
 		String start = from[0] + " " + from[1] + ":00";
 		String end = to[0] + " " + to[1] + ":00";
-		if (ConnectionMySQL.updateEvent("" + eventId, event.getEventName(), event.getLocation(), start, end, event.getPriority().pri, null
-				, event.getFreq(), event.getInfo())){
-			
+		if (ConnectionMySQL.updateEvent("" + eventId, event.getEventName(), event.getLocation(), start, end, event.getPriority().pri, null, event.getFreq(), event.getInfo())){
+			System.out.println("ENDRING GIKK BRA*************");
 		}else{
 			if (DEBUG){
 				System.out.println("change event connection false");
