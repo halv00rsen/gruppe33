@@ -263,9 +263,11 @@ public class Program {
 	public void updateAppliance(Event event, EventAppliance eventAppliance){
 		ConnectionMySQL.setAppliance(event.getID(), eventAppliance.getPerson().getUsername(), eventAppliance.getAppliance().getStateName());
 	}
-	public void deleteEvent(Event event, Calendar...cals){
+	public void deleteEvent(Event event){
 		//remove event from database/server
-		currentPerson.getPersonalCalendar().removeEvent(event);
+		Calendar cal = getCalendarFor(event.getID());
+		cal.removeEvent(event);
+		ConnectionMySQL.deleteEvent(event.getID());
 		updateCalendarListeners();
 		callMessage(Message.EventDeleted);
 //		for (Calendar cal: cals)
@@ -454,11 +456,6 @@ public class Program {
 			Event event = convertEventServer(ev);
 			currentPerson.getPersonalCalendar().addEvent(event);
 		}
-		for(Event e : currentPerson.getPersonalCalendar().getEvents()){
-			
-			System.out.println(e.debugString());
-			
-		}
 	}
 	
 	private boolean contains(int id, List<Integer> l){
@@ -557,7 +554,13 @@ public class Program {
 		}
 		event.setInfo(e.get("info"));
 		
-//		String creator = ConnectionMySQL.getEventCreator(event.getID());
+		String creator = ConnectionMySQL.getEventCreator(event.getID());
+		for (Person p : allUsers){
+			if (p.username.equals(creator)){
+				event.setMadeBy(p);
+				break;
+			}
+		}
 		
 		List<HashMap<String, String>> applicants = ConnectionMySQL.getAppliances(event.getID());
 		for (Map<String, String> a: applicants){

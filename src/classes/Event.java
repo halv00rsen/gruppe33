@@ -5,6 +5,8 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
+import database.PersonInformation;
+
 public class Event implements Comparable<Event>{
 	private final List<EventAppliance> appliance;
 	
@@ -113,6 +115,9 @@ public class Event implements Comparable<Event>{
 	}
 	public void setMadeBy(Person p){
 		madeBy = p;
+		//DEBUGFELT vvvvvvvvv
+			madeBy = PersonInformation.getPeople().get(1);
+		//DEBUGFELT ^^^^^^^^^
 		appliance.add(new EventAppliance(p, Appliance.Not_Answered));
 	}
 	public Person getMadeBy(Person p){

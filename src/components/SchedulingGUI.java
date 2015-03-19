@@ -74,7 +74,6 @@ public class SchedulingGUI extends Component{
 	
 	public void changePerson(Person p){
 		userInfo.changePerson(p);
-		applicants.changePerson(p);
 	}
 
 	public void updateCalendars(Calendar... calendars){
@@ -89,7 +88,7 @@ public class SchedulingGUI extends Component{
 //	}
 	
 	public void addEventFromCalendar(Event event) {
-		eventAdder.addEvent(event, null);
+		mainMethods.getAddNewEvent().addEvent(event, null);
 	}
 
 	public void setEventAdder(AddNewEvent eventAdder) {

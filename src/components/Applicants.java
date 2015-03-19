@@ -120,9 +120,9 @@ public class Applicants extends Component implements CalendarGUIListener{
     
     private void btnCalled(ActionEvent e) {
     	if(currentEvent != null){
-    		mainMethods.updateAppliance(currentEvent, new EventAppliance(currentUser, choiceBox.getSelectionModel().getSelectedItem()));
+    		mainMethods.updateAppliance(currentEvent, new EventAppliance(mainMethods.getCurrentUser(), choiceBox.getSelectionModel().getSelectedItem()));
     		for (EventAppliance c : items){
-    			if(c.getPerson().getUsername().equals(currentUser.username)){
+    			if(c.getPerson().getUsername().equals(mainMethods.getCurrentUser().getUsername())){
     				c.setAppliance(choiceBox.getSelectionModel().getSelectedItem());
     				redraw();
     			}
@@ -190,7 +190,7 @@ public class Applicants extends Component implements CalendarGUIListener{
 			currentEvent = event;
 			EventAppliance me = null;
 			for (EventAppliance e : event.getAppliance()){
-				if(e.getPerson().getUsername().equals(currentUser.username)){
+				if(e.getPerson().getUsername().equals(mainMethods.getCurrentUser().getUsername())){
 					me = e;
 					choiceBox.getSelectionModel().select(me.getAppliance());
 				}
@@ -203,10 +203,6 @@ public class Applicants extends Component implements CalendarGUIListener{
 		
 	}
 
-	public void changePerson(Person p) {
-		this.currentUser = p;
-		
-	}
 
 		
 
