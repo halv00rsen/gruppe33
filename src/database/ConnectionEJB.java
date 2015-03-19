@@ -765,7 +765,8 @@ public class ConnectionEJB {
 		try {
 			groupBean = groupLookup();
 			
-			groupBean.removeParentGroup(group, parentGroup);
+			groupBean.removeParentGroup(group);
+			
 		} catch (Exception e) {
 			if (DEBUG) e.printStackTrace();
 			return false;
