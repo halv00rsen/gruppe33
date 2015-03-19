@@ -165,7 +165,7 @@ public class LoginGUI extends Component{
 			@Override
 			public void handle(ActionEvent arg0) {
 		
-				System.out.println(ConnectionMySQL.sendMessage("berger123", "Ola123", "Dette er en test"));
+				System.out.println(ConnectionMySQL.getMessage("Ola123"));
 				validateEmail();
 				
 			}

@@ -230,7 +230,9 @@ public class Main extends Application implements ProgramListener{
 
 				@Override
 				public void handle(WindowEvent event) {
-					program.updateThread.cancel();
+					if(program.updateThread != null){
+						program.updateThread.cancel();
+					}
 					program.logout();
 				}
 				
