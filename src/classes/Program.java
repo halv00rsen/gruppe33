@@ -124,6 +124,10 @@ public class Program {
 		for (EventAppliance e : oldEvent.getAppliance()){
 			ConnectionMySQL.removeMembersFromEvent(eventId, e.person.username);
 		}
+		if (event.getAppliance().isEmpty()){
+			event.getAppliance().add(oldEvent.getAppliance().get(0));
+		}else
+			event.getAppliance().add(0, oldEvent.getAppliance().get(0));
 		for (EventAppliance e : event.getAppliance()){
 			ConnectionMySQL.addMembersToEvent(eventId, e.person.username);
 		}
@@ -159,6 +163,16 @@ public class Program {
 //			cals.addEvent(event);
 //		callMessage(Message.EventAdded);
 		e.setMadeBy(currentPerson);
+		if (cal != null){
+			for (Group g : currentPerson.getGroups()){
+				if (cal.isOwner(g.id, TypeOfCalendar.Group)){
+					for (Person p : g.getMembers()){
+						e.getAppliance().add(new EventAppliance(p, Appliance.Not_Answered));
+					}
+					break;
+				}
+			}
+		}
 		
 		if(e.getFreq() != null){
 			
@@ -225,7 +239,7 @@ public class Program {
 		}
 		for (EventAppliance p : event.getAppliance()){
 			ConnectionMySQL.addMembersToEvent(eventId, p.getPerson().getUsername());
-			updateAppliance(event, p);
+//			updateAppliance(event, p);
 		}
 		event.setId(eventId);
 		cal.addEvent(event);

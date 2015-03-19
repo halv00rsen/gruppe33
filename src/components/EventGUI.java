@@ -183,16 +183,18 @@ public class EventGUI extends Component implements GetPersonListener, GetGroupLi
     		newevent.setFreq(ting, false, freqEnd);
     	}else
     		newevent.setFreq(0, true, freqEnd);
+    	int index = calendarChoice.getSelectionModel().getSelectedIndex();
+    	Calendar calendar = calendarChoice.getItems().get(index);
     	List<EventAppliance> persons = new ArrayList<EventAppliance>();
-    	for (Person p : listPeople){
-    		persons.add(new EventAppliance(p, Appliance.Not_Answered));
+    	if (calendar.type == TypeOfCalendar.Personal){
+    		for (Person p : listPeople){
+    			persons.add(new EventAppliance(p, Appliance.Not_Answered));
+    		}
     	}
     	newevent.addAppliance(persons);
     	newevent.setInfo(infoText.getText());
     	newevent.setPriority(priority);
     	
-    	int index = calendarChoice.getSelectionModel().getSelectedIndex();
-    	Calendar calendar = calendarChoice.getItems().get(index);
     	if (currentEvent == null){
     		eventCall.addEvent(newevent, (calendar.type == TypeOfCalendar.Personal ? null: calendar) );
     		changeTab.showEventInHomeScreen(newevent);
@@ -414,6 +416,7 @@ public class EventGUI extends Component implements GetPersonListener, GetGroupLi
         FxUtil.autoCompleteComboBox(searchPeople, FxUtil.AutoCompleteMode.CONTAINING); 
         //ListView
         comboPeople = searchPeople.getItems();
+        
         invited.setMaxHeight(300);
         listPeople = FXCollections.observableArrayList();
         invited.setItems(listPeople);
@@ -477,6 +480,28 @@ public class EventGUI extends Component implements GetPersonListener, GetGroupLi
         blueBox.setPrefHeight(500);
         blueBox.setPrefWidth(300);
         blueBox.getChildren().add(listBox);
+        
+        calendarChoice.setOnAction(new EventHandler<ActionEvent>(){
+        	
+        	public void handle(ActionEvent e){
+        		int index = calendarChoice.getSelectionModel().getSelectedIndex();
+        		if (index == -1)
+        			return;
+        		Calendar cal = calendarItems.get(index);
+        		if (cal == null)
+        			return;
+        		if (cal.type == TypeOfCalendar.Personal){
+        			buttonsBox.setDisable(false);
+        			invited.setDisable(false);
+        		}else{
+        			buttonsBox.setDisable(true);
+        			invited.setDisable(true);
+        		}
+//        		if (calendarChoice.getValue().type == TypeOfCalendar.Personal){
+//        			
+//        		}
+        	}
+        });
         
       //Priority
         BorderPane prioThings = new BorderPane();
