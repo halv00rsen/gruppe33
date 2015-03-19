@@ -8,6 +8,14 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import components.CalendarBase;
+import javafx.animation.KeyFrame;
+import javafx.animation.KeyValue;
+import javafx.animation.Timeline;
+import javafx.concurrent.Task;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
+import javafx.util.Duration;
 import classes.Calendar.TypeOfCalendar;
 import database.ConnectionMySQL;
 import database.CreateUser;
@@ -29,12 +37,15 @@ public class Program {
 		allUsers = new ArrayList<Person>();
 		//opprett kobling med database og/eller socketprogram
 	}
-	public class UpdateThread extends Thread {
-		boolean isLoggedin;
-	    UpdateThread() {
+	public class UpdateThread{
+		public boolean isLoggedin;
+		
+	    public UpdateThread() {
 	    	isLoggedin = true;
+	    	mailInfo = new ArrayList<MailInfo>();
 	    }
 
+<<<<<<< HEAD
 	    public void run() {
 	    	mailInfo = new ArrayList<MailInfo>();
 	        while(isLoggedin){
@@ -58,6 +69,34 @@ public class Program {
 	        	
 	        }
 	        System.out.println("BYE");
+=======
+
+		public void run() {
+	        Timeline timeline = new Timeline();
+	        timeline.setOnFinished( new EventHandler<ActionEvent>(){
+				@Override
+				public void handle(ActionEvent arg0) {
+					run();
+				}
+				
+			});
+	        KeyFrame wait = new KeyFrame(Duration.millis(5000));
+	    	timeline.getKeyFrames().add(wait);
+	    	
+	        ArrayList<HashMap<String, String>> email = ConnectionMySQL.getMessage(getCurrentUser().getUsername());
+		       if(email != null){
+	        	for (int i = 0; i < email.size(); i++) {
+					String from = email.get(i).get("user_from");
+					String to = email.get(i).get("user_to");
+					String info = email.get(i).get("message");
+					Message message = Message.Custom;
+			       	callMessage(message.customMessage(info));
+			       	MailInfo hei = new MailInfo("testmail", from, "00.00.00.00", info, 0);
+			       	createMail(hei);
+				}
+		       }
+		     timeline.play();
+>>>>>>> fc2c6f376f3b9a27274f56431cfb92b201f18b3d
 	    }
 	    
 
@@ -509,8 +548,9 @@ public class Program {
 			}
 			currentPerson = new Person(usernameDatabase, passwordDatabase, firstname, lastname, Boolean.getBoolean(info.get("isAdmin")));
 			currentPerson.setOtherInfo(info.get("phone"), info.get("email"));
+			
 			updateThread = new UpdateThread();
-			updateThread.start();
+			updateThread.run();
 		}
 		
 		activeCalendars.add(currentPerson.getPersonalCalendar());
