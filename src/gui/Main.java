@@ -307,7 +307,7 @@ public class Main extends Application implements ProgramListener{
 		homeScreen.highlightEvent(event);
 	}
 
-	private Tab home, newEvent, room, persons, inbox, settings, groups;
+	private Tab home, newEvent, persons, inbox, settings, groups;
 	
 	@Override
 	public void loginSuccess(Person person) {
@@ -330,9 +330,9 @@ public class Main extends Application implements ProgramListener{
 		eventScreen = new EventScreen(new AddNewEvent(), new ChangeTab(), new AddPersonListener(), new AddGroupListener());
 		newEvent.setContent(eventScreen);
 		
-		room = new Tab("Reserver Rom");
-		reserveRoomScreen = new ReserveRoomScreen();
-		room.setContent(reserveRoomScreen);
+//		room = new Tab("Reserver Rom");
+//		reserveRoomScreen = new ReserveRoomScreen();
+//		room.setContent(reserveRoomScreen);
 		
 		groups = new Tab("Grupper");
 		groups.setContent(new GroupScreen(new AddPersonListener(), new AddGroupListener()));
@@ -352,7 +352,7 @@ public class Main extends Application implements ProgramListener{
 		settings.setContent(settingsScreen);
 		settingsScreen.setUserInfo(person.getFirstname(), person.getLastname(), person.getMail(), person.getPhone(), person.username);
 		
-		tabPane.getTabs().addAll(home, newEvent, room, persons, inbox, settings, groups);
+		tabPane.getTabs().addAll(home, newEvent, persons, inbox, settings, groups);
 		tabPane.setTabMinWidth(75);
 		if (program.isAdminLogIn()){
 			Tab newUser = new Tab("Ny bruker");
