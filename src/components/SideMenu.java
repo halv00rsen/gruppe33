@@ -46,7 +46,6 @@ public class SideMenu extends Component implements CalendarGUIListener{
 	ArrayList<Event> events = new ArrayList<Event>();
 	private final Text fromTimeData, toTimeData, locationData, infoData, priorityData;
 	private ArrayList<SideMenuInterface> listeners = new ArrayList<SideMenuInterface>();
-	private Person currentUser;
 	private SchedulingGuiMethods mainMethods;
 	
 	public SideMenu(Pane parent, List<Event> events, SchedulingGuiMethods mainMethods) {
@@ -112,6 +111,7 @@ public class SideMenu extends Component implements CalendarGUIListener{
 //		    	System.out.println(newValue.getID());
 				for (Event event : items) {
 					if (event == newValue){
+						
 						changeEvent(event);
 						alertListenersAboutEventChange(event);
 						
@@ -147,6 +147,8 @@ public class SideMenu extends Component implements CalendarGUIListener{
 			return;
 		mainMethods.getChangeTab().deleteEvent(event);
 		items.remove(event);
+		editEvent.setDisable(true);
+		deleteEvent.setDisable(true);
 //		if(list.getSelectionModel().getSelectedIndex() == -1) {
 //			
 //		}
@@ -159,7 +161,7 @@ public class SideMenu extends Component implements CalendarGUIListener{
 		Event event = list.getSelectionModel().getSelectedItem();
 		if (event == null)
 			return;
-		if(! event.getMadeBy().equals(currentUser)){
+		if(! event.getMadeBy().equals(mainMethods.getCurrentUser())){
 			return;
 		}
 		mainMethods.getChangeTab().showEvent(event);
@@ -232,24 +234,16 @@ public class SideMenu extends Component implements CalendarGUIListener{
 	
 	@Override
 	public void eventIsHighligthed(Event event) {
-		if(! event.getMadeBy().equals(currentUser)){
-			editEvent.setDisable(true);
-			deleteEvent.setDisable(true);
-		}else{
-			editEvent.setDisable(false);
-			deleteEvent.setDisable(false);
-		}
+		
 //		changeEvent(event);
 //		list.requestFocus();
 		if (event == null){
-			System.out.println("event is higligjgjd is null");
 			return;
 		}
 		event.getID();
 		
 		for (int i = 0; i< events.size(); i++) {
 			if(event.getID() == events.get(i).getID()){
-				System.out.println("FOUND FOUND FOUND");
 				list.getSelectionModel().select(events.get(i));
 				
 			}
@@ -260,9 +254,6 @@ public class SideMenu extends Component implements CalendarGUIListener{
 	}
 	public void addListener(SideMenuInterface obj){
 		this.listeners.add(obj);
-	}
-	public void changeCurrentUser(Person p){
-		this.currentUser = p;
 	}
 	public void alertListenersAboutEventChange(Event event){
 		for (SideMenuInterface listener : this.listeners) {
