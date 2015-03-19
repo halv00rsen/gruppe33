@@ -50,7 +50,7 @@ public class Program {
 						String to = email.get(i).get("user_to");
 						String info = email.get(i).get("message");
 						Message message = Message.Custom;
-			        	callMessage(message.customMessage(info));
+//			        	callMessage(message.customMessage(info));
 			        	MailInfo hei = new MailInfo("testmail", from, "00.00.00.00", info, 0);
 			        	createMail(hei);
 					}

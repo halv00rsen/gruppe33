@@ -21,9 +21,9 @@ public class ConnectionMySQL {
 	
 	private static boolean DEBUG = false;
 	private static String driver = "com.mysql.jdbc.Driver";
-	private static String url = "jdbc:mysql://localhost/";
-	private static String dbName = "test";
-	private static String user = "root";
+	private static String url = "jdbc:mysql://mysql.stud.ntnu.no/";
+	private static String dbName = "simendw_calendar";
+	private static String user = "simendw_gruppe33";
 	private static String password = "passord";
 		
 	private static ResultSet sendQuery(String query) {
@@ -124,7 +124,7 @@ public class ConnectionMySQL {
 
 	public static boolean createUser(String username, String firstName, String lastName, String password, String email, String phone, boolean isAdmin) { 
 		
-		String myStmt = "INSERT INTO Person SET username = '" + username + "', firstName = '" + firstName + "', lastName = '" + lastName
+		String myStmt = "INSERT INTO person SET username = '" + username + "', firstName = '" + firstName + "', lastName = '" + lastName
 				 + "', password = '" + password + "', email = '" + email + "', isAdmin = " + isAdmin;
 		if(!phone.isEmpty()) myStmt += ", phone = '" + phone + "'";
 		myStmt += ";";
