@@ -189,6 +189,12 @@ public class Main extends Application implements ProgramListener{
 		}
 		
 	}
+	public class MessageDeleter{
+		
+		public void deleteMessage(String username_from, String username_to, String info){
+			program.deleteMessage(username_from,username_to,info);
+		}
+	}
 	public class EventHider{
 		public void hideEvent(Event event, Person person){
 			//kan bare kjøres en gang
@@ -344,7 +350,7 @@ public class Main extends Application implements ProgramListener{
 		
 		
 		inbox = new Tab("Postkasse");
-		inboxScreen = new InboxScreen(new GoToEvent());
+		inboxScreen = new InboxScreen(new GoToEvent(),new MessageDeleter());
 		inbox.setContent(inboxScreen);
 		
 		settings = new Tab("Innstillinger");
@@ -375,7 +381,7 @@ public class Main extends Application implements ProgramListener{
 		Button slideAway = new Button("Fjern melding");
 		slideAway.setOnAction(e -> messageScreen.hide());
 		vBox.getChildren().addAll(logout, slideButton, slideAway);
-		slideButton.setOnAction(e -> messageScreen.show("heisann", EventInfo.FromInbox));
+		slideButton.setOnAction(e -> messageScreen.show("Melding", EventInfo.FromInbox));
 		root.getChildren().addAll(tabPane, messageScreen, vBox);
 //		logout.setLayoutX(1020);
 //		logout.setLayoutY(2);

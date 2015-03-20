@@ -3,6 +3,7 @@ package components;
 import classes.MailInfo;
 import gui.Main;
 import gui.Main.GoToEvent;
+import gui.Main.MessageDeleter;
 import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.scene.Cursor;
@@ -15,14 +16,20 @@ public class MailBox extends Pane{
 	String backupStyle;
 	private final int eventId;
 	String defaultStyle = "-fx-background-color: #FFFF99; -fx-border:3";
-	public MailBox(MailInfo info, GoToEvent goToEvent){
-		this.eventId = info.eventId;
+	public MessageDeleter mesDel;
+	private Inbox inbox;
+	public MailBox thisMailBox;
+	public MailBox(MailInfo message, GoToEvent goToEvent,MessageDeleter mesDel,Inbox inbox){
+		this.inbox = inbox;
+		thisMailBox = this;
+		this.eventId = message.eventId;
 		System.out.println("EVENTID in mailbox" + eventId);
 		VBox box = new VBox(5);
-		Text header = new Text(info.header);
-		Text from = new Text("Fra: " + info.from);
-		Text date = new Text("Dato: " + info.date);
-		Text mail = new Text(info.status);
+		Text header = new Text(message.header);
+		this.mesDel = mesDel;
+		Text from = new Text("Fra: " + message.from);
+		Text date = new Text("Dato: " + message.date);
+		Text mail = new Text(message.status);
 		setPrefWidth(Main.getWidth() / 2);
 		box.getChildren().addAll(header, from, date, mail);
 		getChildren().add(box);
@@ -36,7 +43,10 @@ public class MailBox extends Pane{
 				defaultStyle = "-fx-background-color: #DDDDDD; -fx-border:3";
 				backupStyle = "-fx-background-color: #DDDDDD; -fx-border:3";
 				setStyle("-fx-background-color: #DDDDDD; -fx-border:3");
+				System.out.println(message.from +" " +  message.to + " " +message.status);
+				mesDel.deleteMessage(message.from, message.to, message.status);
 				goToEvent.goToEvent(eventId);
+				inbox.removeMail(thisMailBox);
 			}
 		});
 		

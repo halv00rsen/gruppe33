@@ -6,6 +6,7 @@ import javafx.scene.Group;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Text;
+import javafx.scene.text.TextFlow;
 import javafx.util.Duration;
 
 public class MessageScreen extends Group{
@@ -23,13 +24,15 @@ public class MessageScreen extends Group{
 		rec.setStrokeWidth(3);
 		rec.setStroke(Color.BLACK);
 		message = new Text("heisanndu");
+		TextFlow textFlow = new TextFlow(message);
+        textFlow.setMaxWidth(200);
 		message.setX(20);
 		message.setY(40);
 //		rec.setStyle("-fx-border: 3; -fx-border-color: #FF9933; -fx-background-color: #FFB870");
 		Text header = new Text("Melding!");
 		header.setX(20);
 		header.setY(20);
-		getChildren().addAll(rec, header, message);
+		getChildren().addAll(rec,textFlow);
 		setLayoutX(280);
 		setLayoutY(- 1 * height - 5);
 		showing = false;
