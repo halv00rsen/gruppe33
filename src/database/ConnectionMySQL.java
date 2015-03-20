@@ -559,13 +559,15 @@ public class ConnectionMySQL {
 		
 		ArrayList<HashMap<String, String>> allMessages = new ArrayList<HashMap<String, String>>();
 		try {
-			ResultSet myRs = sendQuery("SELECT username_from, message FROM message WHERE username_to = '" + username + "';");
+			ResultSet myRs = sendQuery("SELECT username_from, message FROM Message;");
+			
+//			ResultSet myRs = sendQuery("SELECT username_from, message FROM Message WHERE username_to = '" + username + "';");
 			while (myRs.next()){
-				
-				HashMap<String, String> messages = new HashMap<String, String>();
-				messages.put("username_from", myRs.getString("username_from"));
-				messages.put("message", myRs.getString("message"));
-				allMessages.add(messages);
+				System.out.println("FANT" + myRs.getString("message"));
+//				HashMap<String, String> messages = new HashMap<String, String>();
+//				messages.put("username_from", myRs.getString("username_from"));
+//				messages.put("message", myRs.getString("message"));
+//				allMessages.add(messages);
 				
 			}
 		} catch (Exception e) {
@@ -573,8 +575,8 @@ public class ConnectionMySQL {
 				e.printStackTrace();
 			return null;
 		}
-		String myStmt = "DELETE FROM Message WHERE username_to = '" + username + "';";
-		sendStatement(myStmt);
+//		String myStmt = "DELETE FROM Message WHERE username_to = '" + username + "';";
+//		sendStatement(myStmt);
 		return allMessages;
 		
 	}

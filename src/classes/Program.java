@@ -82,18 +82,24 @@ public class Program {
 				});
 		        KeyFrame wait = new KeyFrame(Duration.millis(5000));
 		    	timeline.getKeyFrames().add(wait);
-		    	
 		        ArrayList<HashMap<String, String>> email = ConnectionMySQL.getMessage(getCurrentUser().getUsername());
 			       if(email != null){
-		        	for (int i = 0; i < email.size(); i++) {
-						String from = email.get(i).get("user_from");
-						String to = email.get(i).get("user_to");
-						String info = email.get(i).get("message");
-						Message message = Message.Custom;
-				       	callMessage(message.customMessage(info));
-				       	MailInfo hei = new MailInfo("testmail", from, "00.00.00.00", info, 0);
-				       	createMail(hei);
-					}
+			    	   System.out.println("email er ikke null!");
+			    	   System.out.println("email"+email);
+//			    	   
+//			    	   System.out.println("email.get(0)"+email.get(0));
+//			    	   System.out.println("email.get(0).get(username_from)"+email.get(0).get("username_from"));
+			    	   	for (int i = 0; i < email.size(); i++) {
+			    	   		String from = email.get(i).get("username_from");
+							String to = email.get(i).get("username_to");
+							String info = email.get(i).get("message");
+							
+				    	   	
+							Message message = Message.Custom;
+					       	callMessage(message.customMessage(info));
+					       	MailInfo hei = new MailInfo("testmail", from, "00.00.00.00", info, 353);
+					       	createMail(hei);
+			    	   	}
 			       }
 			     timeline.play();
 			}
@@ -298,6 +304,7 @@ public class Program {
 			newCal.addEvent(oldEvent);
 		}
 		for (EventAppliance e : oldEvent.getAppliance()){
+//			ConnectionMySQL.sendMessage(getCurrentUser().getUsername(), e.person.username, "DETTE ER EN TEST");
 			ConnectionMySQL.removeMembersFromEvent(eventId, e.person.username);
 		}
 		if (event.getAppliance().isEmpty()){
@@ -309,6 +316,8 @@ public class Program {
 		}
 		oldEvent.overrideEvent(event);
 		ConnectionMySQL.sendMessage(getCurrentUser().getUsername(), getCurrentUser().getUsername(), "DETTE ER EN TEST");
+	
+		
 //		createMail(new MailInfo("HEIHIG","UOBEG","PUP","bpi",oldEvent.getID()));
 		updateCalendars();
 	}
