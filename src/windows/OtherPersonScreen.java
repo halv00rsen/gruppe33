@@ -68,7 +68,6 @@ public class OtherPersonScreen extends Window implements GetPersonListener{
 			int p = peopleComboBox.getSelectionModel().getSelectedIndex();
 			if (p == -1)
 				return;
-			System.out.println("Hiodgjioerjgioe");
 	        mainBox.getChildren().remove(schedulingGUI);
 	        cal = new PersonCalendar(items.get(p));
 	        schedulingGUI = new SchedulingGUI(this,mainMethods,cal);
