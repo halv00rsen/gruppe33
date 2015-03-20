@@ -2,6 +2,7 @@ package database;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
+import java.sql.DatabaseMetaData;
 import java.sql.DriverManager;
 import java.sql.Connection;
 import java.sql.Statement;
@@ -75,6 +76,8 @@ public class ConnectionMySQL {
 			return myConn;
 			
 		} catch (Exception e) {
+			if (DEBUG)
+				e.printStackTrace();
 			return null;
 		}
 	}
@@ -409,8 +412,8 @@ public class ConnectionMySQL {
 		ArrayList<HashMap<String, String>> allGroups = new ArrayList<HashMap<String, String>>();
 		try {
 			ResultSet myRs = sendQuery("SELECT personGroup.groupid, groupName, parent " + 
-					"FROM personGroup, person, isMemberOF " + 
-					"WHERE personGroup.groupId = isMemberOF.groupId AND person.username = isMemberOf.username AND person.username = '" + username + "';");
+					"FROM personGroup, person, isMemberOf " + 
+					"WHERE personGroup.groupId = isMemberOf.groupId AND person.username = isMemberOf.username AND person.username = '" + username + "';");
 			while (myRs.next()){
 				
 				HashMap<String, String> groups = new HashMap<String, String>();
@@ -550,24 +553,24 @@ public class ConnectionMySQL {
 	}
 	
 	public static boolean sendMessage(String username_from, String username_to, String message){
+		String myStmt = "INSERT INTO message (username_from,username_to,message) VALUES ('"+username_from+"','"+username_to+"','"+message+"');";
 		
-		String myStmt = "INSERT INTO Message VALUES(NULL, '" + message + "', '" + username_from + "', '" + username_to + "');";
+//		String myStmt = "INSERT INTO Message VALUES(NULL, '" + message + "', '" + username_from + "', '" + username_to + "');";
 		return sendStatement(myStmt);
+//		return false;
 	}
 	
 	public static ArrayList<HashMap<String, String>> getMessage(String username){
-		
 		ArrayList<HashMap<String, String>> allMessages = new ArrayList<HashMap<String, String>>();
 		try {
-			ResultSet myRs = sendQuery("SELECT username_from, message FROM Message;");
-			
-//			ResultSet myRs = sendQuery("SELECT username_from, message FROM Message WHERE username_to = '" + username + "';");
-			while (myRs.next()){
-				System.out.println("FANT" + myRs.getString("message"));
-//				HashMap<String, String> messages = new HashMap<String, String>();
-//				messages.put("username_from", myRs.getString("username_from"));
-//				messages.put("message", myRs.getString("message"));
-//				allMessages.add(messages);
+			ResultSet myRs = sendQuery("SELECT message.username_to,message.username_from, message.message FROM message WHERE username_to = '" + username + "';");
+			while(myRs.next()){
+				System.out.println("HAS NEXT");
+				HashMap<String, String> messages = new HashMap<String, String>();
+				messages.put("username_from", myRs.getString("username_from"));
+				messages.put("username_to", myRs.getString("username_to"));
+				messages.put("message", myRs.getString("message"));
+				allMessages.add(messages);
 				
 			}
 		} catch (Exception e) {
@@ -580,5 +583,9 @@ public class ConnectionMySQL {
 		return allMessages;
 		
 	}
-	
+	public static boolean deleteMessage(String username_from,String username_to, String info){
+		String myStmt = "DELETE FROM message WHERE message.username_to = '"+username_to+"' AND message.username_from = '"+ username_from+"' AND message.message = '"+info+"';";
+		return sendStatement(myStmt);
+		
+	}
 }

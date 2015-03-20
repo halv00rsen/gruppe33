@@ -189,6 +189,12 @@ public class Main extends Application implements ProgramListener{
 		}
 		
 	}
+	public class MessageDeleter{
+		
+		public void deleteMessage(String username_from, String username_to, String info){
+			program.deleteMessage(username_from,username_to,info);
+		}
+	}
 	public class EventHider{
 		public void hideEvent(Event event, Person person){
 			//kan bare kjøres en gang
@@ -243,7 +249,7 @@ public class Main extends Application implements ProgramListener{
 				@Override
 				public void handle(WindowEvent event) {
 					if(program.updateThread != null){
-						program.updateThread.cancel();
+//						program.updateThread.cancel();
 					}
 					program.logout();
 				}
@@ -307,7 +313,7 @@ public class Main extends Application implements ProgramListener{
 		homeScreen.highlightEvent(event);
 	}
 
-	private Tab home, newEvent, room, persons, inbox, settings, groups;
+	private Tab home, newEvent, persons, inbox, settings, groups;
 	
 	@Override
 	public void loginSuccess(Person person) {
@@ -330,9 +336,9 @@ public class Main extends Application implements ProgramListener{
 		eventScreen = new EventScreen(new AddNewEvent(), new ChangeTab(), new AddPersonListener(), new AddGroupListener());
 		newEvent.setContent(eventScreen);
 		
-		room = new Tab("Reserver Rom");
-		reserveRoomScreen = new ReserveRoomScreen();
-		room.setContent(reserveRoomScreen);
+//		room = new Tab("Reserver Rom");
+//		reserveRoomScreen = new ReserveRoomScreen();
+//		room.setContent(reserveRoomScreen);
 		
 		groups = new Tab("Grupper");
 		groups.setContent(new GroupScreen(new AddPersonListener(), new AddGroupListener()));
@@ -344,7 +350,7 @@ public class Main extends Application implements ProgramListener{
 		
 		
 		inbox = new Tab("Postkasse");
-		inboxScreen = new InboxScreen(new GoToEvent());
+		inboxScreen = new InboxScreen(new GoToEvent(),new MessageDeleter());
 		inbox.setContent(inboxScreen);
 		
 		settings = new Tab("Innstillinger");
@@ -352,7 +358,7 @@ public class Main extends Application implements ProgramListener{
 		settings.setContent(settingsScreen);
 		settingsScreen.setUserInfo(person.getFirstname(), person.getLastname(), person.getMail(), person.getPhone(), person.username);
 		
-		tabPane.getTabs().addAll(home, newEvent, room, persons, inbox, settings, groups);
+		tabPane.getTabs().addAll(home, newEvent, persons, inbox, settings, groups);
 		tabPane.setTabMinWidth(75);
 		if (program.isAdminLogIn()){
 			Tab newUser = new Tab("Ny bruker");
@@ -375,7 +381,7 @@ public class Main extends Application implements ProgramListener{
 		Button slideAway = new Button("Fjern melding");
 		slideAway.setOnAction(e -> messageScreen.hide());
 		vBox.getChildren().addAll(logout, slideButton, slideAway);
-		slideButton.setOnAction(e -> messageScreen.show("heisann", EventInfo.FromInbox));
+		slideButton.setOnAction(e -> messageScreen.show("Melding", EventInfo.FromInbox));
 		root.getChildren().addAll(tabPane, messageScreen, vBox);
 //		logout.setLayoutX(1020);
 //		logout.setLayoutY(2);

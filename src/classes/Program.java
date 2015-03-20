@@ -7,6 +7,11 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Scanner;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
+import com.mysql.jdbc.MySQLConnection;
 
 import components.CalendarBase;
 import javafx.animation.KeyFrame;
@@ -44,31 +49,47 @@ public class Program {
 	    	isLoggedin = true;
 	    	mailInfo = new ArrayList<MailInfo>();
 	    }
-
-//	    public void run() {
-//	    	mailInfo = new ArrayList<MailInfo>();
-//	        while(isLoggedin){
-//	        try {
-//				Thread.sleep(1000);
-//			} catch (InterruptedException e) {
-//			}
-//	        	
-//	        	ArrayList<HashMap<String, String>> email = ConnectionMySQL.getMessage(getCurrentUser().getUsername());
-//		        if(email != null){
-//	        		for (int i = 0; i < email.size(); i++) {
-//						String from = email.get(i).get("user_from");
-//						String to = email.get(i).get("user_to");
-//						String info = email.get(i).get("message");
-//						Message message = Message.Custom;
-////			        	callMessage(message.customMessage(info));
-//			        	MailInfo hei = new MailInfo("testmail", from, "00.00.00.00", info, 0);
-//			        	createMail(hei);
-//					}
-//		        }
-//	        	
-//	        }
-//	        System.out.println("BYE");
-
+	    public void callOnFinished(){
+	    	ArrayList<HashMap<String, String>> email = ConnectionMySQL.getMessage(getCurrentUser().getUsername());
+		       if(email != null){
+		    	   System.out.println("email er ikke null!");
+		    	   System.out.println("email"+email);
+//		    	   
+//		    	   System.out.println("email.get(0)"+email.get(0));
+//		    	   System.out.println("email.get(0).get(username_from)"+email.get(0).get("username_from"));
+		    	   	for (int i = 0; i < email.size(); i++) {
+		    	   		String from = email.get(i).get("username_from");
+						String to = email.get(i).get("username_to");
+						String info = email.get(i).get("message");
+						
+			    	   	
+						Message message = Message.Custom;
+						HashMap<String,String> a = translateMail(from,to,info);
+						if(! a.get("header").equals("null") && ! a.get("username_from").equals("null") && ! a.get("username_to").equals("null") && ! a.get("time").equals("null") && ! a.get("status").equals("null") ){
+							MailInfo hei = mailInfoGenerator(a.get("header"),a.get("username_from"),a.get("username_to"),a.get("time"),a.get("status"),Integer.valueOf(a.get("event_id")));
+					       	boolean exist = false;
+					       	for (int j = 0; j < mailInfo.size(); j++) {
+								
+								if(mailInfo.get(j).from.equals(hei.from) && mailInfo.get(j).to.equals(hei.to) && mailInfo.get(j).status.equals(hei.status) && mailInfo.get(j).header.equals(hei.header) && mailInfo.get(j).date.equals(hei.date) && mailInfo.get(j).eventId == hei.eventId){
+									exist = true;
+								}
+							}
+					       	if(! exist){
+					       		
+					       		callMessage(message.customMessage(a.get("status")));
+					       		createMail(hei);
+					       	}
+						}else{
+//							System.out.println("want to delete message " + from + to + info);
+							deleteMessage(from, to,info);
+						}
+				       	
+				       	
+		    	   	}
+		       }
+		    run();
+	    }
+		
 		public void run() {
 			if(isLoggedin){
 				System.out.println("************************thread******************");
@@ -76,42 +97,23 @@ public class Program {
 		        timeline.setOnFinished( new EventHandler<ActionEvent>(){
 					@Override
 					public void handle(ActionEvent arg0) {
-						run();
+						callOnFinished();
 					}
 					
 				});
 		        KeyFrame wait = new KeyFrame(Duration.millis(5000));
 		    	timeline.getKeyFrames().add(wait);
-		        ArrayList<HashMap<String, String>> email = ConnectionMySQL.getMessage(getCurrentUser().getUsername());
-			       if(email != null){
-			    	   System.out.println("email er ikke null!");
-			    	   System.out.println("email"+email);
-//			    	   
-//			    	   System.out.println("email.get(0)"+email.get(0));
-//			    	   System.out.println("email.get(0).get(username_from)"+email.get(0).get("username_from"));
-			    	   	for (int i = 0; i < email.size(); i++) {
-			    	   		String from = email.get(i).get("username_from");
-							String to = email.get(i).get("username_to");
-							String info = email.get(i).get("message");
-							
-				    	   	
-							Message message = Message.Custom;
-					       	callMessage(message.customMessage(info));
-					       	MailInfo hei = new MailInfo("testmail", from, "00.00.00.00", info, 353);
-					       	createMail(hei);
-			    	   	}
-			       }
-			     timeline.play();
-			}
-			
-	    }
-	    
-
+		        
+			    timeline.play();
+		        }
+	        	
+	        }
 		public void cancel(){
 	    	isLoggedin = false;
 	    }
 	}
 	public void createMail(MailInfo hei) {
+		mailInfo.add(hei);
 		for (ProgramListener l : listeners)
 			l.createMail(hei);
 		
@@ -119,7 +121,9 @@ public class Program {
 	public Person getCurrentUser(){
 		return currentPerson;
 	}
-	
+	public MailInfo mailInfoGenerator(String header, String from, String to, String time, String status, int event_id) {
+		return new MailInfo(header, from, to,time,status, event_id);
+	}
 	public void createGroup(String name){
 		int groupId = ConnectionMySQL.createGroup(name, 0);
 		if (groupId == -1){
@@ -304,7 +308,13 @@ public class Program {
 			newCal.addEvent(oldEvent);
 		}
 		for (EventAppliance e : oldEvent.getAppliance()){
-//			ConnectionMySQL.sendMessage(getCurrentUser().getUsername(), e.person.username, "DETTE ER EN TEST");
+			
+			if(e.person.username != getCurrentUser().getUsername()){
+				String info =  "header: Hendelse endret \ntime: "+LocalDateTime.now()+"\nstatus: En event har blitt endret på! For å se nærmere på dette gå til innboksen og klikk på hendelsen! \nevent_id: " + eventId;
+				ConnectionMySQL.sendMessage(getCurrentUser().getUsername(), e.person.username,info);
+				
+			}
+			
 			ConnectionMySQL.removeMembersFromEvent(eventId, e.person.username);
 		}
 		if (event.getAppliance().isEmpty()){
@@ -313,10 +323,10 @@ public class Program {
 			event.getAppliance().add(0, oldEvent.getAppliance().get(0));
 		for (EventAppliance e : event.getAppliance()){
 			ConnectionMySQL.addMembersToEvent(eventId, e.person.username);
+			
 		}
 		oldEvent.overrideEvent(event);
-		ConnectionMySQL.sendMessage(getCurrentUser().getUsername(), getCurrentUser().getUsername(), "DETTE ER EN TEST");
-	
+		
 		
 //		createMail(new MailInfo("HEIHIG","UOBEG","PUP","bpi",oldEvent.getID()));
 		updateCalendars();
@@ -441,6 +451,16 @@ public class Program {
 	}
 	
 	public void updateAppliance(Event event, EventAppliance eventAppliance){
+		for (EventAppliance e : event.getAppliance()){
+			if(e.person.username != getCurrentUser().getUsername()){
+				if(eventAppliance.getAppliance().equals(Appliance.Not_Attending)){
+					String info =  "header: "+getCurrentUser().getUsername()+" meldte avbrudd! \ntime: "+LocalDateTime.now()+"\nstatus: Noen har meldt av brudd fra et arrangement. Gå til innboks for å se hvilket arrangement! \nevent_id: " + event.getID();
+					ConnectionMySQL.sendMessage(getCurrentUser().getUsername(), e.person.username,info);
+					
+				}
+				
+			}
+		}
 		ConnectionMySQL.setAppliance(event.getID(), eventAppliance.getPerson().getUsername(), eventAppliance.getAppliance().getStateName());
 	}
 	public void deleteEvent(Event event){
@@ -617,6 +637,7 @@ public class Program {
 			currentPerson.setOtherInfo(info.get("phone"), info.get("email"));
 			
 			updateThread = new UpdateThread();
+			mailInfo = new ArrayList<MailInfo>();
 			updateThread.run();
 		}
 		
@@ -843,6 +864,67 @@ public class Program {
 	public boolean isAdminLogIn(){
 		return isLoggedIn() && currentPerson.admin;
 	}
-	
-
+	public void deleteMessage(String username_from, String username_to, String info) {
+		boolean exist = false;
+       	for (int j = 0; j < mailInfo.size(); j++) {
+       		String from2 = mailInfo.get(j).from;
+			String to2 = mailInfo.get(j).to;
+			String info2 = mailInfo.get(j).status;
+			if(username_from.equals(from2) && username_to.equals(to2) && info2.equals(info)){
+				mailInfo.remove(j);
+			}
+		}
+		System.out.println("ATTEMPTING DELETE" + ConnectionMySQL.deleteMessage(username_from, username_to, info));
+		
+	}
+	public HashMap<String,String> translateMail(String user_from,String user_to,String info){
+		HashMap<String,String> a = new HashMap<String,String>();
+		a.put("username_from", user_from);
+		a.put("username_to", user_to);
+		Pattern p0 = Pattern.compile("header:\\s(.*)\\n");
+		Matcher m0 = p0.matcher(info);
+		
+		Pattern p1 = Pattern.compile("time:\\s(.*)\\n");
+		Matcher m1 = p1.matcher(info);
+		
+		Pattern p2 = Pattern.compile("status:\\s(.*)\\n");
+		Matcher m2 = p2.matcher(info);
+		
+		Pattern p3 = Pattern.compile("event_id:\\s(.*)");
+		Matcher m3 = p3.matcher(info);
+		
+		if(m0.find()){
+			System.out.println(m0.group(1));
+			a.put("header", m0.group(1));
+		}else{
+			System.out.println("a.put(header, null);");
+			a.put("header", "null");
+		}
+		if(m1.find()){
+			System.out.println(m1.group(1));
+			a.put("time", m1.group(1));
+		}else{
+			System.out.println("a.put(time, null);");
+			a.put("time", "null");
+		}
+		if(m2.find()){
+			System.out.println(m2.group(1));
+			a.put("status", m2.group(1));
+		}else{
+			System.out.println("a.put(status, null);");
+			a.put("status", "null");
+		}
+		if(m3.find()){
+			System.out.println(m3.group(1));
+			a.put("event_id", m3.group(1));
+		}else{
+			System.out.println("a.put(event_id, null);");
+			a.put("event_id", "null");
+		}
+//		System.out.println("HER E HASH" + a);
+//		System.out.println("header: Hendelse endret \ntime: "+LocalDateTime.now()+"\nstatus: En event har blitt endret på! For å se nærmere på dette gå til innboksen og klikk på hendelsen! \nevent_id: " + 26232);
+		return a;
+		
+		
+	}
 }
